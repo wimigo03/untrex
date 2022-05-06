@@ -254,9 +254,21 @@ return [
             'label_color' => 'success',
         ],*/
         [
+            'text'        => 'Cotizaciones',
+            'route'         => 'cotizaciones.index',
+            'icon'        => 'fas fa-funnel-dollar',
+            'label_color' => 'success',
+        ],
+        [
             'text'        => 'Plan de cuentas',
-            'url'         => 'admin/plandecuentas',
-            'icon'        => 'far fa-fw fa-file',
+            'route'         => 'plandecuentas.index',
+            'icon'        => 'fas fa-sitemap',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Comprobantes',
+            'route'         => 'comprobantes.index',
+            'icon'        => 'fas fa-list-alt',
             'label_color' => 'success',
         ],
         //['header' => 'account_settings'],

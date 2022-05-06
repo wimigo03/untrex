@@ -31,5 +31,5 @@ Route::middleware([
     })->name('dashboard');
 });
 
-route::get('/plandecuentas', [PlandecuentasController::class, 'index']);
+//route::get('/plandecuentas', [PlandecuentasController::class, 'index']);
 //Route::get('/plandecuentas', 'PlandecuentasController@index')->name('index');

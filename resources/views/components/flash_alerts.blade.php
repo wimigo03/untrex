@@ -26,7 +26,7 @@
         @slot( 'message', session('danger') )
     @endcomponent
 @endif
-@if ( $errors->any() )
+{{--@if ( $errors->any() )
     @foreach ( $errors->all() as $error )
         @component( 'components.alert' )
             @slot( 'class', 'danger' )
@@ -34,4 +34,4 @@
             @slot( 'message', $error )
         @endcomponent
     @endforeach
-@endif
+@endif--}}

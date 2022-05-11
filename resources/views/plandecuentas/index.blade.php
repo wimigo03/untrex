@@ -70,10 +70,13 @@
 @stop
 
 @section('js')
+    {{--<script type="text/javascript" src="/js/plan_cuentas/index.js"></script>--}}
     <script type="text/javascript" src="/js/plan_cuentas/treeview.js"></script>
+    <script type="text/javascript" src="/js/plan_cuentas/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/plan_cuentas/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $(':text,:hidden').val(''); //Limpia los input al refrescar la pagina
-        } );
+        /*$(document).ready(function() {
+            $(':text,:hidden').val('');
+        } );*/
     </script>
 @stop

@@ -12,9 +12,7 @@ class PlandecuentasController extends Controller
     public function index(){
 
         $plancuentas = PlanCuentas::where('parent_id', '0')->where('estado',1)->orderBy('id', 'asc')->get();
-        //dd($plancuentas);
 		$html = $this->arbol($plancuentas);
-        //dd($html);
         return view('plandecuentas.index',compact('html'));
     }
 
@@ -26,10 +24,11 @@ class PlandecuentasController extends Controller
             $html2 .= '<li class="item-'.$numero.' deeper parent">';
             $html2 .= '<a class="" href="#">
                         <span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$numero;
-            if($state)
+            if($state){
                 $html2 .= '-1" class="sign"><i class="icon-plus icon-white"></i></span>';
-            else
+            }else{
                 $html2 .= '-1" class=""><i class="icon-plus icon-white"></i></span>';
+            }
             $html2 .= '<span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$numero.'-1" class="lbl">'. $row->codigo . " " . $row->nombre.'</span>';
             $html2 .= '</a>';
             $plancuenta_tree = PlanCuentas::where('estado', '1')->where('parent_id', $row->id)->orderBy('id', 'asc')->get();
@@ -41,12 +40,12 @@ class PlandecuentasController extends Controller
         return $html2;
     }
 
-    public function categoryTree2($plancuenta, $parent_id = 0, $num_sub, $numero,$state = 1){
+    public function categoryTree2($plancuenta, $parent_id = 0,$num_sub,$numero,$state = 1){
         $html = '<ul class="children nav-child unstyled small collapse" id="sub-item-'.$num_sub.'-'.$numero.'">';
         foreach($plancuenta as $row) {
             $numero++;
             if ($row->parent_id == $parent_id) {
-                $html .= '<li class="item-' . $numero . 'deeper parent">';
+                $html .= '<li class="item-' . $numero . ' deeper parent">';
                 $html .= '<a class="" href="#">
                             <span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$num_sub.'-'.$row->id;
                 if($state){
@@ -56,7 +55,7 @@ class PlandecuentasController extends Controller
                 }
                 $html .= '<span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$num_sub.'-'.$row->id.'" class="lbl">'. $row->codigo." ".$row->nombre.'</span>';
                 $html .= '</a>';
-                $plancuenta2 = PlanCuentas::where('estado', '1')->where('parent_id', $row->id)->orderBy('id', 'asc')->get();
+                $plancuenta2 = PlanCuentas::where('estado', '1')->where('parent_id', $row->id)->where('deleted_at',null)->orderBy('id', 'asc')->get();
                 $html .= $this->categoryTree2($plancuenta2, $row->id, $num_sub, $row->id, $html);
                 $html .= '</li>';
             }

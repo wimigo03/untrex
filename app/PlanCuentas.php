@@ -8,7 +8,8 @@ use DB;
 
 class PlanCuentas extends Model
 {
-    protected $table = 'plan_cuentas';
+    //protected $table = 'plan_cuentas';
+    public static $TableName='plan_cuentas';
     protected $fillable = [
         'nombre',
         'codigo',
@@ -20,4 +21,10 @@ class PlanCuentas extends Model
     ];
     use SoftDeletes;
     protected $dates =['deleted_at'];
+
+    public function __construct(array $attributes = [])
+    {
+        $this->table=self::$TableName;
+        parent::__construct($attributes);
+    }
 }

@@ -1,165 +1,330 @@
-  /* MENU-LEFT
--------------------------- */
-/* layout */
-#treeview ul.nav li.deeper{
-	line-height: 20px;
-}
-#treeview ul.nav {
-    margin-bottom: 2px;
-    font-size: 12px; /* to change font-size, please change instead .lbl */
-	display: block;
-}
-#treeview ul.nav ul,
-#treeview ul.nav ul li {
-    list-style: none!important;
-    list-style-type: none!important;
-    margin-top: 1px;
-    margin-bottom: 1px;
-}
-#treeview ul.nav ul {
-    padding-left: 0;
-    width: auto;
-}
-#treeview ul.nav ul.children {
-    padding-left: 12px;
-    width: auto;
-}
-#treeview ul.nav ul.children li{
-    margin-left: 0px;
-}
-#treeview ul.nav li a:hover {
-    text-decoration: none;
-}
-
-#treeview ul.nav li a:hover .lbl {
-    color: #999!important;
-}
-
-#treeview ul.nav li.current>a .lbl {
-    background-color: #999;
-    color: #fff!important;
-}
-#treeview .habilitado{
-	border-color: red !important;
-	color: red !important;
-}
-#treeview .habilitado span.sign{
-	background-color: red !important;
-}
-/* parent item */
-#treeview ul.nav li.parent a {
-    padding: 0px;
-    color: #ccc;
-}
-#treeview ul.nav>li.parent>a {
-    /*border: solid 1px #999;*/	/*padding: 2px;*/
-    text-transform: uppercase;
-}    
-/*#treeview ul.nav li.parent a:hover {
-    background-color: #fff;
-    -webkit-box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);
-    -moz-box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);
-    box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);    
-}*/
-
-/* link tag (a)*/
-#treeview ul.nav li.parent ul li a {
-    color: #222;
-    border: none;
-    display:block;
-    padding-left: 5px;    
-}
-
-#treeview ul.nav li.parent ul li a:hover {
-    background-color: #fff;
-    -webkit-box-shadow:none;
-    -moz-box-shadow:none;
-    box-shadow:none;  
-}
-
-/* sign for parent item */
-#treeview ul.nav li .sign {
-    display: inline-block;
-    width: 14px;
-    padding: 5px 8px;
-    background-color: transparent;
-    color: #fff;
-}
-#treeview ul.nav li.parent>a>.sign{
-    margin-left: 0px;	width: 25px;	height: 15px;
-    background-color: #999;
-}
-
-/* label */
-#treeview ul.nav li .lbl {
-    padding: 5px 12px;
-    display: inline-block;
-}
-#treeview ul.nav li.current>a>.lbl {
-    color: #fff;
-}
-#treeview ul.nav  li a .lbl{
-    font-size: 13px;
-}
-
-/* THEMATIQUE
-------------------------- */
-/* theme 1 */
-#treeview ul.nav>li.item-1.parent>a {
-}
-#treeview ul.nav>li.item-1.parent>a>.sign,
-#treeview ul.nav>li.item-1 li.parent>a>.sign{
-    margin-left: 0px;
-}
-#treeview ul.nav>li.item-1 .lbl {
-}
-#treeview ul.nav>li.item-1 li.current>a .lbl {
-    color: #fff!important;
-}
-
-/* theme 2 */
-#treeview ul.nav>li.item-8.parent>a {
-}
-#treeview ul.nav>li.item-8.parent>a>.sign,
-#treeview ul.nav>li.item-8 li.parent>a>.sign{
-    margin-left: 0px;
-}
-#treeview ul.nav>li.item-8 .lbl {
-}
-#treeview ul.nav>li.item-8 li.current>a .lbl {
-    color: #fff!important;
-}
-
-/* theme 3 */
-#treeview ul.nav>li.item-15.parent>a {
-    border: solid 1px #94cf00;
-}
-#treeview ul.nav>li.item-15.parent>a>.sign,
-#treeview ul.nav>li.item-15 li.parent>a>.sign{
-    margin-left: 0px;
-    background-color: #94cf00;
-}
-#treeview ul.nav>li.item-15 .lbl {
-    color: #94cf00;
-}
-#treeview ul.nav>li.item-15 li.current>a .lbl {
-    background-color: #94cf00;
-    color: #fff!important;
-}
-
-/* theme 4 */
-#treeview ul.nav>li.item-22.parent>a {
-    border: solid 1px #ef409c;
-}
-#treeview ul.nav>li.item-22.parent>a>.sign,
-#treeview ul.nav>li.item-22 li.parent>a>.sign{
-    margin-left: 0px;
-    background-color: #ef409c;
-}
-#treeview ul.nav>li.item-22 .lbl {
-    color: #ef409c;
-}
-#treeview ul.nav>li.item-22 li.current>a .lbl {
-    background-color: #ef409c;
-    color: #fff!important;
+  /* MENU-LEFT
+
+-------------------------- */
+
+/* layout */
+
+#treeview ul.nav li.deeper{
+
+	line-height: 20px;
+
+}
+
+#treeview ul.nav {
+
+    margin-bottom: 2px;
+
+    font-size: 12px; /* to change font-size, please change instead .lbl */
+
+	display: block;
+
+}
+
+#treeview ul.nav ul,
+
+#treeview ul.nav ul li {
+
+    list-style: none!important;
+
+    list-style-type: none!important;
+
+    margin-top: 1px;
+
+    margin-bottom: 1px;
+
+}
+
+#treeview ul.nav ul {
+
+    padding-left: 0;
+
+    width: auto;
+
+}
+
+#treeview ul.nav ul.children {
+
+    padding-left: 12px;
+
+    width: auto;
+
+}
+
+#treeview ul.nav ul.children li{
+
+    margin-left: 0px;
+
+}
+
+#treeview ul.nav li a:hover {
+
+    text-decoration: none;
+
+}
+
+
+
+#treeview ul.nav li a:hover .lbl {
+
+    color: #999!important;
+
+}
+
+
+
+#treeview ul.nav li.current>a .lbl {
+
+    background-color: #999;
+
+    color: #fff!important;
+
+}
+
+#treeview .habilitado{
+
+	border-color: red !important;
+
+	color: red !important;
+
+}
+
+#treeview .habilitado span.sign{
+
+	background-color: red !important;
+
+}
+
+/* parent item */
+
+#treeview ul.nav li.parent a {
+
+    padding: 0px;
+
+    color: #ccc;
+
+}
+
+#treeview ul.nav>li.parent>a {
+
+    /*border: solid 1px #999;*/
+	/*padding: 2px;*/
+    text-transform: uppercase;
+
+}    
+
+/*#treeview ul.nav li.parent a:hover {
+
+    background-color: #fff;
+
+    -webkit-box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);
+
+    -moz-box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);
+
+    box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);    
+
+}*/
+
+
+
+/* link tag (a)*/
+
+#treeview ul.nav li.parent ul li a {
+
+    color: #222;
+
+    border: none;
+
+    display:block;
+
+    padding-left: 5px;    
+
+}
+
+
+
+#treeview ul.nav li.parent ul li a:hover {
+
+    background-color: #fff;
+
+    -webkit-box-shadow:none;
+
+    -moz-box-shadow:none;
+
+    box-shadow:none;  
+
+}
+
+
+
+/* sign for parent item */
+
+#treeview ul.nav li .sign {
+
+    display: inline-block;
+
+    width: 14px;
+
+    padding: 5px 8px;
+
+    background-color: transparent;
+
+    color: #fff;
+
+}
+
+#treeview ul.nav li.parent>a>.sign{
+
+    margin-left: 0px;
+	width: 25px;
+	height: 15px;
+    background-color: #999;
+
+}
+
+
+
+/* label */
+
+#treeview ul.nav li .lbl {
+
+    padding: 5px 12px;
+
+    display: inline-block;
+
+}
+
+#treeview ul.nav li.current>a>.lbl {
+
+    color: #fff;
+
+}
+
+#treeview ul.nav  li a .lbl{
+
+    font-size: 13px;
+
+}
+
+
+
+/* THEMATIQUE
+
+------------------------- */
+
+/* theme 1 */
+
+#treeview ul.nav>li.item-1.parent>a {
+
+}
+
+#treeview ul.nav>li.item-1.parent>a>.sign,
+
+#treeview ul.nav>li.item-1 li.parent>a>.sign{
+
+    margin-left: 0px;
+
+}
+
+#treeview ul.nav>li.item-1 .lbl {
+
+}
+
+#treeview ul.nav>li.item-1 li.current>a .lbl {
+
+    color: #fff!important;
+
+}
+
+
+
+/* theme 2 */
+
+#treeview ul.nav>li.item-8.parent>a {
+
+}
+
+#treeview ul.nav>li.item-8.parent>a>.sign,
+
+#treeview ul.nav>li.item-8 li.parent>a>.sign{
+
+    margin-left: 0px;
+
+}
+
+#treeview ul.nav>li.item-8 .lbl {
+
+}
+
+#treeview ul.nav>li.item-8 li.current>a .lbl {
+
+    color: #fff!important;
+
+}
+
+
+
+/* theme 3 */
+
+#treeview ul.nav>li.item-15.parent>a {
+
+    border: solid 1px #94cf00;
+
+}
+
+#treeview ul.nav>li.item-15.parent>a>.sign,
+
+#treeview ul.nav>li.item-15 li.parent>a>.sign{
+
+    margin-left: 0px;
+
+    background-color: #94cf00;
+
+}
+
+#treeview ul.nav>li.item-15 .lbl {
+
+    color: #94cf00;
+
+}
+
+#treeview ul.nav>li.item-15 li.current>a .lbl {
+
+    background-color: #94cf00;
+
+    color: #fff!important;
+
+}
+
+
+
+/* theme 4 */
+
+#treeview ul.nav>li.item-22.parent>a {
+
+    border: solid 1px #ef409c;
+
+}
+
+#treeview ul.nav>li.item-22.parent>a>.sign,
+
+#treeview ul.nav>li.item-22 li.parent>a>.sign{
+
+    margin-left: 0px;
+
+    background-color: #ef409c;
+
+}
+
+#treeview ul.nav>li.item-22 .lbl {
+
+    color: #ef409c;
+
+}
+
+#treeview ul.nav>li.item-22 li.current>a .lbl {
+
+    background-color: #ef409c;
+
+    color: #fff!important;
+
 }

@@ -3,11 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\PlandecuentasController;
+use App\Http\Controllers\Admin\PlandecuentasAuxiliaresController;
 use App\Http\Controllers\Admin\CotizacionesController;
 use App\Http\Controllers\Admin\ComprobantesController;
 use App\Http\Controllers\Admin\ComprobantesDetalleController;
 
 //Comprobantes Detalles
+Route::post('/comprobantesdetalles/insertar', [ComprobantesDetalleController::class, 'insertar'])->name('comprobantesdetalles.insertar');
 route::get('/comprobantesdetalles/create/{comprobante}', [ComprobantesDetalleController::class, 'create'])->name('comprobantesdetalles.create');
 //Comprobantes
 Route::post('/comprobantes/store', [ComprobantesController::class, 'store'])->name('comprobantes.store');
@@ -19,6 +21,10 @@ Route::post('/cotizaciones/search', [CotizacionesController::class, 'search'])->
 Route::post('/cotizaciones/store', [CotizacionesController::class, 'store'])->name('cotizaciones.store');
 route::get('/cotizaciones/create', [CotizacionesController::class, 'create'])->name('cotizaciones.create');
 route::get('/cotizaciones', [CotizacionesController::class, 'index'])->name('cotizaciones.index');
+//Plan de cuentas auxiliares
+Route::post('/plandecuentasauxiliares/store', [PlandecuentasAuxiliaresController::class, 'store'])->name('plandecuentasauxiliares.store');
+route::get('/plandecuentasauxiliares/create', [PlandecuentasAuxiliaresController::class, 'create'])->name('plandecuentasauxiliares.create');
+route::get('/plandecuentasauxiliares', [PlandecuentasAuxiliaresController::class, 'index'])->name('plandecuentasauxiliares.index');
 //Plan de cuentas
 Route::post('/plandecuentas/store/editar', [PlandecuentasController::class, 'update'])->name('store_editar_dependiente');
 Route::post('/plandecuentas/store', [PlandecuentasController::class, 'store'])->name('store_dependiente');

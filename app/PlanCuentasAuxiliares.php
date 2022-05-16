@@ -6,16 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
-class PlanCuentas extends Model
+class PlanCuentasAuxiliares extends Model
 {
-    protected $table = 'plan_cuentas';
+    protected $table = 'plan_cuentas_auxiliares';
     protected $fillable = [
+        'tipo',
         'nombre',
-        'codigo',
-        'parent_id',
-        'descripcion',
-        'cuenta_detalle',
-        'cheque',
         'estado'
     ];
     use SoftDeletes;

@@ -24,17 +24,17 @@
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-2">
                             {{Form::hidden('parent_id',$parent->id,['readonly'=> true, 'id' => 'id_plancuenta'])}}
-                            {{Form::label('Codigo_padre','Codigo Padre',['class' => 'd-inline'])}}
+                            {{Form::label('Codigo_padre','Codigo Cuenta',['class' => 'd-inline'])}}
                             {{Form::text('codigo_padre',$parent->codigo,['readonly'=> true, 'class'=>'form-control form-control-sm', 'id' => 'codigo_padre'])}}
                         </div>
                         <div class="col-md-4">
-                            {{Form::label('Nombre_padre','Nombre Pabre',['class' => 'd-inline'])}}
+                            {{Form::label('Nombre_padre','Cuenta',['class' => 'd-inline'])}}
                             {{Form::text('nombre_padre',$parent->nombre,['readonly'=> true, 'class'=>'form-control form-control-sm', 'id' => 'nombre_padre'])}}
                         </div>
                     </div>
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-4">
-                            {{Form::label('Nombre_dependiente','Nombre Dependiente',['class' => 'd-inline'])}}
+                            {{Form::label('Nombre_dependiente','Sub Cuenta',['class' => 'd-inline'])}}
                             {{Form::text('nombre_dependiente',null,['class'=>'form-control form-control-sm'. ( $errors->has('nombre_dependiente') ? ' is-invalid' : '' ), 'id' => 'nombre_dependiente'])}}
                             {!! $errors->first('nombre_dependiente','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-2">
-                            {{Form::label('Cuenta_detalle','Cuenta detalle',['class' => 'd-inline'])}}
+                            {{Form::label('Cuenta_detalle','¿Es Cuenta detalle?',['class' => 'd-inline'])}}
                             {!! Form::select('cuenta_detalle', array('1'=>'Si','0'=>'No'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('cuenta_detalle') ? ' is-invalid' : '' ), 'id' => 'cuenta_detalle']) !!}
                             {!! $errors->first('cuenta_detalle','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>

@@ -22,11 +22,11 @@
             <div class="card-body">
                 <div class="form-group row font-verdana-bg">
                     <div class="col-md-2">
-                        {{Form::label('Codigo_padre','Codigo Padre',['class' => 'd-inline'])}}
+                        {{Form::label('Codigo_padre','Codigo Cuenta',['class' => 'd-inline'])}}
                         {{Form::text('codigo_padre',null,['readonly' => true, 'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'js_codigo_padre'])}}
                     </div>
                     <div class="col-md-4">
-                        {{Form::label('Nombre','Nombre',['class' => 'd-inline'])}}
+                        {{Form::label('Nombre','Cuenta',['class' => 'd-inline'])}}
                         {{Form::text('nombre',null,['readonly' => true, 'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'js_nombre'])}}
                     </div>
                     <div class="col-md-6">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group row font-verdana-bg">
                     <div class="col-md-2">
-                        {{Form::label('Cuenta_detalle','Cuenta detalle',['class' => 'd-inline'])}}
+                        {{Form::label('Cuenta_detalle','¿Es Cuenta detalle?',['class' => 'd-inline'])}}
                         {{Form::text('cuenta_detalle',null,['readonly' => true, 'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'js_cuenta_detalle'])}}
                     </div>
                     <div class="col-md-2">

@@ -44,9 +44,9 @@
                             {!! $errors->first('moneda','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
-                            {{ Form::label('centro','Centro',['class' => 'd-inline font-verdana-bg'])}}
-                            {!! Form::select('centro', array('1'=>'Prueba_1','2'=>'Prueba_2'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm ' . ( $errors->has('centro') ? ' is-invalid' : '' )]) !!}
-                            {!! $errors->first('centro','<span class="invalid-feedback d-block">:message</span>') !!}
+                            {{ Form::label('empresa','Empresa',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('empresa', array('1'=>'Untrex'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm ' . ( $errors->has('empresa') ? ' is-invalid' : '' )]) !!}
+                            {!! $errors->first('empresa','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
                             <div class="row">

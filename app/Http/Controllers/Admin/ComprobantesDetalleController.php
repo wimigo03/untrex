@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Cotizaciones;
 use App\Comprobantes;
+use App\ComprobantesDetalle;
+use App\PlanCuentas;
+use App\PlanCuentasAuxiliares;
 use Carbon\Carbon;
 use DB;
 
@@ -18,6 +21,17 @@ class ComprobantesDetalleController extends Controller
     public function create(Comprobantes $comprobante){
         //dd($comprobante, "Dilson");
         $user = DB::table('users')->where('id',$comprobante->user_id)->first();
+        $empresa = DB::table('empresas')->where('id',$comprobante->empresa_id)->first();
+        $proyectos = DB::table('proyectos')->pluck('nombre','id');
+        $centros = DB::table('centros')->pluck('nombre','id');
+        $plan_cuentas = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
+                                    ->where('empresa_id',$comprobante->empresa_id)
+                                    ->where('estado',1)                                    
+                                    ->where('cuenta_detalle','=','1')
+                                    ->pluck('nombre','id');
+        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::select(DB::raw("CONCAT(id,'&nbsp;|&nbsp;',IF(ISNULL(proveedor_id), IF(ISNULL(user_id),IF(ISNULL(maquinaria_id),'GEN: ','EQU: '),'PER: '), 'PROV: '),nombre) AS nombre"),'id')
+        
+                                    ->where('estado','1')->pluck('nombre','id');
         /*$comprobante = Comprobante::where('id',$comprobante->id)->first();
         $query = ComprobantesDetalle::where('idcomprobante',$comprobante->id);
         $plan_cuentas = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) AS nombre"),'id')
@@ -48,71 +62,36 @@ class ComprobantesDetalleController extends Controller
         $empresas = Empresa::where('tipo',1)->get()->pluck('name','id');
         $datoEmpresa = Empresa::where('tipo',1)->where('id',$comprobante->empresa_id)->first();
         return view('comprobantesdetalle.create', compact('empresas','fechaComprobante','comprobante','comprobantes_detalles','plan_cuentas','plan_cuentas_auxiliares','suma_total_debe','suma_total_haber','proyectos','centros','array','datoEmpresa'));*/
-        return view('comprobantes-detalles.create',compact('comprobante','user'));
+        return view('comprobantes-detalles.create',compact('comprobante','user','empresa','proyectos','centros','plan_cuentas','plan_cuentas_auxiliares'));
     }
 
-    public function store(Request $request){//dd($request->all());
+    public function insertar(Request $request){
+        //dd($request->all());
         $request->validate([
+            'proyecto'=> 'required',
             'centro'=> 'required',
-            'tipo'=> 'required',
-            'fecha'=> 'required',
-            'entregado_recibido'=> 'required_unless:tipo,3',
-            'moneda'=> 'required',
-            'taza_cambio' => 'required',
+            'plan_cuenta'=> 'required',
+            'plan_cuenta_auxiliar'=> 'required',
+            'glosa'=> 'required',
+            'debe_bs' => 'required',
+            'haber_bs' => 'required'
         ]);
-        $fecha = substr($request->fecha,6,4) . '-' . substr($request->fecha,3,2) . '-' . substr($request->fecha,0,2);
-        if($fecha >= Carbon::now()->toDateString()){
-            return back()->withInput()->with('danger','No puede cargar datos a una fecha futura...');
-        }
-        $cotizacion = Cotizaciones::where('fecha',$fecha)->first();
-        if($cotizacion == null){
-            return back()->withInput()->with('info','Tipo de Cambio y UFV no encontradas...');
-        }
-        
-        $ultimoComprobante = Comprobantes::whereNotNull('nro_comprobante')
-                                        ->where('tipo',$request->tipo)
-                                        ->where('centro_id',$request->centro_id)
-                                        ->whereMonth('fecha', date('m', strtotime($fecha)))
-                                        ->whereYear('fecha', date('Y', strtotime($fecha)))
-                                        ->orderBy('nro_comprobante_id','desc')
-                                        ->first();
-        if($ultimoComprobante == null){
-            $numero = 1;
-        }else{
-            $numero = intval($ultimoComprobante != null ? $ultimoComprobante->nro_comprobante_id: 0) + 1;
-        }
-        $tipos = ['','CI','CE','CT'];
-        $codigo = $tipos[$request->tipo] . '1';
-        $fecha = Carbon::parse($fecha);
-        $codigo = $codigo . "-" . substr($fecha->toDateString(),2,2);
-        if($fecha->month < 10){
-            $codigo = $codigo . '0' . $fecha->month;
-        }else{
-            $codigo = $codigo . $fecha->month;
-        }
-        $nro_comprobante = $codigo . "-" . (str_pad($numero,4,"0",STR_PAD_LEFT));
-        dd($numero, $nro_comprobante);
-        if(isset($request->entregado_recibido)){
-            $entregado_recibido = $request->entregado_recibido;
-        }else{
-            $entregado_recibido = null;
-        }
-        $comprobante = new Comprobantes();
-        $comprobante->user_id = $request->user_id;
-        $comprobante->centro_id = $request->centro;
-        $comprobante->nro_comprobante = $nro_comprobante;
-        $comprobante->nro_compronbante_id = $numero;
-        $comprobante->tipo_cambio = $request->taza_cambio;
-        $comprobante->ufv = $request->ufv;
-        $comprobante->tipo = $request->tipo;
-        $comprobante->entregado_recibido = $entregado_recibido;
-        $comprobante->fecha = $fecha;
-        $comprobante->moneda = $request->moneda;
-        $comprobante->status = 0;
-        $comprobante->status_validate = 1;
-        $comprobante->save();
 
-        return redirect()->route('comprobantesdetalles.create',$comprobante)->with('message','Los datos ingresados se guardaron correctamente...');
+        $comprobanteDetalle = new ComprobantesDetalle();
+        $comprobanteDetalle->comprobante_id = $request->comprobante_id;
+        $comprobanteDetalle->plancuenta_id = $request->plan_cuenta;
+        $comprobanteDetalle->plancuentaauxiliar_id = $request->plan_cuenta_auxiliar;
+        $comprobanteDetalle->proyecto_id = $request->proyecto;
+        $comprobanteDetalle->centro_id = $request->centro;
+        $comprobanteDetalle->glosa = $request->glosa;
+        $comprobanteDetalle->debe = $request->debe_bs;
+        $comprobanteDetalle->haber = $request->haber_bs;
+        $comprobanteDetalle->tipo_transaccion = $request->tipo_transaccion;
+        $comprobanteDetalle->cheque_nro = $request->cheque_nro;
+        $comprobanteDetalle->cheque_orden = $request->cheque_orden;
+        $comprobanteDetalle->save();
+        
+        return redirect()->route('comprobantesdetalles.create',$request->comprobante_id)->with('message','Los datos ingresados se guardaron correctamente...');
     }
 
     /*public function editar($id){

@@ -266,11 +266,17 @@ return [
             'label_color' => 'success',
         ],
         [
+            'text'        => 'Plan de cuentas Aux.',
+            'route'         => 'plandecuentasauxiliares.index',
+            'icon'        => 'fas fa-list',
+            'label_color' => 'success',
+        ],
+        /*[
             'text'        => 'Comprobantes',
             'route'         => 'comprobantes.index',
             'icon'        => 'fas fa-list-alt',
             'label_color' => 'success',
-        ],
+        ],*/
         //['header' => 'account_settings'],
         /*[
             'text' => 'profile',

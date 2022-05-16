@@ -13,7 +13,8 @@
                 <div class="card-title"><b>DETALLE DE COMPROBANTE</b></div>
             </div>
             <div class="card-body">
-                {{--{!! Form::model(Request::all(),['route'=> ['comprobantes.store'],'onsubmit' => "return validacion_form()"]) !!}--}}
+                {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.insertar']]) !!}
+                    {{Form::hidden('comprobante_id',$comprobante->id)}}
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-2">
                             {{Form::label('Nro','Nro',['class' => 'd-inline'])}}
@@ -32,25 +33,24 @@
                         </div>
                         <div class="col-md-3">
                             {{Form::label('nombre','Nombre',['class' => 'd-inline'])}}
-                            {{--{{Form::hidden('user_id',$user_id)}}--}}
                             {{Form::text('nombre',strtoupper($user->name),['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'nombre'])}}
                             {!! $errors->first('nombre','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-1">
                             {{ Form::label('moneda','Moneda',['class' => 'd-inline font-verdana-bg'])}}
-                            {!! Form::text('moneda', $comprobante->moneda, ['readonly'=>true,'class' => 'form-control form-control-sm ' . ( $errors->has('moneda') ? ' is-invalid' : '' )]) !!}
+                            {!! Form::text('moneda', $comprobante->moneda, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('moneda') ? ' is-invalid' : '' )]) !!}
                             {!! $errors->first('moneda','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-2">
-                            {{ Form::label('centro','Centro',['class' => 'd-inline font-verdana-bg'])}}
-                            {!! Form::text('centro', $comprobante->centro_id, ['readonly'=>true,'class' => 'form-control form-control-sm ' . ( $errors->has('centro') ? ' is-invalid' : '' )]) !!}
-                            {!! $errors->first('centro','<span class="invalid-feedback d-block">:message</span>') !!}
+                            {{ Form::label('empresa','Empresa',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::text('empresa', $empresa->nombre, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('empresa') ? ' is-invalid' : '' )]) !!}
+                            {!! $errors->first('empresa','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                     </div>
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-2">
-                            {{Form::label('Fecha','Fecha',['class' => 'd-inline'])}}
-                            {{Form::text('fecha',$comprobante->fecha,['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'fecha','data-language' => 'es', 'placeholder' => 'dd/mm/yyyy', 'autocomplete' => 'off', 'onkeyup' => 'countChars(this);'])}}
+                            {{Form::label('Fecha','Fecha Comprobante',['class' => 'd-inline'])}}
+                            {{Form::text('fecha',\Carbon\Carbon::parse($comprobante->fecha)->format('d/m/Y'),['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'fecha','data-language' => 'es', 'placeholder' => 'dd/mm/yyyy', 'autocomplete' => 'off', 'onkeyup' => 'countChars(this);'])}}
                             {!! $errors->first('fecha','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-2">
@@ -63,7 +63,79 @@
                             {{Form::text('concepto',$comprobante->concepto,['readonly'=>true,'class'=>'form-control form-control-sm'. ( $errors->has('concepto') ? ' is-invalid' : '' )])}}
                         </div>
                     </div>
-                    <div class="form-group row font-verdana-bg">
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            {{Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('proyecto',$proyectos,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('proyectos') ? ' is-invalid' : '' ),'id'=>'proyectos']) !!}
+                            {!! $errors->first('proyecto','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-3">
+                            {{Form::label('centro','Centro',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('centro',$centros,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('centros') ? ' is-invalid' : '' ),'id'=>'centros']) !!}
+                            {!! $errors->first('centro','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-6">
+                            {{Form::label('plan_cuenta','Cuenta',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('plan_cuenta',$plan_cuentas,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('plan_cuentas') ? ' is-invalid' : '' ),'id'=>'plan_cuentas']) !!}
+                            {!! $errors->first('plan_cuenta','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            {{Form::label('plan_cuenta_auxiliar','Auxiliar',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('plan_cuenta_auxiliar',$plan_cuentas_auxiliares,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('plan_cuentas_auxiliares') ? ' is-invalid' : '' ),'id'=>'plan_cuentas_auxiliares']) !!}
+                            {!! $errors->first('plan_cuenta_auxiliar','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-2">
+                            {{Form::label('tipo_transaccion','Tipo',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('tipo_transaccion', array('CHEQUE'=>'CHEQUE','TRANSFERENCIA'=>'TRANSFERENCIA'), null, ['class' => 'form-control form-control-sm ', 'placeholder' => '--Seleccionar--', 'id' => 'tipo_transaccion']) !!}
+                        </div>
+                        <div class="col-md-2">
+                            {{Form::label('cheque_nro','N° Cheque',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::text('cheque_nro',null,['class'=>'text-uppercase form-control form-control-sm'. ( $errors->has('cheque_nro') ? ' is-invalid' : '' ),'autocomplete'=>'off'])}}
+                            {!! $errors->first('cheque_nro','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-4">
+                            {{Form::label('cheque_orden','A la Orden',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::text('cheque_orden',null,['class'=>'text-uppercase form-control form-control-sm'. ( $errors->has('cheque_orden') ? ' is-invalid' : '' ),'autocomplete'=>'off'])}}
+                            {!! $errors->first('cheque_orden','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            {{Form::label('glosa','Glosa',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::text('glosa',null,['class'=>'form-control form-control-sm'. ( $errors->has('glosa') ? ' is-invalid' : '' ),'autocomplete'=>'off','id'=>'glosa'])}}
+                            {!! $errors->first('glosa','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-2 vista-debe-bs">
+                            {{Form::label('debe_bs','Debe (Bs.)',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::text('debe_bs',null,['class'=>'form-control form-control-sm'. ( $errors->has('debe_bs') ? ' is-invalid' : '' ),'id'=>'debe_bs','autocomplete'=>'off'])}}
+                            {!! $errors->first('debe_bs','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-2 vista-haber-bs">
+                            {{Form::label('haber_bs','Haber (Bs.)',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::text('haber_bs',null,['class'=>'form-control form-control-sm'. ( $errors->has('haber_bs') ? ' is-invalid' : '' ),'id'=>'haber_bs','autocomplete'=>'off'])}}
+                            {!! $errors->first('haber_bs','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-2 vista-debe-sus">
+                            {{Form::label('debe_sus','Debe ($u$)',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::text('debe_sus',null,['class'=>'form-control form-control-sm'. ( $errors->has('debe_sus') ? ' is-invalid' : '' ),'id'=>'debe_sus','autocomplete'=>'off', 'readonly'=>'readonly'])}}
+                            {!! $errors->first('debe','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-2 vista-haber-sus">
+                            {{Form::label('haber_sus','Haber ($u$)',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::text('haber_sus',null,['class'=>'form-control form-control-sm'. ( $errors->has('haber_sus') ? ' is-invalid' : '' ),'id'=>'haber_sus','autocomplete'=>'off', 'readonly'=>'readonly'])}}
+                            {!! $errors->first('haber_sus','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-primary font-verdana-bg" type="submit" id="insertar">
+                                <i class="fa fa-arrow-down"></i>&nbsp;Insertar</button>
+                        </div>
+                    </div>
+                    {{--<div class="form-group row font-verdana-bg">
                         <div class="col-md-12 text-right">
                             <br>
                             <a href="{{route('comprobantes.index')}}" class="btn btn-danger font-verdana-bg">
@@ -73,8 +145,30 @@
                                 <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Registrar&nbsp;
                             </button>
                         </div>
+                    </div>--}}
+                {!! Form::close()!!}
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr class="table-header font-verdana">
+                                    <td class="text-center p-1"><b>NRO</b></td>
+                                    <td class="text-center p-1"><b>CUENTA</b></td>
+                                    <td class="text-center p-1"><b>PROYECTO</b></td>
+                                    <td class="text-center p-1"><b>CENTRO</b></td>
+                                    <td class="text-center p-1"><b>AUXILIAR</b></td>
+                                    <td class="text-center p-1"><b>GLOSA</b></td>
+                                    <td class="text-center p-1"><b>DEBE</b></td>
+                                    <td class="text-center p-1"><b>HABER</b></td>
+                                    <td colspan="2" class="text-center p-1"><i class="fa fa-bars" aria-hidden="true"></i></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
-                {{--{!! Form::close()!!}--}}
+                </div>
             </div>
         </div>
     </div>
@@ -84,15 +178,20 @@
 @section('css')
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/datepicker/datepicker.min.css"/>
+    <link rel="stylesheet" href="/css/select2.min.css" type="text/css">
 @stop
 
 @section('js')
     <script src="/datepicker/datepicker.min.js" type="text/javascript"></script>
     <script src="/datepicker/datepicker.es.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/select2.min.js"></script>
+    {{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
     <script>
-        /*$(document).ready(function() {
-            $(':text,:hidden').val(''); //Limpia los input al refrescar la pagina
-        } );*/
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "--Seleccionar--"
+            });
+        } );
 
         function valideKey(evt){
             var code = (evt.which) ? evt.which : evt.keyCode;

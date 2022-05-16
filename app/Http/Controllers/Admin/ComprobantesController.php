@@ -12,15 +12,23 @@ use DB;
 class ComprobantesController extends Controller
 {
     public function index(){
-        return view('comprobantes.index');
+        $fechaActual = Carbon::now();
+        $cotizacion = Cotizaciones::where('fecha',Carbon::now()->toDateString())->first();
+        //dd($cotizacion);
+        /*if($cotizacion == null){
+            return redirect()->route('cotizaciones.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
+        }*/
+        $comprobantes = DB::table('comprobantes as a')->join('empresas as b','b.id','a.empresa_id')->orderBy('a.id','desc')->paginate();
+        return view('comprobantes.index',compact('comprobantes'));
     }
 
     public function create(){
-        $date = date('Y-m-d');
+        //$date = date('Y-m-d');
+        $date = '2022-05-15';
         $tipo_cambio = Cotizaciones::where('fecha',$date)->where('deleted_at',null)->first();
-        if($tipo_cambio == null){
+        /*if($tipo_cambio == null){
             return back()->with('danger', 'No exite un tipo de cambio para el dia de hoy...');
-        }
+        }*/
         $nombre = auth()->user()->name;
         $user_id = auth()->user()->id;
         return view('comprobantes.create',compact('tipo_cambio','nombre','user_id'));
@@ -28,7 +36,7 @@ class ComprobantesController extends Controller
 
     public function store(Request $request){//dd($request->all());
         $request->validate([
-            'centro'=> 'required',
+            'empresa'=> 'required',
             'tipo'=> 'required',
             'fecha'=> 'required',
             'entregado_recibido'=> 'required_unless:tipo,3',
@@ -36,7 +44,7 @@ class ComprobantesController extends Controller
             'taza_cambio' => 'required',
         ]);
         $fecha = substr($request->fecha,6,4) . '-' . substr($request->fecha,3,2) . '-' . substr($request->fecha,0,2);
-        if($fecha >= Carbon::now()->toDateString()){
+        if($fecha > Carbon::now()->toDateString()){
             return back()->withInput()->with('danger','No puede cargar datos a una fecha futura...');
         }
         $cotizacion = Cotizaciones::where('fecha',$fecha)->first();
@@ -45,7 +53,7 @@ class ComprobantesController extends Controller
         }
         $ultimoComprobante = Comprobantes::whereNotNull('nro_comprobante')
                                         ->where('tipo',$request->tipo)
-                                        ->where('centro_id',$request->centro)
+                                        ->where('empresa_id',$request->empresa)
                                         ->whereMonth('fecha', date('m', strtotime($fecha)))
                                         ->whereYear('fecha', date('Y', strtotime($fecha)))
                                         ->orderBy('nro_comprobante_id','desc')
@@ -72,7 +80,7 @@ class ComprobantesController extends Controller
         }
         $comprobante = new Comprobantes();
         $comprobante->user_id = $request->user_id;
-        $comprobante->centro_id = $request->centro;
+        $comprobante->empresa_id = $request->empresa;
         $comprobante->nro_comprobante = $nro_comprobante;
         $comprobante->nro_comprobante_id = $numero;
         $comprobante->tipo_cambio = $request->taza_cambio;

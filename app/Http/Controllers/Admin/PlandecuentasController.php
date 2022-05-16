@@ -77,7 +77,7 @@ class PlandecuentasController extends Controller
            'codigo_padre' => 'required',
            'nombre_padre' => 'required',
            'nombre_dependiente' => 'required',
-           'descripcion' => 'required',
+           //'descripcion' => 'required',
            'cuenta_detalle' => 'required',
            'cheque' => 'required'  
         ]);

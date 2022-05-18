@@ -7,13 +7,26 @@ use App\Http\Controllers\Admin\PlandecuentasAuxiliaresController;
 use App\Http\Controllers\Admin\CotizacionesController;
 use App\Http\Controllers\Admin\ComprobantesController;
 use App\Http\Controllers\Admin\ComprobantesDetalleController;
+use App\Http\Controllers\Admin\ComprobantesFiscalesController;
+use App\Http\Controllers\Admin\FacturasController;
 
+//Facturas
+Route::get('/factura.comprobante/{comprobante_id}', [FacturasController::class, 'comprobanteCreate'])->name('facturas.comprobante.create');
+//Comprobantes Fiscales
+Route::get('/comprobantesfiscales/show/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'show'])->name('comprobantes.fiscales.show');
+route::get('/comprobantesfiscales', [ComprobantesFiscalesController::class, 'index'])->name('comprobantes.fiscales.index');
 //Comprobantes Detalles
+Route::post('/comprobantesdetalles/finalizar', [ComprobantesDetalleController::class, 'finalizar'])->name('comprobantesdetalles.finalizar');
+Route::get('/comprobantesdetalles/get_plancuenta/{id}', [ComprobantesDetalleController::class, 'getPlanCuenta']);
 Route::post('/comprobantesdetalles/insertar', [ComprobantesDetalleController::class, 'insertar'])->name('comprobantesdetalles.insertar');
 route::get('/comprobantesdetalles/create/{comprobante}', [ComprobantesDetalleController::class, 'create'])->name('comprobantesdetalles.create');
 //Comprobantes
+Route::get('/comprobantes/rechazar/{comprobante_id}', [ComprobantesController::class, 'rechazar'])->name('comprobantes.rechazar');
+Route::get('/comprobantes/aprobar/{comprobante_id}', [ComprobantesController::class, 'aprobar'])->name('comprobantes.aprobar');
+Route::get('/comprobantes/show/{comprobante_id}', [ComprobantesController::class, 'show'])->name('comprobantes.show');
 Route::post('/comprobantes/store', [ComprobantesController::class, 'store'])->name('comprobantes.store');
 route::get('/comprobantes/create', [ComprobantesController::class, 'create'])->name('comprobantes.create');
+route::post('/comprobantes/search', [ComprobantesController::class, 'search'])->name('comprobantes.search');
 route::get('/comprobantes', [ComprobantesController::class, 'index'])->name('comprobantes.index');
 //Cotizaciones
 //route::get('/cotizacionesAjax', [CotizacionesController::class, 'indexAjax'])->name('cotizaciones.indexAjax');

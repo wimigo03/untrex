@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
-class Comprobantes extends Model
+class ComprobantesFiscales extends Model
 {
-    protected $table = 'comprobantes';
+    protected $table = 'comprobantes_fiscales';
     protected $fillable = [
+        'comprobante_interno_id',
         'user_id',
         'socio_id',
         'user_autorizado_id',
@@ -23,9 +24,7 @@ class Comprobantes extends Model
         'concepto',
         'monto',
         'moneda',
-        'copia',
-        'status',
-        'status_validate'
+        'status'
     ];
     use SoftDeletes;
     protected $dates =['deleted_at'];

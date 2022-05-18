@@ -44,9 +44,9 @@
                             {!! $errors->first('moneda','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
-                            {{ Form::label('empresa','Empresa',['class' => 'd-inline font-verdana-bg'])}}
-                            {!! Form::select('empresa', array('1'=>'Untrex'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm ' . ( $errors->has('empresa') ? ' is-invalid' : '' )]) !!}
-                            {!! $errors->first('empresa','<span class="invalid-feedback d-block">:message</span>') !!}
+                            {{ Form::label('socio','Socio',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('socio', $socios, null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm ' . ( $errors->has('socio') ? ' is-invalid' : '' )]) !!}
+                            {!! $errors->first('socio','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
                             <div class="row">
@@ -61,9 +61,14 @@
                             {!! $errors->first('fecha','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-2">
-                            {{Form::label('tipo','Tipo:',['class' => 'd-inline font-verdana-bg'])}}
+                            {{Form::label('tipo','Tipo',['class' => 'd-inline font-verdana-bg'])}}
                             {!! Form::select('tipo', array('1'=>'INGRESO','2'=>'EGRESO','3'=>'TRASPASO'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm ' . ( $errors->has('tipo') ? ' is-invalid' : '' )]) !!}
                             {!! $errors->first('tipo','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-2">
+                            {{Form::label('copia','¿Con copia?',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('copia', array('1'=>'Si','0'=>'No'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm ' . ( $errors->has('tipo') ? ' is-invalid' : '' )]) !!}
+                            {!! $errors->first('copia','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                     </div>
                     <div class="form-group row font-verdana-bg">

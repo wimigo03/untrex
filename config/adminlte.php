@@ -271,12 +271,18 @@ return [
             'icon'        => 'fas fa-list',
             'label_color' => 'success',
         ],
-        /*[
-            'text'        => 'Comprobantes',
+        [
+            'text'        => 'Comprobantes B1',
             'route'         => 'comprobantes.index',
             'icon'        => 'fas fa-list-alt',
             'label_color' => 'success',
-        ],*/
+        ],
+        [
+            'text'        => 'Comprobantes B2',
+            'route'         => 'comprobantes.fiscales.index',
+            'icon'        => 'fas fa-list-alt',
+            'label_color' => 'success',
+        ],
         //['header' => 'account_settings'],
         /*[
             'text' => 'profile',

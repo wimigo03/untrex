@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
-class ComprobantesDetalle extends Model
+class ComprobantesFiscalesDetalle extends Model
 {
-    protected $table = 'comprobantes_detalles';
+    protected $table = 'comprobantes_fiscales_detalles';
     protected $fillable = [
-        'id',
-        'comprobante_id',
+        'comprobante_fiscal_id',
         'plancuenta_id',
         'plancuentaauxiliar_id',
         'proyecto_id',

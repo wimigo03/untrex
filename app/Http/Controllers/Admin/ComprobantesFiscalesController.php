@@ -13,7 +13,7 @@ use App\Socios;
 use Carbon\Carbon;
 use DB;
 
-class ComprobantesController extends Controller
+class ComprobantesFiscalesController extends Controller
 {
     public function index(){
         $fechaActual = Carbon::now();
@@ -21,56 +21,34 @@ class ComprobantesController extends Controller
         if($cotizacion == null){
             return redirect()->route('cotizaciones.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
         }
-        $socios = Socios::pluck('empresa','id');
-        $comprobantes = DB::table('comprobantes as a')
-                    ->join('socios as b','b.id','a.socio_id')
-                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia','a.status_validate')
-                    ->orderBy('a.id','desc')->paginate();
-        return view('comprobantes.index',compact('comprobantes','socios'));
+        $comprobantes_fiscales = DB::table('comprobantes_fiscales as a')
+                                    ->join('socios as b','b.id','a.socio_id')
+                                    ->select('a.id as comprobante_fiscal_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status')
+                                    ->orderBy('a.id','desc')->paginate();
+        return view('comprobantes-fiscales.index',compact('comprobantes_fiscales'));
     }
 
-    public function search(Request $request){
-        //dd($request->all());
-        if($request->fecha != null){
-            $fecha = substr($request->fecha,6,4) . '-' . substr($request->fecha,3,2) . '-' . substr($request->fecha,0,2);
-        }else{
-            $fecha = null;
-        }
-        $socios = Socios::pluck('empresa','id');
-        $comprobantes = DB::table('comprobantes as a')
-                    ->join('socios as b','b.id','a.socio_id')
-                    ->where('a.fecha',"LIKE",$fecha)
-                    ->where('a.nro_comprobante',"LIKE",'%' . $request->nro_comprobante . '%')
-                    ->where('b.id',"LIKE",$request->socio)
-                    ->where('a.tipo',"LIKE",$request->tipo)
-                    ->where('a.status',"LIKE",$request->estado)
-                    //->where('a.concepto',"LIKE","%".$request->concepto."%")
-                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia','a.status_validate')
-                    ->orderBy('a.id','desc')->paginate();
-        return view('comprobantes.index',compact('comprobantes','socios'));
-    }
-
-    public function show($comprobante_id){
-        $comprobante = DB::table('comprobantes as a')
-                        ->join('users as b','b.id','a.user_id')
-                        ->join('socios as c','c.id','a.socio_id')
-                        ->leftjoin('users as d','d.id','a.user_autorizado_id')
-                        ->where('a.id',$comprobante_id)
-                        ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
-                        DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
-                        'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto')
-                        ->first();
-        $comprobante_detalle = DB::table('comprobantes_detalles as a')
-                                ->join('plan_cuentas as b','b.id','a.plancuenta_id')
-                                ->join('proyectos as c','c.id','a.proyecto_id')
-                                ->join('centros as d','d.id','a.centro_id')
-                                ->join('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
-                                ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
-                                ->where('a.comprobante_id',$comprobante_id)
-                                ->where('a.deleted_at',null)->get();
-        $total_debe = $comprobante_detalle->sum('debe');
-        $total_haber = $comprobante_detalle->sum('haber');
-        return view('comprobantes.show',compact('comprobante','comprobante_detalle','total_debe','total_haber'));
+    public function show($comprobante_fiscal_id){
+        $comprobante_fiscal = DB::table('comprobantes_fiscales as a')
+                                ->join('users as b','b.id','a.user_id')
+                                ->join('socios as c','c.id','a.socio_id')
+                                ->leftjoin('users as d','d.id','a.user_autorizado_id')
+                                ->where('a.id',$comprobante_fiscal_id)
+                                ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
+                                DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
+                                'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.monto')
+                                ->first();
+        $comprobante_fiscal_detalle = DB::table('comprobantes_fiscales_detalles as a')
+                                        ->join('plan_cuentas as b','b.id','a.plancuenta_id')
+                                        ->join('proyectos as c','c.id','a.proyecto_id')
+                                        ->join('centros as d','d.id','a.centro_id')
+                                        ->join('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
+                                        ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
+                                        ->where('a.comprobante_fiscal_id',$comprobante_fiscal_id)
+                                        ->where('a.deleted_at',null)->get();
+        $total_debe = $comprobante_fiscal_detalle->sum('debe');
+        $total_haber = $comprobante_fiscal_detalle->sum('haber');
+        return view('comprobantes-fiscales.show',compact('comprobante_fiscal','comprobante_fiscal_detalle','total_debe','total_haber'));
     }
 
     public function create(){

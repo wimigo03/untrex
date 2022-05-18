@@ -10,15 +10,15 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>DETALLE DE COMPROBANTE</b></div>
+                <div class="card-title"><b>FACTURA COMPROBANTE</b></div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.insertar']]) !!}
-                    @include('comprobantes-detalles.partials.form1')
-                {!! Form::close()!!}
-                {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.finalizar']]) !!}
+                {{--{!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.insertar']]) !!}--}}
+                    @include('comprobantes-facturas.partials.form1')
+                {{--{!! Form::close()!!}--}}
+                {{--{!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.finalizar']]) !!}
                     @include('comprobantes-detalles.partials.form2')
-                {!! Form::close()!!}
+                {!! Form::close()!!}--}}
             </div>
         </div>
     </div>

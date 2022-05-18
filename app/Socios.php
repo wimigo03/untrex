@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
-class Empresas extends Model
+class Socios extends Model
 {
-    protected $table = 'empresas';
+    protected $table = 'socios';
     protected $fillable = [
-        'nombre',
+        'empresa',
         'abreviatura',
         'direccion',
         'nit',

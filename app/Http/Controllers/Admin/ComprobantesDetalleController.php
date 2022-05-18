@@ -15,66 +15,49 @@ use DB;
 class ComprobantesDetalleController extends Controller
 {
     public function index(){
-        //
+        //index
     }
 
     public function create(Comprobantes $comprobante){
-        //dd($comprobante, "Dilson");
         $user = DB::table('users')->where('id',$comprobante->user_id)->first();
-        $empresa = DB::table('empresas')->where('id',$comprobante->empresa_id)->first();
+        $socio = DB::table('socios')->where('id',$comprobante->socio_id)->first();
         $proyectos = DB::table('proyectos')->pluck('nombre','id');
         $centros = DB::table('centros')->pluck('nombre','id');
         $plan_cuentas = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
-                                    ->where('empresa_id',$comprobante->empresa_id)
+                                    ->where('socio_id',$comprobante->socio_id)
                                     ->where('estado',1)                                    
-                                    ->where('cuenta_detalle','=','1')
+                                    ->where('cuenta_detalle','1')
                                     ->pluck('nombre','id');
-        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::select(DB::raw("CONCAT(id,'&nbsp;|&nbsp;',IF(ISNULL(proveedor_id), IF(ISNULL(user_id),IF(ISNULL(maquinaria_id),'GEN: ','EQU: '),'PER: '), 'PROV: '),nombre) AS nombre"),'id')
-        
-                                    ->where('estado','1')->pluck('nombre','id');
-        /*$comprobante = Comprobante::where('id',$comprobante->id)->first();
-        $query = ComprobantesDetalle::where('idcomprobante',$comprobante->id);
-        $plan_cuentas = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) AS nombre"),'id')
-                                    ->where('empresa_id',$comprobante->empresa_id)
-                                    ->where('status',1)                                    
-                                    ->where('cuenta_detalle','=','1')
-                                    ->get()->pluck('nombre','id');
-        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::select(DB::raw("CONCAT(id,'&nbsp;|&nbsp;',IF(ISNULL(proveedor_id), IF(ISNULL(user_id),IF(ISNULL(maquinaria_id),'GEN: ','EQU: '),'PER: '), 'PROV: '),nombre) AS nombre"),'id')
-                                                            ->where('status','1')
-                                                            ->get()
-                                                            ->pluck('nombre','id');
-        $suma_total_debe = $query->sum('debe');
-        $suma_total_haber = $query->sum('haber');
-        $comprobantes_detalles = $query->orderBy('id', 'DESC')->paginate();
-        $detalles = $query->get();
-        $proyectos = Proyecto::where('empresa_id',$comprobante->empresa_id)->get()->pluck('name','id');
-        $centros = Centro::get()->pluck('name','id');
-        $relaciones = FacturaComprobanteDetalle::get();
-        $array = array();
-        foreach ($relaciones as $relacion) {
-            foreach ($detalles as $det) {
-                if($det->id == $relacion->comprobante_detalle_id){
-                    array_push($array,$relacion->comprobante_detalle_id);
-                }
-            }
-        }
-        $fechaComprobante = Carbon::parse($comprobante->fecha)->format('d-m-Y');
-        $empresas = Empresa::where('tipo',1)->get()->pluck('name','id');
-        $datoEmpresa = Empresa::where('tipo',1)->where('id',$comprobante->empresa_id)->first();
-        return view('comprobantesdetalle.create', compact('empresas','fechaComprobante','comprobante','comprobantes_detalles','plan_cuentas','plan_cuentas_auxiliares','suma_total_debe','suma_total_haber','proyectos','centros','array','datoEmpresa'));*/
-        return view('comprobantes-detalles.create',compact('comprobante','user','empresa','proyectos','centros','plan_cuentas','plan_cuentas_auxiliares'));
+        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::where('estado',1)->pluck('nombre','id');
+        $comprobante_detalle = DB::table('comprobantes_detalles as a')
+                                ->join('plan_cuentas as b','b.id','a.plancuenta_id')
+                                ->join('proyectos as c','c.id','a.proyecto_id')
+                                ->join('centros as d','d.id','a.centro_id')
+                                ->join('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
+                                ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
+                                ->where('a.comprobante_id',$comprobante->id)
+                                ->where('a.deleted_at',null)->get();
+        $total_debe = $comprobante_detalle->sum('debe');
+        $total_haber = $comprobante_detalle->sum('haber');
+        return view('comprobantes-detalles.create',compact('comprobante','user','socio','proyectos','centros','plan_cuentas','plan_cuentas_auxiliares','comprobante_detalle','total_debe','total_haber'));
+    }
+
+    public function getPlanCuenta($id){
+        $plan_cuenta = PlanCuentas::where('id',$id)->first();
+        if($plan_cuenta){            
+            return response()->json($plan_cuenta);
+        } else return response()->json(['error'=>'Algo Salio Mal']);
     }
 
     public function insertar(Request $request){
-        //dd($request->all());
         $request->validate([
             'proyecto'=> 'required',
             'centro'=> 'required',
             'plan_cuenta'=> 'required',
             'plan_cuenta_auxiliar'=> 'required',
             'glosa'=> 'required',
-            'debe_bs' => 'required',
-            'haber_bs' => 'required'
+            'debe_bs'=> 'required_without:haber_bs',
+            'haber_bs'=> 'required_without:debe_bs'
         ]);
 
         $comprobanteDetalle = new ComprobantesDetalle();
@@ -94,58 +77,16 @@ class ComprobantesDetalleController extends Controller
         return redirect()->route('comprobantesdetalles.create',$request->comprobante_id)->with('message','Los datos ingresados se guardaron correctamente...');
     }
 
-    /*public function editar($id){
-        $datos = PlanCuentas::find($id);
-        if($datos->cuenta_detalle == 1){
-            $cuenta_detalle = "Si";
-        }else{
-            $cuenta_detalle = "No";
+    public function finalizar(Request $request){
+        //dd($request->all());
+        if($request->total_debe != $request->total_haber){
+            return back()->withInput()->with('danger','El total debe y haber no son iguales...');
         }
-        if($datos->cheque == 1){
-            $cheque = "Si";
-        }else{
-            $cheque = "No";
-        }
-        $parent = PlanCuentas::find($datos->parent_id);
-        return view('plandecuentas.edit',compact('datos','parent','cuenta_detalle','cheque'));
+        $total = $request->total_debe;
+        $comprobante = Comprobantes::find($request->comprobante_id);
+        $comprobante->monto = $total;
+        $comprobante->status_validate = 1;
+        $comprobante->update();
+        return redirect()->route('comprobantes.index')->with('message','El comprobante '. $comprobante->nro_comprobante . ' fue registrado con exito...');
     }
-
-    public function update(Request $request){
-        
-        $datos = PlanCuentas::find($request->plancuenta_id);
-        $datos->nombre = $request->nombre_dependiente;
-        $datos->descripcion = $request->descripcion;
-        $datos->update();
-        return redirect()->route('plandecuentas.index')->with('info','Plan de cuenta modificado con exito...');
-    }
-
-    public function ajaxSeleccionar($id){
-        $plandecuenta = PlanCuentas::find($id);
-        $plandecuentaParent = PlanCuentas::find($plandecuenta->parent_id);
-        $codigo_padre = 0;
-        $cuenta_detalle = "NO";
-        $cheque = "NO";
-        if($plandecuentaParent != null){
-            $codigo_padre = $plandecuentaParent->codigo;
-            if($plandecuenta->cuenta_detalle == '1'){
-                $cuenta_detalle = "SI";
-            }
-            if($plandecuenta->cheque == '1'){
-                $cheque = "SI";
-            }
-        }
-        if($plandecuenta->count()>0){
-            return response()->json([
-                'id'=>$plandecuenta->id,
-                'codigo_padre' => $codigo_padre,
-                'codigo'=>$plandecuenta->codigo,
-                'nombre'=>$plandecuenta->nombre,
-                'parent_id'=>$plandecuenta->parent_id,
-                'descripcion'=>$plandecuenta->descripcion,
-                'cuenta_detalle'=>$cuenta_detalle,
-                'cheque'=>$cheque,
-            ]);
-        }
-        return response()->json(['error'=>'Algo Salio Mal']);
-    }*/
 }

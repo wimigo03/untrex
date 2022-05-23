@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-warning text-white">
+            <div class="card-header bg-gradient-secondary text-white">
                 <div class="card-title"><b>CREAR COTIZACION</b></div>
             </div>
             <div class="card-body">

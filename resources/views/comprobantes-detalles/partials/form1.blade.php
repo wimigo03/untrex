@@ -88,12 +88,12 @@
         {{Form::text('cheque_orden',null,['class'=>'text-uppercase form-control form-control-sm'. ( $errors->has('cheque_orden') ? ' is-invalid' : '' ),'autocomplete'=>'off'])}}
         {!! $errors->first('cheque_orden','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
         {{Form::label('plan_cuenta_auxiliar','Auxiliar',['class' => 'd-inline font-verdana-bg'])}}
         {!! Form::select('plan_cuenta_auxiliar',$plan_cuentas_auxiliares,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('plan_cuentas_auxiliares') ? ' is-invalid' : '' ),'id'=>'plan_cuentas_auxiliares']) !!}
         {!! $errors->first('plan_cuenta_auxiliar','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
         {{Form::label('glosa','Glosa',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('glosa',null,['class'=>'form-control form-control-sm'. ( $errors->has('glosa') ? ' is-invalid' : '' ),'autocomplete'=>'off','id'=>'glosa'])}}
         {!! $errors->first('glosa','<span class="invalid-feedback d-block">:message</span>') !!}

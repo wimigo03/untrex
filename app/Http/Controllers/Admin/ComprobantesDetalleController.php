@@ -18,13 +18,13 @@ class ComprobantesDetalleController extends Controller
         //index
     }
 
-    public function create(Comprobantes $comprobante){
+    public function create(Comprobantes $comprobante){//dd($comprobante);
         $user = DB::table('users')->where('id',$comprobante->user_id)->first();
         $socio = DB::table('socios')->where('id',$comprobante->socio_id)->first();
         $proyectos = DB::table('proyectos')->pluck('nombre','id');
         $centros = DB::table('centros')->pluck('nombre','id');
         $plan_cuentas = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
-                                    ->where('socio_id',$comprobante->socio_id)
+                                    //->where('socio_id',$comprobante->socio_id)
                                     ->where('estado',1)                                    
                                     ->where('cuenta_detalle','1')
                                     ->pluck('nombre','id');
@@ -33,7 +33,7 @@ class ComprobantesDetalleController extends Controller
                                 ->join('plan_cuentas as b','b.id','a.plancuenta_id')
                                 ->join('proyectos as c','c.id','a.proyecto_id')
                                 ->join('centros as d','d.id','a.centro_id')
-                                ->join('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
+                                ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
                                 ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
                                 ->where('a.comprobante_id',$comprobante->id)
                                 ->where('a.deleted_at',null)->get();

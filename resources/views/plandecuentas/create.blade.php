@@ -14,7 +14,7 @@
 <div class="form-group row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-warning text-white">
+            <div class="card-header bg-gradient-secondary text-white">
                 <div class="card-title"><b>CREAR PLAN DE CUENTAS</b>
                     {{--<a href="{{ route('personal.index') }}" class="btn btn-sm pull-right text-white"><i class="fa fa-reply" aria-hidden="true"></i></a>--}}
                 </div>

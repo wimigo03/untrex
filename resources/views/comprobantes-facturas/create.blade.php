@@ -13,12 +13,10 @@
                 <div class="card-title"><b>FACTURA COMPROBANTE</b></div>
             </div>
             <div class="card-body">
-                {{--{!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.insertar']]) !!}--}}
+                {!! Form::open(['route'=>'facturas.comprobante.store','id'=>'form-factura']) !!}
                     @include('comprobantes-facturas.partials.form1')
-                {{--{!! Form::close()!!}--}}
-                {{--{!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.finalizar']]) !!}
-                    @include('comprobantes-detalles.partials.form2')
-                {!! Form::close()!!}--}}
+                {!! Form::close()!!}
+                @include('comprobantes-facturas.partials.form2')
             </div>
         </div>
     </div>
@@ -37,12 +35,24 @@
     <script type="text/javascript" src="/js/select2.min.js"></script>
     {{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
     <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
         $(document).ready(function() {
-            $('.cheque').hide();
+            //$('.cheque').hide();
             $('.select2').select2({
                 placeholder: "--Seleccionar--"
             });
-        } );
+
+            $('#insertar').show();
+            $('#insertar').click(function(e){
+                $(this).hide();
+                $('#loading').show();
+                $('#form-factura').submit();
+            });
+        });
 
         function valideKey(evt){
             var code = (evt.which) ? evt.which : evt.keyCode;
@@ -71,45 +81,90 @@
             autoClose: true
         });
 
-        function countChars(obj,dato){
+        function countChars(obj){
         var cont = obj.value.length;
-        console.log(cont,dato);
-        if(dato === 1){
-            if(cont > 0){
-                $('#haber_bs').attr('disabled',true);
-            }else{
-                $('#haber_bs').attr('disabled',false);
-            }
-        }else{
-            if(cont > 0){
-                $('#debe_bs').attr('disabled',true);
-            }else{
-                $('#debe_bs').attr('disabled',false);
+            if(cont > 9){
+                var fecha = document.getElementById("fecha").value;
+                var RegExPattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
+                if ((fecha.match(RegExPattern)) && (fecha!='')) {
+                    
+                } else {
+                    document.getElementById("message").innerHTML = "(No valido)";
+                    document.getElementById("fecha").value = "";
+                }
             }
         }
-            /*if(cont > 1){
-                $('#debe_bs').attr('disabled',true);
-            }else{
-                $('#haber_bs').attr('disabled',true);
+
+        function countCharsMonto(obj){
+            var cont = obj.value.length;
+            if(cont <= 0){
+                document.getElementById("monto").value = 0;
             }
-            */
         }
+        function countCharsExcento(obj){
+            var cont = obj.value.length;
+            if(cont <= 0){
+                document.getElementById("excento").value = 0;
+            }
+        }
+        function countCharsDescuento(obj){
+            var cont = obj.value.length;
+            if(cont <= 0){
+                document.getElementById("descuento").value = 0;
+            }
+        }
+
+        function limitDecimalPlaces(e, count){
+            if (e.target.value.indexOf('.') == -1) { return; }
+            if ((e.target.value.length - e.target.value.indexOf('.')) > count) {
+                e.target.value = parseFloat(e.target.value).toFixed(count);
+                }
+            }
+
+        function isNumberKey(evt){
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+            }
 
         $('#tipo').change(function() {
-            if($(this).val()==3){
-                $('label[for="entregado_recibido"]').hide();
-                $('input[name="entregado_recibido"]').val('');
-                $('input[name="entregado_recibido"]').hide();
-            } else{
-                $('label[for="entregado_recibido"]').show();
-                $('input[name="entregado_recibido"]').show();
-            }
-            if($(this).val()==1) $('label[for="entregado_recibido"]').empty().html('Hemos recibido de:');
-            if($(this).val()==2) $('label[for="entregado_recibido"]').empty().html('Hemos entregado a:');
-            if($(this).val()==3) $('label[for="entregado_recibido"]').empty().html('');
-        });
+                var tipo =  $(this).val();                
+                if(tipo == 'VENTA')
+                    $('#estado').show();
+                else
+                    $('#estado').hide();
+            });
 
-        $('#plan_cuentas').change(function() {
+        $('#proveedores').change(function() {
+            var proveedor_id = $(this).val();
+            if(proveedor_id != null)
+            {
+                if(proveedor_id.length != 0)
+                {
+                    if(proveedor_id!=202)
+                    {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/admin/facturaComprobante/get_proveedor/'+proveedor_id,
+                            dataType: 'json',
+                            data: {
+                                id: proveedor_id
+                            },
+                            success: function(json){
+                                console.log(json);
+                                $('#nit').empty().val(json.nit);
+                                $('#razon_social').empty().val(json.razon_social);
+                            },
+                            error: function(xhr){
+                                console.log(xhr.responseText);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+        /*$('#plan_cuentas').change(function() {
                 var idplancuenta = $(this).val();
                 if(idplancuenta!=null)
                 {
@@ -136,6 +191,6 @@
                         });
                     }
                 }
-            });
+            });*/
     </script>
 @stop

@@ -72,7 +72,7 @@
                                                         <i class="fas fa-edit" aria-hidden="true"></i>
                                                     </a>
                                                 @endif
-                                                <a href="{{--url('comprobantes.pdf', $comprobante_id )--}}" class="btn btn-xs btn-danger" target="_blank">
+                                                <a href="{{route('comprobantes.pdf', $datos->comprobante_id )}}" class="btn btn-xs btn-danger" target="_blank">
                                                     <i class="fas fa-file-pdf" aria-hidden="true"></i>
                                                 </a>
                                                 {{--<button class="btn btn-xs btn-danger" type="submit">

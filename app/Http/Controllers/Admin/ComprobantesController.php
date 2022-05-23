@@ -12,11 +12,11 @@ use App\ComprobantesFiscalesDetalle;
 use App\Socios;
 use Carbon\Carbon;
 use DB;
+use PDF;
 
 class ComprobantesController extends Controller
 {
     public function index(){
-        $fechaActual = Carbon::now();
         $cotizacion = Cotizaciones::where('fecha',Carbon::now()->toDateString())->first();
         if($cotizacion == null){
             return redirect()->route('cotizaciones.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
@@ -30,7 +30,6 @@ class ComprobantesController extends Controller
     }
 
     public function search(Request $request){
-        //dd($request->all());
         if($request->fecha != null){
             $fecha = substr($request->fecha,6,4) . '-' . substr($request->fecha,3,2) . '-' . substr($request->fecha,0,2);
         }else{
@@ -52,22 +51,22 @@ class ComprobantesController extends Controller
 
     public function show($comprobante_id){
         $comprobante = DB::table('comprobantes as a')
-                        ->join('users as b','b.id','a.user_id')
-                        ->join('socios as c','c.id','a.socio_id')
-                        ->leftjoin('users as d','d.id','a.user_autorizado_id')
-                        ->where('a.id',$comprobante_id)
-                        ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
-                        DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
-                        'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto')
-                        ->first();
+                    ->join('users as b','b.id','a.user_id')
+                    ->join('socios as c','c.id','a.socio_id')
+                    ->leftjoin('users as d','d.id','a.user_autorizado_id')
+                    ->where('a.id',$comprobante_id)
+                    ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
+                    DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
+                    'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto')
+                    ->first();
         $comprobante_detalle = DB::table('comprobantes_detalles as a')
-                                ->join('plan_cuentas as b','b.id','a.plancuenta_id')
-                                ->join('proyectos as c','c.id','a.proyecto_id')
-                                ->join('centros as d','d.id','a.centro_id')
-                                ->join('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
-                                ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
-                                ->where('a.comprobante_id',$comprobante_id)
-                                ->where('a.deleted_at',null)->get();
+                            ->join('plan_cuentas as b','b.id','a.plancuenta_id')
+                            ->join('proyectos as c','c.id','a.proyecto_id')
+                            ->join('centros as d','d.id','a.centro_id')
+                            ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
+                            ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
+                            ->where('a.comprobante_id',$comprobante_id)
+                            ->where('a.deleted_at',null)->get();
         $total_debe = $comprobante_detalle->sum('debe');
         $total_haber = $comprobante_detalle->sum('haber');
         return view('comprobantes.show',compact('comprobante','comprobante_detalle','total_debe','total_haber'));
@@ -85,7 +84,7 @@ class ComprobantesController extends Controller
         return view('comprobantes.create',compact('tipo_cambio','socios','nombre','user_id'));
     }
 
-    public function store(Request $request){//dd($request->all());
+    public function store(Request $request){dd($request->all());
         $request->validate([
             'socio'=> 'required',
             'tipo'=> 'required',
@@ -236,5 +235,44 @@ class ComprobantesController extends Controller
         $comprobante->status = 2;
         $comprobante->update();
         return redirect()->route('comprobantes.index')->with('danger','El comprobante '. $comprobante->nro_comprobante . ' fue rechazado...');
+    }
+
+    public function pdf($comprobante_id){
+        //dd($id);
+        set_time_limit(0);ini_set('memory_limit', '1G');
+        $comprobante = DB::table('comprobantes as a')
+                    ->join('users as b','b.id','a.user_id')
+                    ->join('socios as c','c.id','a.socio_id')
+                    ->leftjoin('users as d','d.id','a.user_autorizado_id')
+                    ->where('a.id',$comprobante_id)
+                    ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
+                    DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
+                    'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto','a.tipo_cambio','a.ufv')
+                    ->first();
+        if($comprobante->status == 0){
+            $estado = 'PENDIENTE';
+        }else{
+            if($comprobante->status == 1){
+                $estado = 'APROBADO';
+            }else{
+                $estado = 'ANULADO';
+            }   
+        }
+        $comprobante_detalle = DB::table('comprobantes_detalles as a')
+                            ->join('plan_cuentas as b','b.id','a.plancuenta_id')
+                            ->join('proyectos as c','c.id','a.proyecto_id')
+                            ->join('centros as d','d.id','a.centro_id')
+                            ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
+                            ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber',
+                                    'e.id as plancuentaauxiliar_id')
+                            ->where('a.comprobante_id',$comprobante_id)
+                            ->where('a.deleted_at',null)->get();
+        $total_debe = $comprobante_detalle->sum('debe');
+        $total_haber = $comprobante_detalle->sum('haber');
+        $i_f = 1;
+        $detalles_comprobantes_cheques = ComprobantesDetalle::where('comprobante_id',$comprobante_id)->where('cheque_nro','<>','')->orderBy('debe','desc')->get();
+        $pdf = PDF::loadView('comprobantes.pdf',compact(['comprobante','comprobante_detalle','total_debe','total_haber','estado','i_f','detalles_comprobantes_cheques']));
+        $pdf->setPaper('LETTER', 'portrait');//landscape
+        return $pdf->stream();
     }
 }

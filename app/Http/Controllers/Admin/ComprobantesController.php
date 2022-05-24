@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Luecano\NumeroALetras\NumeroALetras;
 use App\Cotizaciones;
 use App\Comprobantes;
 use App\ComprobantesDetalle;
@@ -24,9 +25,30 @@ class ComprobantesController extends Controller
         $socios = Socios::pluck('empresa','id');
         $comprobantes = DB::table('comprobantes as a')
                     ->join('socios as b','b.id','a.socio_id')
-                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia','a.status_validate')
-                    ->orderBy('a.id','desc')->paginate();
-        return view('comprobantes.index',compact('comprobantes','socios'));
+                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia')
+                    ->orderBy('a.id','desc')->paginate(10);
+        $back = true;
+        return view('comprobantes.index',compact('comprobantes','socios','back'));
+    }
+
+    public function indexAjax(){
+        return datatables()
+            ->query(DB::table('comprobantes as a')
+            ->join('socios as b','b.id','a.socio_id')
+            ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia',
+                    DB::raw("if(a.status = '0','BORRADOR',if(a.status = '1', 'APROBADO','ANULADO')) as status_search"),
+                    DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha_comprobante")))
+            ->filterColumn('status_search', function($query, $keyword) {
+                $sql = "if(a.status = '0','BORRADOR',if(a.status = '1', 'APROBADO', 'ANULADO'))  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            ->filterColumn('fecha_comprobante', function($query, $keyword) {
+                $sql = "DATE_FORMAT(a.fecha,'%d/%m/%Y')  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            ->addColumn('btnActions','comprobantes.partials.actions')
+            ->rawColumns(['btnActions'])
+            ->toJson();
     }
 
     public function search(Request $request){
@@ -44,9 +66,10 @@ class ComprobantesController extends Controller
                     ->where('a.tipo',"LIKE",$request->tipo)
                     ->where('a.status',"LIKE",$request->estado)
                     //->where('a.concepto',"LIKE","%".$request->concepto."%")
-                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia','a.status_validate')
+                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia')
                     ->orderBy('a.id','desc')->paginate();
-        return view('comprobantes.index',compact('comprobantes','socios'));
+        $back = false;
+        return view('comprobantes.indexSearch',compact('comprobantes','socios','back'));
     }
 
     public function show($comprobante_id){
@@ -84,7 +107,7 @@ class ComprobantesController extends Controller
         return view('comprobantes.create',compact('tipo_cambio','socios','nombre','user_id'));
     }
 
-    public function store(Request $request){dd($request->all());
+    public function store(Request $request){//dd($request->all());
         $request->validate([
             'socio'=> 'required',
             'tipo'=> 'required',
@@ -143,7 +166,6 @@ class ComprobantesController extends Controller
         $comprobante->moneda = $request->moneda;
         $comprobante->copia = $request->copia;
         $comprobante->status = 0;
-        $comprobante->status_validate = 0;
         $comprobante->save();
 
         return redirect()->route('comprobantesdetalles.create',$comprobante)->with('message','Los datos ingresados se guardaron correctamente...');
@@ -208,7 +230,7 @@ class ComprobantesController extends Controller
         $comprobante_fiscal->concepto = $comprobante->concepto;
         $comprobante_fiscal->monto = $comprobante->monto;
         $comprobante_fiscal->moneda = $comprobante->moneda;
-        $comprobante_fiscal->status = 1;
+        $comprobante_fiscal->status = 0;
         $comprobante_fiscal->save();
 
         $comprobante_detalle = ComprobantesDetalle::where('comprobante_id',$comprobante->id)->get();
@@ -239,6 +261,9 @@ class ComprobantesController extends Controller
 
     public function pdf($comprobante_id){
         //dd($id);
+        //echo $numberLetras->toWords($number);
+        //echo $numberLetras->toWords($decimal);
+        //echo $numberLetras->toInvoice($decimal, 2, 'Bolivianos');
         set_time_limit(0);ini_set('memory_limit', '1G');
         $comprobante = DB::table('comprobantes as a')
                     ->join('users as b','b.id','a.user_id')
@@ -247,7 +272,7 @@ class ComprobantesController extends Controller
                     ->where('a.id',$comprobante_id)
                     ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
                     DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
-                    'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto','a.tipo_cambio','a.ufv')
+                    'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto','a.tipo_cambio','a.ufv','a.entregado_recibido')
                     ->first();
         if($comprobante->status == 0){
             $estado = 'PENDIENTE';
@@ -263,15 +288,18 @@ class ComprobantesController extends Controller
                             ->join('proyectos as c','c.id','a.proyecto_id')
                             ->join('centros as d','d.id','a.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
-                            ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber',
-                                    'e.id as plancuentaauxiliar_id')
+                            ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe',
+                                    'a.haber','e.id as plancuentaauxiliar_id','a.cheque_nro','c.abreviatura as ab_proyecto','d.abreviatura as ab_centro')
                             ->where('a.comprobante_id',$comprobante_id)
                             ->where('a.deleted_at',null)->get();
         $total_debe = $comprobante_detalle->sum('debe');
         $total_haber = $comprobante_detalle->sum('haber');
+        $numberLetras = new NumeroALetras();
+        $monto_total = number_format($total_debe,2,',','.');
+        $monto_total_letras = $numberLetras->toInvoice($total_debe, 2, 'Bolivianos');
         $i_f = 1;
         $detalles_comprobantes_cheques = ComprobantesDetalle::where('comprobante_id',$comprobante_id)->where('cheque_nro','<>','')->orderBy('debe','desc')->get();
-        $pdf = PDF::loadView('comprobantes.pdf',compact(['comprobante','comprobante_detalle','total_debe','total_haber','estado','i_f','detalles_comprobantes_cheques']));
+        $pdf = PDF::loadView('comprobantes.pdf',compact(['comprobante','comprobante_detalle','total_debe','total_haber','estado','i_f','detalles_comprobantes_cheques','monto_total','monto_total_letras']));
         $pdf->setPaper('LETTER', 'portrait');//landscape
         return $pdf->stream();
     }

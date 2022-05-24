@@ -74,6 +74,9 @@
                     </div>
                     <div class="col-md-2 text-right">
                         <br>
+                        <a href="{{route('comprobantes.index')}}" class="btn btn-sm btn-primary font-verdana-bg">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
                         @if ($comprobante->status == 0 )
                             <a href="{{route('comprobantes.aprobar',$comprobante->comprobante_id)}}" class="btn btn-sm btn-success font-verdana-bg">
                                 <i class="fas fa-check" aria-hidden="true"></i>
@@ -82,7 +85,7 @@
                                 <i class="fas fa-times" aria-hidden="true"></i>
                             </a>
                         @endif
-                        <a href="{{--route('comprobantes.pdf',$comprobante->id)--}}" class="btn btn-sm btn-warning font-verdana-bg" target="_blank">
+                        <a href="{{route('comprobantes.pdf', $comprobante->comprobante_id)}}" class="btn btn-sm btn-warning font-verdana-bg" target="_blank">
                             <i class="fas fa-print" aria-hidden="true"></i>
                         </a>
                     </div>

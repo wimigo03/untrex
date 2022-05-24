@@ -63,7 +63,18 @@
                     </div>
                     <div class="col-md-4 text-right">
                         <br>
-                        <a href="{{--route('comprobantes.pdf',$comprobante->id)--}}" class="btn btn-sm btn-warning font-verdana-bg" target="_blank">
+                        <a href="{{route('comprobantes.fiscales.index')}}" class="btn btn-sm btn-primary font-verdana-bg">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                        @if ($comprobante_fiscal->status == 0 )
+                            <a href="{{route('comprobantes.fiscales.aprobar',$comprobante_fiscal->comprobante_id)}}" class="btn btn-sm btn-success font-verdana-bg">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                            </a>
+                            <a href="{{route('comprobantes.fiscales.rechazar',$comprobante_fiscal->comprobante_id)}}" class="btn btn-sm btn-danger font-verdana-bg">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                            </a>
+                        @endif
+                        <a href="{{route('comprobantes.fiscales.pdf',$comprobante_fiscal->comprobante_id)}}" class="btn btn-sm btn-warning font-verdana-bg" target="_blank">
                             <i class="fas fa-print" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -108,19 +119,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{--<div class="card-footer clearfix font-verdana-bg">
-                            {{ $comprobante_fiscal_detalle->appends(Request::all())->links() }}
-                            <p class="text-muted">Mostrando <strong>{{ $comprobante_fiscal_detalle->count() }}</strong> registros de <strong>{{$comprobante_fiscal_detalle->total() }}</strong> totales</p>
-                        </div>--}}
                     </div>
                 @endif
-                <div class="form-group row">
-                    <div class="col-md-12">
-                        <a href="{{route('comprobantes.index')}}" class="btn btn-sm btn-secondary font-verdana-bg">
-                            <i class="fas fa-angle-double-left"></i>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

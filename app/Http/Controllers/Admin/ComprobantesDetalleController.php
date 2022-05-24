@@ -18,13 +18,12 @@ class ComprobantesDetalleController extends Controller
         //index
     }
 
-    public function create(Comprobantes $comprobante){//dd($comprobante);
+    public function create(Comprobantes $comprobante){
         $user = DB::table('users')->where('id',$comprobante->user_id)->first();
         $socio = DB::table('socios')->where('id',$comprobante->socio_id)->first();
         $proyectos = DB::table('proyectos')->pluck('nombre','id');
         $centros = DB::table('centros')->pluck('nombre','id');
         $plan_cuentas = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
-                                    //->where('socio_id',$comprobante->socio_id)
                                     ->where('estado',1)                                    
                                     ->where('cuenta_detalle','1')
                                     ->pluck('nombre','id');
@@ -34,7 +33,8 @@ class ComprobantesDetalleController extends Controller
                                 ->join('proyectos as c','c.id','a.proyecto_id')
                                 ->join('centros as d','d.id','a.centro_id')
                                 ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
-                                ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
+                                ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber',
+                                        'a.id as comprobante_detalle_id')
                                 ->where('a.comprobante_id',$comprobante->id)
                                 ->where('a.deleted_at',null)->get();
         $total_debe = $comprobante_detalle->sum('debe');
@@ -78,15 +78,73 @@ class ComprobantesDetalleController extends Controller
     }
 
     public function finalizar(Request $request){
-        //dd($request->all());
         if($request->total_debe != $request->total_haber){
             return back()->withInput()->with('danger','El total debe y haber no son iguales...');
         }
         $total = $request->total_debe;
         $comprobante = Comprobantes::find($request->comprobante_id);
         $comprobante->monto = $total;
-        $comprobante->status_validate = 1;
         $comprobante->update();
         return redirect()->route('comprobantes.index')->with('message','El comprobante '. $comprobante->nro_comprobante . ' fue registrado con exito...');
+    }
+
+    public function editar($comprobante_detalle_id){
+        $comprobante_detalle = ComprobantesDetalle::where('id',$comprobante_detalle_id)->first();
+        $comprobante = Comprobantes::where('id',$comprobante_detalle->comprobante_id)->first();
+        $user = DB::table('users')->where('id',$comprobante->user_id)->first();
+        $socio = DB::table('socios')->where('id',$comprobante->socio_id)->first();
+        $proyectos = DB::table('proyectos')->pluck('nombre','id');
+        $centros = DB::table('centros')->pluck('nombre','id');
+        $plan_cuentas = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
+                                    //->where('socio_id',$comprobante->socio_id)
+                                    ->where('estado',1)                                    
+                                    ->where('cuenta_detalle','1')
+                                    ->pluck('nombre','id');
+        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::where('estado',1)->pluck('nombre','id');
+        $comprobante_detalles = DB::table('comprobantes_detalles as a')
+                                ->join('plan_cuentas as b','b.id','a.plancuenta_id')
+                                ->join('proyectos as c','c.id','a.proyecto_id')
+                                ->join('centros as d','d.id','a.centro_id')
+                                ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
+                                ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber',
+                                        'a.id as comprobante_detalle_id')
+                                ->where('a.comprobante_id',$comprobante->id)
+                                ->where('a.deleted_at',null)->get();
+        $total_debe = $comprobante_detalles->sum('debe');
+        $total_haber = $comprobante_detalles->sum('haber');
+        return view('comprobantes-detalles.editar',compact('comprobante_detalle','comprobante','user','socio','proyectos','centros','plan_cuentas','plan_cuentas_auxiliares','comprobante_detalles','total_debe','total_haber'));
+    }
+
+    public function update(Request $request){
+        $request->validate([
+            'proyecto'=> 'required',
+            'centro'=> 'required',
+            'plan_cuenta'=> 'required',
+            'plan_cuenta_auxiliar'=> 'required',
+            'glosa'=> 'required',
+            'debe_bs'=> 'required_without:haber_bs',
+            'haber_bs'=> 'required_without:debe_bs'
+        ]);
+
+        $comprobanteDetalle = ComprobantesDetalle::find($request->comprobante_detalle_id);
+        $comprobanteDetalle->plancuenta_id = $request->plan_cuenta;
+        $comprobanteDetalle->plancuentaauxiliar_id = $request->plan_cuenta_auxiliar;
+        $comprobanteDetalle->proyecto_id = $request->proyecto;
+        $comprobanteDetalle->centro_id = $request->centro;
+        $comprobanteDetalle->glosa = $request->glosa;
+        $comprobanteDetalle->debe = $request->debe_bs;
+        $comprobanteDetalle->haber = $request->haber_bs;
+        $comprobanteDetalle->tipo_transaccion = $request->tipo_transaccion;
+        $comprobanteDetalle->cheque_nro = $request->cheque_nro;
+        $comprobanteDetalle->cheque_orden = $request->cheque_orden;
+        $comprobanteDetalle->update();
+        
+        return redirect()->route('comprobantesdetalles.editar',$request->comprobante_detalle_id)->with('info','Los datos ingresados se guardaron correctamente...');
+    }
+
+    public function delete($comprobante_detalle_id){
+        $comprobanteDetalle = ComprobantesDetalle::find($comprobante_detalle_id);
+        $comprobanteDetalle->delete();
+        return back()->with('info','Se elimino un detalle de comprobante');
     }
 }

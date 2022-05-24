@@ -19,8 +19,15 @@
                 <?php 
                     $num = 1;
                 ?>
-                @foreach ($comprobante_detalle as $datos)
-                    <tr class="font-verdana">
+                @foreach ($comprobante_detalles as $datos)
+                    @php
+                        if($datos->comprobante_detalle_id == $comprobante_detalle->id){
+                            $editando = 'bg-warning';
+                        }else{
+                            $editando = null;
+                        }
+                    @endphp
+                    <tr class="font-verdana {{$editando}}">
                         <td width="1%" class="text-left p-1">{{ $num++ }}</td>
                         <td class="text-left p-1">{{ $datos->codigo . ' - ' . $datos->plancuenta }}</td>
                         <td class="text-center p-1">{{ $datos->proyecto }}</td>
@@ -35,11 +42,6 @@
                                     <td style="padding: 0;">
                                         <a href="{{route('comprobantesdetalles.editar', $datos->comprobante_detalle_id)}}" class="btn btn-xs btn-warning">
                                             <i class="fas fa-edit" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-                                    <td style="padding: 0;">
-                                        <a href="{{route('comprobantesdetalles.delete', $datos->comprobante_detalle_id)}}" class="btn btn-xs btn-danger">
-                                            <i class="fas fa-trash" aria-hidden="true"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -61,22 +63,4 @@
             </tbody>
         </table>
     </div>
-</div>
-<div class="form-group row font-verdana-bg">
-    @if ($comprobante->status_validate == 1)
-        <div class="col-md-12 text-right">
-            <a href="{{route('comprobantes.index')}}" class="btn btn-secondary font-verdana-bg">
-                <i class="fas fa-reply" aria-hidden="true"></i>&nbsp;Volver&nbsp;
-            </a>
-        </div>
-    @else
-        <div class="col-md-12 text-right">
-            <a href="{{route('comprobantes.index')}}" class="btn btn-danger font-verdana-bg">
-                <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
-            </a>
-            <button type="submit" class="btn btn-primary font-verdana-bg">
-                <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Finalizar&nbsp;
-            </button>
-        </div>
-    @endif
 </div>

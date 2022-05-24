@@ -24,8 +24,7 @@ class Comprobantes extends Model
         'monto',
         'moneda',
         'copia',
-        'status',
-        'status_validate'
+        'status'
     ];
     use SoftDeletes;
     protected $dates =['deleted_at'];

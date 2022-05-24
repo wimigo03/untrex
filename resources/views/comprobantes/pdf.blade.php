@@ -8,7 +8,8 @@
 			margin: 30px 50px 50px 55px;font-size: 10px;
 			font-family: "verdana,arial,helvetica", -apple-system, BlinkMacSystemFont;
 			font-size: 0.75rem;
-			background-color: #ffffff;}
+			background-color: #ffffff;
+		}
     </style>
 </head>
 	<body>
@@ -16,7 +17,7 @@
 			<tr>
 				<td rowspan="2" width="25%" align="center" valign="top">
 					<font size="13px"><b>A S O C I A C I O N</b></font><br> 
-					<font size="10px"><b>LOPEZ - UNTRES</b></font>
+					<font size="10px"><b>L O P E Z - U N T R E S</b></font>
 				</td>
 				<td rowspan="2" align="center">
 					@if ($i_f == 1)
@@ -65,7 +66,7 @@
 		<table width="100%" cellspacing="0" cellpadding="5" border="1">
 			<tr>
 				<td>
-					<table border="1" width="100%" cellpadding="2">
+					<table border="0" width="100%" cellpadding="2">
 						@if($comprobante->tipo_comprobante != 'TRASPASO')
 							<tr>
 								<td valign="top" colspan="3">
@@ -91,7 +92,7 @@
 								<td width="5%" valign="top">
 									<font size="10px"><b>Cheques:</b>&nbsp;
 										@foreach ($detalles_comprobantes_cheques as $cheque)
-											+ CH-{{ $cheque->cheque_nro}}
+											+ CH-{{$cheque->cheque_nro}}
 										@endforeach
 									</font>
 								</td>
@@ -112,11 +113,11 @@
 				<tr bgcolor="#6c757d">
 					<td width="7%" align="left"><font color="#ffffff" size="9px"><b>CODIGO</b></font></td>
 					<td width="40%" align="center"><font color="#ffffff" size="9px"><b>DESCRIPCION / GLOSA</b></font></td>
-					<td align="center"><font color="#ffffff" size="9px"><b>PROY./CEN</b></font></td>
-					<td align="right"><font color="#ffffff" size="9px"><b>DEBE(BS.)</b></font></td>
-					<td align="right"><font color="#ffffff" size="9px"><b>HABER(BS.)</b></font></td>
-					<td align="right"><font color="#ffffff" size="9px"><b>DEBE($US)</b></font></td>
-					<td align="right"><font color="#ffffff" size="9px"><b>HABER($US)</b></font></td>
+					<td align="center"><font color="#ffffff" size="9px"><b>PROY./CEN.</b></font></td>
+					<td align="center"><font color="#ffffff" size="9px"><b>DEBE(BS.)</b></font></td>
+					<td align="center"><font color="#ffffff" size="9px"><b>HABER(BS.)</b></font></td>
+					<td align="center"><font color="#ffffff" size="9px"><b>DEBE($US)</b></font></td>
+					<td align="center"><font color="#ffffff" size="9px"><b>HABER($US)</b></font></td>
 				</tr>
 			</thead>
 				@php
@@ -150,7 +151,7 @@
 						$total_haber_dolares = $total_haber_dolares + $haber_dolares;
 					?>
 					<tr bgcolor="{{ $color }}">
-						<td align="left" valign="top"><font size="8px">{{--$datos_detalle->plancuenta->codigo--}}</font></td>
+						<td align="left" valign="top"><font size="8px">{{$datos_detalle->codigo}}</font></td>
 						<td align="left" valign="top"><font size="8px">
 							@if($datos_detalle->haber != 0)
 								<table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -202,10 +203,10 @@
 						</font></td>
 						<td align="center" valign="top"><font size="9px">
 							@if($datos_detalle->proyecto)
-								{{ $datos_detalle->proyecto->abreviatura }}
+								{{$datos_detalle->ab_proyecto}}
 							@endif
 							@if($datos_detalle->centro)
-							/ {{ $datos_detalle->centro->abreviatura }}
+							/ {{ $datos_detalle->ab_centro }}
 							@endif
 						</font></td>
 						<td align="right" valign="top"><font size="9px">{{ number_format($debe_bs,2,'.',',')  }}</font></td>
@@ -226,14 +227,10 @@
 					</tr>
 		</table>
 
-		{{--<table>
+		<table>
 			<tr>
 				<td>
-					<?php
-						$letra = ($comprobante->moneda == 'BS')?'Bolivianos':'Dolares';
-						$monto_total = ($comprobante->moneda == 'BS')?$total_debe_bs:$total_debe_dolares;
-					?>
-					<font size="9px"><b>SON: {{NumerosEnLetras::convertir($monto_total,$letra,true)}}</b></font>
+					<font size="9px"><b>SON: {{$monto_total}} ({{$monto_total_letras}})</b></font>
 				</td>
 			</tr>
 		</table>
@@ -267,16 +264,17 @@
 				<td>&nbsp;</td>
 				<td><font size="10px"><b>Aprobado por</b></font></td>
 			</tr>
-		</table>--}}
+		</table>
 	</body>
-	<footer>&nbsp;</footer>
 </html>
-<script type="text/php">
-    if(isset($pdf)) {
-        $pdf->page_script('
-            $font = $fontMetrics->get_font("verdana");
-            $pdf->text(40, 765, "{{ Auth()->user()->username }} {{ date('[d-m-Y] [H:i]') }}", $font, 7); 
-            $pdf->text(530, 765, "Pagina $PAGE_NUM de $PAGE_COUNT", $font, 7); 
-        ');
-    }
-</script>
+@section('js')
+	<script type="text/php">
+		if(isset($pdf)) {
+			$pdf->page_script('
+				$font = $fontMetrics->get_font("verdana");
+				$pdf->text(40, 765, "ww", $font, 7); 
+				$pdf->text(530, 765, "Pagina $PAGE_NUM de $PAGE_COUNT", $font, 7); 
+			');
+		}
+	</script>
+@stop

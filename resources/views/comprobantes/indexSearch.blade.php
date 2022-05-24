@@ -5,12 +5,12 @@
 <div class="form-group row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-warning text-white">
+            <div class="card-header bg-gradient-secondary text-white">
                 <div class="card-title"><b>COMPROBANTES</b></div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['comprobantes.fiscales.search']]) !!}
-                    @include('comprobantes-fiscales.partials.search')
+                {!! Form::model(Request::all(),['route'=> ['comprobantes.search']]) !!}
+                    @include('comprobantes.partials.search')
                 {!! Form::close()!!}
                 <div class="form-group row">
                     <div class="col-md-12 text-center">
@@ -25,13 +25,14 @@
                                         <td class="text-center p-1"><b>EMPRESA</b></td>
                                         <td class="text-center p-1"><b>MONTO</b></td>
                                         <td class="text-center p-1"><b>ESTADO</b></td>
+                                        <td class="text-center p-1"><b>COPIA</b></td>
                                         <td class="text-center p-1"><i class="fa fa-bars" aria-hidden="true"></i></td>
                                     </tr>
-                                    <tbody>
                                 </thead>
-                                    @foreach ($comprobantes_fiscales as $datos)
+                                <tbody>
+                                    @foreach ($comprobantes as $datos)
                                         <tr class="font-verdana">
-                                            <td class="text-center p-1">{{$datos->comprobante_fiscal_id}}</td>
+                                            <td class="text-center p-1">{{$datos->comprobante_id}}</td>
                                             <td class="text-center p-1">{{\Carbon\Carbon::parse($datos->fecha)->format('d/m/Y')}}</td>
                                             <td class="text-center p-1">{{$datos->nro_comprobante}}</td>
                                             <td class="text-justify p-1">{{$datos->concepto}}</td>
@@ -49,10 +50,17 @@
                                                 @endif
                                             </td>
                                             <td class="text-center p-1">
+                                                @if ($datos->copia == 1)
+                                                    <i class="fas fa-check" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fas fa-times" aria-hidden="true"></i>   
+                                                @endif
+                                            </td>
+                                            <td class="text-center p-1">
                                                 <table style="border-collapse:collapse; border: none;">
                                                     <tr>
                                                         <td style="padding: 0;">
-                                                            <a href="{{route('comprobantes.fiscales.show', $datos->comprobante_fiscal_id)}}" class="btn btn-xs btn-info">
+                                                            <a href="{{route('comprobantes.show', $datos->comprobante_id )}}" class="btn btn-xs btn-info">
                                                                 <i class="fas fa-eye" aria-hidden="true"></i>
                                                             </a>
                                                         </td>
@@ -62,13 +70,13 @@
                                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                                 </a>
                                                             @else
-                                                                <a href="{{--route('comprobantesdetalles.create', $datos->comprobante_id)--}}" class="btn btn-xs btn-warning">
+                                                                <a href="{{route('comprobantesdetalles.create', $datos->comprobante_id)}}" class="btn btn-xs btn-warning">
                                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                                 </a>
                                                             @endif
                                                         </td>
                                                         <td style="padding: 0;">
-                                                            <a href="{{route('comprobantes.fiscales.pdf', $datos->comprobante_fiscal_id)}}" class="btn btn-xs btn-danger" target="_blank">
+                                                            <a href="{{route('comprobantes.pdf', $datos->comprobante_id)}}" class="btn btn-xs btn-danger" target="_blank">
                                                                 <i class="fas fa-file-pdf" aria-hidden="true"></i>
                                                             </a>
                                                         </td>
@@ -82,7 +90,7 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        {{ $comprobantes_fiscales->links('vendor.pagination')}}
+                        {{ $comprobantes->links('vendor.pagination')}}
                     </div>
                 </div>
             </div>

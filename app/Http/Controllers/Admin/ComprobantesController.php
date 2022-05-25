@@ -89,7 +89,8 @@ class ComprobantesController extends Controller
                             ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
                             ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
                             ->where('a.comprobante_id',$comprobante_id)
-                            ->where('a.deleted_at',null)->get();
+                            ->where('a.deleted_at',null)
+                            ->orderBy('a.id','desc')->get();
         $total_debe = $comprobante_detalle->sum('debe');
         $total_haber = $comprobante_detalle->sum('haber');
         return view('comprobantes.show',compact('comprobante','comprobante_detalle','total_debe','total_haber'));
@@ -297,7 +298,8 @@ class ComprobantesController extends Controller
                             ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe',
                                     'a.haber','e.id as plancuentaauxiliar_id','a.cheque_nro','c.abreviatura as ab_proyecto','d.abreviatura as ab_centro')
                             ->where('a.comprobante_id',$comprobante_id)
-                            ->where('a.deleted_at',null)->get();
+                            ->where('a.deleted_at',null)
+                            ->orderBy('a.id','desc')->get();
         $total_debe = $comprobante_detalle->sum('debe');
         $total_haber = $comprobante_detalle->sum('haber');
         $numberLetras = new NumeroALetras();

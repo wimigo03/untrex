@@ -6,15 +6,15 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>MODIFICAR DETALLE DE COMPROBANTE</b></div>
+            <div class="card-header bg-gradient-warning text-white">
+                <div class="card-title"><b>DETALLE DE COMPROBANTE</b></div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.update']]) !!}
-                    @include('comprobantes-detalles.partials.form1_editar')
+                {!! Form::model(Request::all(),['route'=> ['comprobantesfiscalesdetalles.insertar']]) !!}
+                    @include('comprobantes-fiscales-detalles.partials.form1')
                 {!! Form::close()!!}
-                {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.finalizar']]) !!}
-                    @include('comprobantes-detalles.partials.form2_editar')
+                {!! Form::model(Request::all(),['route'=> ['comprobantesfiscalesdetalles.finalizar']]) !!}
+                    @include('comprobantes-fiscales-detalles.partials.form2')
                 {!! Form::close()!!}
             </div>
         </div>
@@ -25,11 +25,13 @@
 @section('css')
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/datepicker/datepicker.min.css"/>
+    <link rel="stylesheet" href="/css/select2.min.css" type="text/css">
 @stop
 
 @section('js')
     <script src="/datepicker/datepicker.min.js" type="text/javascript"></script>
     <script src="/datepicker/datepicker.es.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/select2.min.js"></script>
     {{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
     <script>
         $(document).ready(function() {
@@ -37,32 +39,6 @@
             $('.select2').select2({
                 placeholder: "--Seleccionar--"
             });
-            idplancuenta = document.getElementById("plan_cuentas").value;
-            if(idplancuenta!=null)
-                {
-                    if(idplancuenta.length!=0){
-                        $.ajax({
-                            type: 'GET',
-                            url: '/admin/comprobantesdetalles/get_plancuenta/'+idplancuenta,
-                            dataType: 'json',
-                            data: {
-                                id: idplancuenta
-                            },
-                            success: function(json){
-                                if(json.cheque=='1'){                                    
-                                    $('.cheque').show();
-                                    //$('.cheque_id').val(1);
-                                } else {
-                                    //$('.cheque_id').val(0);
-                                    $('.cheque').hide();
-                                }
-                            },
-                            error: function(xhr){
-                                //console.log(xhr.responseText);
-                            }
-                        });
-                    }
-                }
         } );
 
         function valideKey(evt){
@@ -93,22 +69,27 @@
         });
 
         function countChars(obj,dato){
-            var cont = obj.value.length;
-            if(dato === 1){
-                if(cont > 0){
-                    document.getElementById("haber_bs").value = "";
-                    $('#haber_bs').attr('disabled',true);
-                }else{
-                    $('#haber_bs').attr('disabled',false);
-                }
+        var cont = obj.value.length;
+        console.log(cont,dato);
+        if(dato === 1){
+            if(cont > 0){
+                $('#haber_bs').attr('disabled',true);
             }else{
-                if(cont > 0){
-                    document.getElementById("debe_bs").value = "";
-                    $('#debe_bs').attr('disabled',true);
-                }else{
-                    $('#debe_bs').attr('disabled',false);
-                }
+                $('#haber_bs').attr('disabled',false);
             }
+        }else{
+            if(cont > 0){
+                $('#debe_bs').attr('disabled',true);
+            }else{
+                $('#debe_bs').attr('disabled',false);
+            }
+        }
+            /*if(cont > 1){
+                $('#debe_bs').attr('disabled',true);
+            }else{
+                $('#haber_bs').attr('disabled',true);
+            }
+            */
         }
 
         $('#tipo').change(function() {

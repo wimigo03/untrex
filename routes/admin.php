@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CotizacionesController;
 use App\Http\Controllers\Admin\ComprobantesController;
 use App\Http\Controllers\Admin\ComprobantesDetalleController;
 use App\Http\Controllers\Admin\ComprobantesFiscalesController;
+use App\Http\Controllers\Admin\ComprobantesFiscalesDetalleController;
 use App\Http\Controllers\Admin\FacturasController;
 
 //Facturas
@@ -17,14 +18,19 @@ Route::post('/facturaComprobante/store', [FacturasController::class, 'store'])->
 Route::get('/facturaComprobante/get_proveedor/{id}', [FacturasController::class, 'getProveedor']);
 Route::get('/facturaComprobante/{comprobante_id}', [FacturasController::class, 'comprobanteCreate'])->name('facturas.comprobante.create');
 //Comprobantes Fiscales Detalle
-//Route::post('/comprobantesfiscales/update', [ComprobantesFiscalesController::class, 'update'])->name('comprobantesdetalles.fiscales.update');
-//Route::get('/comprobantesfiscales/editar/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'editar'])->name('comprobantesdetalles.fiscales.editar');
+Route::get('/comprobantesfiscalesdetalles/delete/{comprobante_detalle_id}', [ComprobantesFiscalesDetalleController::class, 'delete'])->name('comprobantesfiscalesdetalles.delete');
+Route::post('/comprobantesfiscalesdetalles/update', [ComprobantesFiscalesDetalleController::class, 'update'])->name('comprobantesfiscalesdetalles.update');
+Route::get('/comprobantesfiscalesdetalles/editar/{comprobante_fiscal_id}', [ComprobantesFiscalesDetalleController::class, 'editar'])->name('comprobantesfiscalesdetalles.editar');
+Route::post('/comprobantesfiscalesdetalles/finalizar', [ComprobantesFiscalesDetalleController::class, 'finalizar'])->name('comprobantesfiscalesdetalles.finalizar');
+Route::post('/comprobantesfiscalesdetalles/insertar', [ComprobantesFiscalesDetalleController::class, 'insertar'])->name('comprobantesfiscalesdetalles.insertar');
+route::get('/comprobantesfiscalesdetalles/create/{comprobante}', [ComprobantesFiscalesDetalleController::class, 'create'])->name('comprobantesfiscalesdetalles.create');
 //Comprobantes Fiscales
 Route::get('/comprobantesfiscales/pdf/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'pdf'])->name('comprobantes.fiscales.pdf');
 Route::get('/comprobantesfiscales/rechazar/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'rechazar'])->name('comprobantes.fiscales.rechazar');
 Route::get('/comprobantesfiscales/aprobar/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'aprobar'])->name('comprobantes.fiscales.aprobar');
 Route::get('/comprobantesfiscales/show/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'show'])->name('comprobantes.fiscales.show');
 route::post('/comprobantesfiscales/search', [ComprobantesFiscalesController::class, 'search'])->name('comprobantes.fiscales.search');
+route::get('/comprobantesfiscales/indexAjax', [ComprobantesFiscalesController::class, 'indexAjax'])->name('comprobantes.fiscales.indexAjax');
 route::get('/comprobantesfiscales', [ComprobantesFiscalesController::class, 'index'])->name('comprobantes.fiscales.index');
 //Comprobantes Detalles
 Route::get('/comprobantesdetalles/delete/{comprobante_detalle_id}', [ComprobantesDetalleController::class, 'delete'])->name('comprobantesdetalles.delete');

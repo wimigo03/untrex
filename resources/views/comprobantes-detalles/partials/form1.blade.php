@@ -119,7 +119,7 @@
         {!! $errors->first('haber_sus','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
     <div class="col-md-4 text-right"><br>
-        <button class="btn btn-warning font-verdana-bg" type="submit" id="insertar">
+        <button class="btn btn-secondary font-verdana-bg" type="submit" id="insertar">
             <i class="fas fa-arrow-down"></i>&nbsp;Insertar
         </button>
         <a href="{{route('facturas.comprobante.create', $comprobante->id)}}" class="btn btn-success font-verdana-bg">

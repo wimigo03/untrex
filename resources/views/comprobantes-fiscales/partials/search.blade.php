@@ -30,9 +30,16 @@
         {{Form::label('concepto','Concepto',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('concepto',null,['class'=>'form-control form-control-sm font-verdana-bg','id'=>'concepto'])}}
     </div>
-    <div class="col-md-6"><br>
+    <div class="col-md-2"><br>
         <button type="submit" class="btn btn-primary font-verdana-bg">
             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Buscar&nbsp;
         </button>
+    </div>
+    <div class="col-md-4 text-right"><br>
+        @if ($back == false)
+            <a href="{{route('comprobantes.fiscales.index')}}" class="btn btn-primary font-verdana-bg">
+                <i class="fas fa-angle-double-left"></i>
+            </a>    
+        @endif
     </div>
 </div>

@@ -119,10 +119,10 @@
         {!! $errors->first('haber_sus','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
     <div class="col-md-4 text-right"><br>
-        <a href="{{route('comprobantesdetalles.create',$comprobante)}}" class="btn btn-primary font-verdana-bg">
+        <a href="{{route('comprobantesfiscalesdetalles.create',$comprobante)}}" class="btn btn-primary font-verdana-bg">
             <i class="fa fa-angle-double-left" aria-hidden="true"></i>&nbsp;Finalizar Edicion&nbsp;
         </a>
-        <button class="btn btn-secondary font-verdana-bg" type="submit" id="actualizar">
+        <button class="btn btn-warning font-verdana-bg" type="submit" id="actualizar">
             <i class="fas fa-sync-alt"></i>&nbsp;Actualizar
         </button>
         {{--<a href="{{route('facturas.comprobante.create', $comprobante->id)}}" class="btn btn-success font-verdana-bg">

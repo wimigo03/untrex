@@ -12,10 +12,9 @@
                 {!! Form::model(Request::all(),['route'=> ['comprobantes.search']]) !!}
                     @include('comprobantes.partials.search')
                 {!! Form::close()!!}
-                <hr>
                 <div class="form-group row">
                     <div class="col-md-12 text-center">
-                        <div class="table-responsive table-striped">
+                        <div class="table-responsive table-striped table-bordered">
                             <table id="dataTable" class="display responsive" style="width:100%">
                                 <thead>
                                     <tr class="font-verdana">
@@ -44,22 +43,13 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/pagination.css">
+    {{--<link rel="stylesheet" href="/css/pagination.css">--}}
     <link rel="stylesheet" href="/datepicker/datepicker.min.css"/>
-    <link rel="stylesheet" href="/css/select2.min.css" type="text/css">
-
-    <link rel="stylesheet" href="/dataTable_1.10.22/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="/dataTable_1.10.22/css/responsive.dataTables.min.css">
 @stop
 
 @section('js')
-    <script type="text/javascript" src="/dataTable_1.10.22/js/jquery-3.5.1.js"></script>
-    <script type="text/javascript" src="/dataTable_1.10.22/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="/dataTable_1.10.22/js/dataTables.responsive.min.js"></script>
-
     <script src="/datepicker/datepicker.min.js" type="text/javascript"></script>
     <script src="/datepicker/datepicker.es.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable({

@@ -73,12 +73,12 @@
                     </div>
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-6">
-                            {{Form::label('entregado_recibido','Hemos recibido de:')}}
+                            {{Form::label('entregado_recibido','Hemos recibido de:',['class' => 'd-inline font-verdana-bg'])}}
                             {{Form::text('entregado_recibido',null,['class'=>'text-uppercase form-control form-control-sm'. ( $errors->has('entregado_recibido') ? ' is-invalid' : '' ),'autocomplete'=>'off'])}}
                             {!! $errors->first('entregado_recibido','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-6">
-                            {{Form::label('concepto','Concepto:')}}
+                            {{Form::label('concepto','Concepto:',['class' => 'd-inline font-verdana-bg'])}}
                             {{Form::text('concepto',null,['class'=>'form-control form-control-sm'. ( $errors->has('concepto') ? ' is-invalid' : '' )])}}
                         </div>
                     </div>

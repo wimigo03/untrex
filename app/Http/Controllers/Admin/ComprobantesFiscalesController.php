@@ -28,7 +28,28 @@ class ComprobantesFiscalesController extends Controller
                                     ->join('socios as b','b.id','a.socio_id')
                                     ->select('a.id as comprobante_fiscal_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status')
                                     ->orderBy('a.id','desc')->paginate();
-        return view('comprobantes-fiscales.index',compact('comprobantes_fiscales','socios'));
+        $back = true;
+        return view('comprobantes-fiscales.index',compact('comprobantes_fiscales','socios','back'));
+    }
+
+    public function indexAjax(){
+        return datatables()
+            ->query(DB::table('comprobantes_fiscales as a')
+            ->join('socios as b','b.id','a.socio_id')
+            ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status',
+                    DB::raw("if(a.status = '0','BORRADOR',if(a.status = '1', 'APROBADO','ANULADO')) as status_search"),
+                    DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha_comprobante")))
+            ->filterColumn('status_search', function($query, $keyword) {
+                $sql = "if(a.status = '0','BORRADOR',if(a.status = '1', 'APROBADO', 'ANULADO'))  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            ->filterColumn('fecha_comprobante', function($query, $keyword) {
+                $sql = "DATE_FORMAT(a.fecha,'%d/%m/%Y')  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            ->addColumn('btnActions','comprobantes-fiscales.partials.actions')
+            ->rawColumns(['btnActions'])
+            ->toJson();
     }
 
     public function search(Request $request){
@@ -47,8 +68,9 @@ class ComprobantesFiscalesController extends Controller
                                     ->where('a.status',"LIKE",$request->estado)
                                     //->where('a.concepto',"LIKE","%".$request->concepto."%")
                                     ->select('a.id as comprobante_fiscal_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status')
-                                    ->orderBy('a.id','desc')->paginate();
-        return view('comprobantes-fiscales.index',compact('comprobantes_fiscales','socios'));
+                                    ->orderBy('a.id','desc')->get();
+        $back = false;
+        return view('comprobantes-fiscales.indexSearch',compact('comprobantes_fiscales','socios','back'));
     }
 
     public function show($comprobante_fiscal_id){
@@ -77,6 +99,12 @@ class ComprobantesFiscalesController extends Controller
     public function aprobar($comprobante_id){
         /*try{
             DB::beginTransaction();*/
+            $comprobante_detalle = ComprobantesFiscalesDetalle::where('comprobante_fiscal_id',$comprobante_id)->get();
+            $total_debe = $comprobante_detalle->sum('debe');
+            $total_haber = $comprobante_detalle->sum('haber');
+            if($total_debe != $total_haber){
+                return back()->withInput()->with('danger','Imposible Aprobar el comprobante. El total debe y haber no son iguales...');
+            }
             $comprobante = ComprobantesFiscales::find($comprobante_id);
             $comprobante->user_autorizado_id = auth()->user()->id;;
             $comprobante->status = 1;

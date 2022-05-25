@@ -6,15 +6,15 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-secondary text-white">
+            <div class="card-header bg-gradient-warning text-white">
                 <div class="card-title"><b>MODIFICAR DETALLE DE COMPROBANTE</b></div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.update']]) !!}
-                    @include('comprobantes-detalles.partials.form1_editar')
+                {!! Form::model(Request::all(),['route'=> ['comprobantesfiscalesdetalles.update']]) !!}
+                    @include('comprobantes-fiscales-detalles.partials.form1_editar')
                 {!! Form::close()!!}
-                {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.finalizar']]) !!}
-                    @include('comprobantes-detalles.partials.form2_editar')
+                {!! Form::model(Request::all(),['route'=> ['comprobantesfiscalesdetalles.finalizar']]) !!}
+                    @include('comprobantes-fiscales-detalles.partials.form2_editar')
                 {!! Form::close()!!}
             </div>
         </div>
@@ -25,11 +25,13 @@
 @section('css')
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/datepicker/datepicker.min.css"/>
+    <link rel="stylesheet" href="/css/select2.min.css" type="text/css">
 @stop
 
 @section('js')
     <script src="/datepicker/datepicker.min.js" type="text/javascript"></script>
     <script src="/datepicker/datepicker.es.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/select2.min.js"></script>
     {{--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
     <script>
         $(document).ready(function() {

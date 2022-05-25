@@ -67,7 +67,7 @@ class ComprobantesController extends Controller
                     ->where('a.status',"LIKE",$request->estado)
                     //->where('a.concepto',"LIKE","%".$request->concepto."%")
                     ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia')
-                    ->orderBy('a.id','desc')->paginate();
+                    ->orderBy('a.id','desc')->get();
         $back = false;
         return view('comprobantes.indexSearch',compact('comprobantes','socios','back'));
     }
@@ -107,7 +107,7 @@ class ComprobantesController extends Controller
         return view('comprobantes.create',compact('tipo_cambio','socios','nombre','user_id'));
     }
 
-    public function store(Request $request){//dd($request->all());
+    public function store(Request $request){
         $request->validate([
             'socio'=> 'required',
             'tipo'=> 'required',
@@ -127,7 +127,7 @@ class ComprobantesController extends Controller
         }
         $ultimoComprobante = Comprobantes::whereNotNull('nro_comprobante')
                                         ->where('tipo',$request->tipo)
-                                        ->where('socio_id',$request->socio)
+                                        //->where('socio_id',$request->socio)
                                         ->whereMonth('fecha', date('m', strtotime($fecha)))
                                         ->whereYear('fecha', date('Y', strtotime($fecha)))
                                         ->orderBy('nro_comprobante_id','desc')
@@ -174,6 +174,12 @@ class ComprobantesController extends Controller
     public function aprobar($comprobante_id){
         /*try{
             DB::beginTransaction();*/
+            $comprobante_detalle = ComprobantesDetalle::where('comprobante_id',$comprobante_id)->get();
+            $total_debe = $comprobante_detalle->sum('debe');
+            $total_haber = $comprobante_detalle->sum('haber');
+            if($total_debe != $total_haber){
+                return back()->withInput()->with('danger','Imposible Aprobar el comprobante. El total debe y haber no son iguales...');
+            }
             $comprobante = Comprobantes::find($comprobante_id);
             $comprobante->user_autorizado_id = auth()->user()->id;;
             $comprobante->status = 1;
@@ -191,7 +197,7 @@ class ComprobantesController extends Controller
     private function copia_comprobante($comprobante){
         $ultimoComprobante = ComprobantesFiscales::whereNotNull('nro_comprobante')
                                                 ->where('tipo',$comprobante->tipo)
-                                                ->where('socio_id',$comprobante->socio_id)
+                                                //->where('socio_id',$comprobante->socio_id)
                                                 ->whereMonth('fecha', date('m', strtotime($comprobante->fecha)))
                                                 ->whereYear('fecha', date('Y', strtotime($comprobante->fecha)))
                                                 ->orderBy('nro_comprobante_id','desc')

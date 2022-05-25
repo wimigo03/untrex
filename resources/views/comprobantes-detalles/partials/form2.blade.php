@@ -63,7 +63,7 @@
     </div>
 </div>
 <div class="form-group row font-verdana-bg">
-    @if ($comprobante->status_validate == 1)
+    @if ($comprobante->status == 1)
         <div class="col-md-12 text-right">
             <a href="{{route('comprobantes.index')}}" class="btn btn-secondary font-verdana-bg">
                 <i class="fas fa-reply" aria-hidden="true"></i>&nbsp;Volver&nbsp;
@@ -71,9 +71,9 @@
         </div>
     @else
         <div class="col-md-12 text-right">
-            <a href="{{route('comprobantes.index')}}" class="btn btn-danger font-verdana-bg">
+            {{--<a href="{{route('comprobantes.index')}}" class="btn btn-danger font-verdana-bg">
                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
-            </a>
+            </a>--}}
             <button type="submit" class="btn btn-primary font-verdana-bg">
                 <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Finalizar&nbsp;
             </button>

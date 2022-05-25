@@ -22,7 +22,7 @@
                 @foreach ($comprobante_detalles as $datos)
                     @php
                         if($datos->comprobante_detalle_id == $comprobante_detalle->id){
-                            $editando = 'bg-gradient-secondary';
+                            $editando = 'bg-warning';
                         }else{
                             $editando = null;
                         }

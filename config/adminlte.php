@@ -272,16 +272,18 @@ return [
             'label_color' => 'success',
         ],
         [
-            'text'        => 'Comprobantes B1',
-            'route'         => 'comprobantes.index',
-            'icon'        => 'fas fa-list-alt',
-            'label_color' => 'success',
-        ],
-        [
-            'text'        => 'Comprobantes B2',
-            'route'         => 'comprobantes.fiscales.index',
-            'icon'        => 'fas fa-list-alt',
-            'label_color' => 'success',
+            'text'    => 'Comprobantes',
+            'icon'    => 'fas fa-list-alt',
+            'submenu' => [
+                [
+                    'text' => 'Base 1',
+                    'route'         => 'comprobantes.index',
+                ],
+                [
+                    'text' => 'Base 2',
+                    'route'         => 'comprobantes.fiscales.index',
+                ],
+            ],
         ],
         //['header' => 'account_settings'],
         /*[
@@ -386,7 +388,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
@@ -406,7 +408,7 @@ return [
             ],
         ],
         'Select2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

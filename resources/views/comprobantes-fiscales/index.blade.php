@@ -13,7 +13,7 @@
                     @include('comprobantes-fiscales.partials.search')
                 {!! Form::close()!!}
                 <div class="form-group row">
-                    <div class="col-md-12 text-center">
+                    <div class="col-md-12">
                         <div class="table-responsive table-striped table-bordered">
                             <table id="dataTable" class="display responsive" style="width:100%">
                                 <thead>

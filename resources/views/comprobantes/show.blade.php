@@ -78,7 +78,7 @@
                             <i class="fas fa-angle-double-left"></i>
                         </a>
                         @if ($comprobante->status == 0 )
-                            <a href="{{route('comprobantes.aprobar',$comprobante->comprobante_id)}}" class="btn btn-sm btn-success font-verdana-bg">
+                            <a href="{{route('comprobantes.aprobar',$comprobante->comprobante_id)}}" class="btn btn-sm btn-success font-verdana-bg"  onClick="return confirm('Estas a punto de aprobar un comprobante ¿Desea continuar...?)">
                                 <i class="fas fa-check" aria-hidden="true"></i>
                             </a>
                             <a href="{{route('comprobantes.rechazar',$comprobante->comprobante_id)}}" class="btn btn-sm btn-danger font-verdana-bg">

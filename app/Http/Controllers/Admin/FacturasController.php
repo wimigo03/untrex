@@ -57,7 +57,7 @@ class FacturasController extends Controller
         }
     }
 
-    public function store(Request $request){
+    public function store(Request $request){dd("No terminado");
         $request->validate([
             'numero'=> 'required|numeric',
             'monto'=> 'required|numeric',

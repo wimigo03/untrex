@@ -22,7 +22,7 @@
                                         <td class="text-center p-1"><b>FECHA</b></td>
                                         <td class="text-center p-1"><b>COMPROBANTE</b></td>
                                         <td class="text-center p-1"><b>CONCEPTO</b></td>
-                                        <td class="text-center p-1"><b>EMPRESA</b></td>
+                                        <td class="text-center p-1"><b>PROYECTO</b></td>
                                         <td class="text-center p-1"><b>MONTO</b></td>
                                         <td class="text-center p-1"><b>ESTADO</b></td>
                                         <td class="text-center p-1"><b>COPIA</b></td>
@@ -36,7 +36,7 @@
                                             <td class="text-center p-1">{{\Carbon\Carbon::parse($datos->fecha)->format('d/m/Y')}}</td>
                                             <td class="text-center p-1">{{$datos->nro_comprobante}}</td>
                                             <td class="text-justify p-1">{{$datos->concepto}}</td>
-                                            <td class="text-center p-1">{{$datos->empresa}}</td>
+                                            <td class="text-center p-1">{{$datos->abreviatura}}</td>
                                             <td class="text-right p-1">{{number_format($datos->monto,2,'.',',')}}</td>
                                             <td class="text-center p-1">
                                                 @if ($datos->status == 0)

@@ -10,6 +10,7 @@ class PlanCuentasAuxiliares extends Model
 {
     protected $table = 'plan_cuentas_auxiliares';
     protected $fillable = [
+        'proyecto_id',
         'tipo',
         'nombre',
         'estado'

@@ -5,12 +5,12 @@
         {{Form::text('nro_comprobante',$comprobante->nro_comprobante,['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'nro_comprobante'])}}
         {!! $errors->first('nro_comprobante','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
         {{Form::label('Tc','TC',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('taza_cambio',$comprobante->tipo_cambio,['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'taza_cambio'])}}
         {!! $errors->first('taza_cambio','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
         {{Form::label('Ufv','UFV',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('ufv',$comprobante->ufv,['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'ufv'])}}
         {!! $errors->first('ufv','<span class="invalid-feedback d-block">:message</span>') !!}
@@ -20,15 +20,21 @@
         {!! Form::text('moneda', $comprobante->moneda, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('moneda') ? ' is-invalid' : '' )]) !!}
         {!! $errors->first('moneda','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-5">
+    <div class="col-md-6">
         {{Form::label('nombre','Nombre',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('nombre',strtoupper($user->name),['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'nombre'])}}
         {!! $errors->first('nombre','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
+    <div class="col-md-1 text-right">
+        <br>
+        <a href="{{route('comprobantes.editar', $comprobante->id)}}" class="btn btn-success font-verdana-bg">
+            <i class="fas fa-edit" aria-hidden="true"></i>
+        </a>
+    </div>
     <div class="col-md-5">
-        {{ Form::label('socio','Socio',['class' => 'd-inline font-verdana-bg'])}}
-        {!! Form::text('socio', $socio->empresa, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('socio') ? ' is-invalid' : '' )]) !!}
-        {!! $errors->first('socio','<span class="invalid-feedback d-block">:message</span>') !!}
+        {{ Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
+        {!! Form::text('proyecto', $proyecto->nombre, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('proyecto') ? ' is-invalid' : '' )]) !!}
+        {!! $errors->first('proyecto','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
     <div class="col-md-1">
         {{ Form::label('copia','¿Copia?',['class' => 'd-inline font-verdana-bg'])}}
@@ -59,11 +65,11 @@
 </div>
 <hr>
 <div class="form-group row">
-    <div class="col-md-3">
+    {{--<div class="col-md-3">
         {{Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
         {!! Form::select('proyecto',$proyectos,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('proyectos') ? ' is-invalid' : '' ),'id'=>'proyectos']) !!}
         {!! $errors->first('proyecto','<span class="invalid-feedback d-block">:message</span>') !!}
-    </div>
+    </div>--}}
     <div class="col-md-3">
         {{Form::label('centro','Centro',['class' => 'd-inline font-verdana-bg'])}}
         {!! Form::select('centro',$centros,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('centros') ? ' is-invalid' : '' ),'id'=>'centros']) !!}
@@ -119,7 +125,7 @@
         {!! $errors->first('haber_sus','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
     <div class="col-md-4 text-right"><br>
-        <button class="btn btn-secondary font-verdana-bg" type="submit" id="insertar">
+        <button class="btn btn-primary font-verdana-bg" type="submit" id="insertar">
             <i class="fas fa-arrow-down"></i>&nbsp;Insertar
         </button>
         <a href="{{route('facturas.comprobante.create', $comprobante->id)}}" class="btn btn-success font-verdana-bg">

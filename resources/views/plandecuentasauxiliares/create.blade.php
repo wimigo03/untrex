@@ -16,12 +16,13 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>CREAR PLAN DE CUENTA AUXILIAR</b>
+                <div class="card-title"><b>CREAR PLAN DE CUENTA AUXILIAR - {{$proyecto->nombre}}</b>
                     {{--<a href="{{ route('personal.index') }}" class="btn btn-sm pull-right text-white"><i class="fa fa-reply" aria-hidden="true"></i></a>--}}
                 </div>
             </div>
             <div class="card-body">
                 {!! Form::model(Request::all(),['route'=> ['plandecuentasauxiliares.store'],'onsubmit' => "return validacion_form()"]) !!}
+                    {!! Form::hidden('proyecto_id',$proyecto->id) !!}
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-3">
                             {{Form::label('Tipo','Tipo',['class' => 'd-inline'])}}
@@ -36,7 +37,7 @@
                         <div class="col-md-4 text-right">
                             <br>
                             <button type="submit" class="btn btn-primary font-verdana-bg">
-                                <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Salvar&nbsp;
+                                <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Guardar&nbsp;
                             </button>
                             <a href="{{route('plandecuentasauxiliares.index')}}" class="btn btn-danger font-verdana-bg">
                                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;

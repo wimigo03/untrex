@@ -6,7 +6,6 @@
                 <tr class="font-verdana">
                     <td class="text-center p-1"><b>NRO</b></td>
                     <td class="text-center p-1"><b>CUENTA</b></td>
-                    <td class="text-center p-1"><b>PROYECTO</b></td>
                     <td class="text-center p-1"><b>CENTRO</b></td>
                     <td class="text-center p-1"><b>AUXILIAR</b></td>
                     <td class="text-center p-1"><b>GLOSA</b></td>
@@ -30,7 +29,6 @@
                     <tr class="font-verdana {{$editando}}">
                         <td width="1%" class="text-left p-1">{{ $num++ }}</td>
                         <td class="text-left p-1">{{ $datos->codigo . ' - ' . $datos->plancuenta }}</td>
-                        <td class="text-center p-1">{{ $datos->proyecto }}</td>
                         <td class="text-center p-1">{{ $datos->centro }}</td>
                         <td class="text-left p-1">{{ $datos->auxiliar }}</td>
                         <td class="text-left p-1">{{ strtoupper($datos->glosa) }}</td>
@@ -50,7 +48,7 @@
                     </tr>
                 @endforeach
                     <tr class="font-verdana">
-                        <td colspan="6" class="text-center p-1"><b>TOTAL</b></td>
+                        <td colspan="5" class="text-center p-1"><b>TOTAL</b></td>
                         <td class="text-right p-1">
                             {{number_format($total_debe,2,'.',',')}}
                             {{Form::hidden('total_debe',$total_debe)}}

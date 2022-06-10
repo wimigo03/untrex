@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Luecano\NumeroALetras\NumeroALetras;
-use App\Cotizaciones;
+//use App\Cotizaciones;
+use App\TipoCambio;
+use App\Proyectos;
 use App\Comprobantes;
 use App\ComprobantesDetalle;
 use App\ComprobantesFiscales;
@@ -18,24 +20,24 @@ use PDF;
 class ComprobantesController extends Controller
 {
     public function index(){
-        $cotizacion = Cotizaciones::where('fecha',Carbon::now()->toDateString())->first();
+        $cotizacion = TipoCambio::where('fecha',Carbon::now()->toDateString())->first();
         if($cotizacion == null){
-            return redirect()->route('cotizaciones.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
+            return redirect()->route('tipo_cambio.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
         }
-        $socios = Socios::pluck('empresa','id');
+        $proyectos = Proyectos::pluck('nombre','id');
         $comprobantes = DB::table('comprobantes as a')
-                    ->join('socios as b','b.id','a.socio_id')
-                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia')
+                    ->join('proyectos as b','b.id','a.proyecto_id')
+                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.abreviatura','a.monto','a.status','a.copia')
                     ->orderBy('a.id','desc')->paginate(10);
         $back = true;
-        return view('comprobantes.index',compact('comprobantes','socios','back'));
+        return view('comprobantes.index',compact('comprobantes','proyectos','back'));
     }
 
     public function indexAjax(){
         return datatables()
             ->query(DB::table('comprobantes as a')
-            ->join('socios as b','b.id','a.socio_id')
-            ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia',
+            ->join('proyectos as b','b.id','a.proyecto_id')
+            ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.abreviatura','a.monto','a.status','a.copia',
                     DB::raw("if(a.status = '0','BORRADOR',if(a.status = '1', 'APROBADO','ANULADO')) as status_search"),
                     DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha_comprobante")))
             ->filterColumn('status_search', function($query, $keyword) {
@@ -57,37 +59,36 @@ class ComprobantesController extends Controller
         }else{
             $fecha = null;
         }
-        $socios = Socios::pluck('empresa','id');
+        $proyectos = Proyectos::pluck('nombre','id');
         $comprobantes = DB::table('comprobantes as a')
-                    ->join('socios as b','b.id','a.socio_id')
+                    ->join('proyectos as b','b.id','a.proyecto_id')
                     ->where('a.fecha',"LIKE",$fecha)
                     ->where('a.nro_comprobante',"LIKE",'%' . $request->nro_comprobante . '%')
-                    ->where('b.id',"LIKE",$request->socio)
+                    ->where('b.id',"LIKE",$request->proyecto)
                     ->where('a.tipo',"LIKE",$request->tipo)
                     ->where('a.status',"LIKE",$request->estado)
                     //->where('a.concepto',"LIKE","%".$request->concepto."%")
-                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.empresa','a.monto','a.status','a.copia')
+                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.abreviatura','a.monto','a.status','a.copia')
                     ->orderBy('a.id','desc')->get();
         $back = false;
-        return view('comprobantes.indexSearch',compact('comprobantes','socios','back'));
+        return view('comprobantes.indexSearch',compact('comprobantes','proyectos','back'));
     }
 
     public function show($comprobante_id){
         $comprobante = DB::table('comprobantes as a')
                     ->join('users as b','b.id','a.user_id')
-                    ->join('socios as c','c.id','a.socio_id')
+                    ->join('proyectos as c','c.id','a.proyecto_id')
                     ->leftjoin('users as d','d.id','a.user_autorizado_id')
                     ->where('a.id',$comprobante_id)
                     ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
                     DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
-                    'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto')
+                    'a.status','a.concepto','c.nombre','d.name as autorizado','a.fecha','a.copia','a.monto')
                     ->first();
         $comprobante_detalle = DB::table('comprobantes_detalles as a')
                             ->join('plan_cuentas as b','b.id','a.plancuenta_id')
-                            ->join('proyectos as c','c.id','a.proyecto_id')
                             ->join('centros as d','d.id','a.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
-                            ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
+                            ->select('b.codigo','b.nombre as plancuenta','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe','a.haber')
                             ->where('a.comprobante_id',$comprobante_id)
                             ->where('a.deleted_at',null)
                             ->orderBy('a.id','desc')->get();
@@ -98,19 +99,19 @@ class ComprobantesController extends Controller
 
     public function create(){
         $date = date('Y-m-d');
-        $tipo_cambio = Cotizaciones::where('fecha',$date)->where('deleted_at',null)->first();
+        $tipo_cambio = TipoCambio::where('fecha',$date)->where('deleted_at',null)->first();
         if($tipo_cambio == null){
             return back()->with('danger', 'No exite un tipo de cambio para el dia de hoy...');
         }
-        $socios = Socios::pluck('empresa','id');
+        $proyectos = Proyectos::pluck('nombre','id');
         $nombre = auth()->user()->name;
         $user_id = auth()->user()->id;
-        return view('comprobantes.create',compact('tipo_cambio','socios','nombre','user_id'));
+        return view('comprobantes.create',compact('tipo_cambio','proyectos','nombre','user_id'));
     }
 
     public function store(Request $request){
         $request->validate([
-            'socio'=> 'required',
+            'proyecto'=> 'required',
             'tipo'=> 'required',
             'fecha'=> 'required',
             'entregado_recibido'=> 'required_unless:tipo,3',
@@ -122,13 +123,13 @@ class ComprobantesController extends Controller
         if($fecha > Carbon::now()->toDateString()){
             return back()->withInput()->with('danger','No puede cargar datos a una fecha futura...');
         }
-        $cotizacion = Cotizaciones::where('fecha',$fecha)->first();
+        $cotizacion = TipoCambio::where('fecha',$fecha)->first();
         if($cotizacion == null){
             return back()->withInput()->with('info','Tipo de Cambio y UFV no encontradas...');
         }
         $ultimoComprobante = Comprobantes::whereNotNull('nro_comprobante')
                                         ->where('tipo',$request->tipo)
-                                        //->where('socio_id',$request->socio)
+                                        ->where('proyecto_id',$request->proyecto)
                                         ->whereMonth('fecha', date('m', strtotime($fecha)))
                                         ->whereYear('fecha', date('Y', strtotime($fecha)))
                                         ->orderBy('nro_comprobante_id','desc')
@@ -155,7 +156,7 @@ class ComprobantesController extends Controller
         }
         $comprobante = new Comprobantes();
         $comprobante->user_id = $request->user_id;
-        $comprobante->socio_id = $request->socio;
+        $comprobante->proyecto_id = $request->proyecto;
         $comprobante->nro_comprobante = $nro_comprobante;
         $comprobante->nro_comprobante_id = $numero;
         $comprobante->tipo_cambio = $request->taza_cambio;
@@ -170,6 +171,105 @@ class ComprobantesController extends Controller
         $comprobante->save();
 
         return redirect()->route('comprobantesdetalles.create',$comprobante)->with('message','Los datos ingresados se guardaron correctamente...');
+    }
+
+    public function editar($comprobante_id){
+        $comprobante = Comprobantes::where('id',$comprobante_id)->first();
+        $date = date('Y-m-d');
+        $tipo_cambio = TipoCambio::where('fecha',$date)->where('deleted_at',null)->first();
+        if($tipo_cambio == null){
+            return back()->with('danger', 'No exite un tipo de cambio para el dia de hoy...');
+        }
+        $proyectos = Proyectos::pluck('nombre','id');
+        $nombre = auth()->user()->name;
+        $user_id = auth()->user()->id;
+        return view('comprobantes.editar',compact('comprobante','tipo_cambio','proyectos','nombre','user_id'));
+    }
+
+    public function update(Request $request){
+        $request->validate([
+            'tipo_2'=> 'required',
+            'fecha_2'=> 'required',
+            'entregado_recibido'=> 'required_unless:tipo_2,3'
+        ]);
+        $fecha_2 = substr($request->fecha_2,6,4) . '-' . substr($request->fecha_2,3,2) . '-' . substr($request->fecha_2,0,2);
+        if($fecha_2 > Carbon::now()->toDateString()){
+            return back()->withInput()->with('danger','No puede cargar datos a una fecha futura...');
+        }
+        $cotizacion = TipoCambio::where('fecha',$fecha_2)->first();
+        if($cotizacion == null){
+            return back()->withInput()->with('info','Tipo de Cambio y UFV no encontradas...');
+        }
+        $comprobante_1 = Comprobantes::find($request->comprobante_id);
+        if(($request->fecha_1 == $fecha_2) && ($request->tipo_1 == $request->tipo_2)){
+           $comprobante_1->entregado_recibido = $request->entregado_recibido;
+           $comprobante_1->concepto = $request->concepto;
+           $comprobante_1->update();
+        }else{
+            $ultimoComprobante = Comprobantes::whereNotNull('nro_comprobante')
+                                                ->where('tipo',$request->tipo_2)
+                                                ->where('proyecto_id',$comprobante_1->proyecto_id)
+                                                ->whereMonth('fecha', date('m', strtotime($fecha_2)))
+                                                ->whereYear('fecha', date('Y', strtotime($fecha_2)))
+                                                ->orderBy('nro_comprobante_id','desc')
+                                                ->first();
+            if($ultimoComprobante == null){
+                $numero = 1;
+            }else{
+                $numero = intval($ultimoComprobante != null ? $ultimoComprobante->nro_comprobante_id: 0) + 1;
+            }
+            $tipos = ['','CI','CE','CT'];
+            $codigo = $tipos[$request->tipo_2] . '1';
+            $fecha = Carbon::parse($fecha_2);
+            $codigo = $codigo . "-" . substr($fecha->toDateString(),2,2);
+            if($fecha->month < 10){
+                $codigo = $codigo . '0' . $fecha->month;
+            }else{
+                $codigo = $codigo . $fecha->month;
+            }
+            $nro_comprobante = $codigo . "-" . (str_pad($numero,4,"0",STR_PAD_LEFT));
+            if(isset($request->entregado_recibido)){
+                $entregado_recibido = $request->entregado_recibido;
+            }else{
+                $entregado_recibido = null;
+            }
+            $comprobante_2 = new Comprobantes();
+            $comprobante_2->user_id = $comprobante_1->user_id;
+            $comprobante_2->proyecto_id = $comprobante_1->proyecto_id;
+            $comprobante_2->nro_comprobante = $nro_comprobante;
+            $comprobante_2->nro_comprobante_id = $numero;
+            $comprobante_2->tipo_cambio = $cotizacion->dolar_oficial;
+            $comprobante_2->ufv = $cotizacion->ufv;
+            $comprobante_2->tipo = $request->tipo_2;
+            $comprobante_2->entregado_recibido = $entregado_recibido;
+            $comprobante_2->fecha = $fecha;
+            $comprobante_2->concepto = $request->concepto;
+            $comprobante_2->moneda = $comprobante_1->moneda;
+            $comprobante_2->copia = $comprobante_1->copia;
+            $comprobante_2->status = 0;
+            $comprobante_2->save();
+
+            $comprobante_detalle = ComprobantesDetalle::where('comprobante_id',$request->comprobante_id)->get();
+            foreach($comprobante_detalle as $datos){
+                $comprobanteDetalle = new ComprobantesDetalle();
+                $comprobanteDetalle->comprobante_id = $comprobante_2->id;
+                $comprobanteDetalle->plancuenta_id = $datos->plancuenta_id;
+                $comprobanteDetalle->plancuentaauxiliar_id = $datos->plancuentaauxiliar_id;
+                $comprobanteDetalle->centro_id = $datos->centro_id;
+                $comprobanteDetalle->glosa = strtoupper($datos->glosa);
+                $comprobanteDetalle->debe = $datos->debe;
+                $comprobanteDetalle->haber = $datos->haber;
+                $comprobanteDetalle->tipo_transaccion = $datos->tipo_transaccion;
+                $comprobanteDetalle->cheque_nro = $datos->cheque_nro;
+                $comprobanteDetalle->cheque_orden = $datos->cheque_orden;
+                $comprobanteDetalle->save();
+            }
+            $comprobante_1->concepto = 'ANULADO POR EDICION DE CABECERA EL NUMERO COMPROBANTE ES ' . $comprobante_2->nro_comprobante;
+            $comprobante_1->status = 2;
+            $comprobante_1->update();
+        }
+        
+        return redirect()->route('comprobantesdetalles.create',$comprobante_2)->with('message','Los datos ingresados se actualizaron correctamente...');
     }
 
     public function aprobar($comprobante_id){
@@ -198,7 +298,7 @@ class ComprobantesController extends Controller
     private function copia_comprobante($comprobante){
         $ultimoComprobante = ComprobantesFiscales::whereNotNull('nro_comprobante')
                                                 ->where('tipo',$comprobante->tipo)
-                                                //->where('socio_id',$comprobante->socio_id)
+                                                ->where('proyecto_id',$comprobante->proyecto_id)
                                                 ->whereMonth('fecha', date('m', strtotime($comprobante->fecha)))
                                                 ->whereYear('fecha', date('Y', strtotime($comprobante->fecha)))
                                                 ->orderBy('nro_comprobante_id','desc')
@@ -226,7 +326,7 @@ class ComprobantesController extends Controller
         $comprobante_fiscal = new ComprobantesFiscales();
         $comprobante_fiscal->comprobante_interno_id = $comprobante->id;
         $comprobante_fiscal->user_id = $comprobante->user_id;
-        $comprobante_fiscal->socio_id = $comprobante->socio_id;
+        $comprobante_fiscal->proyecto_id = $comprobante->proyecto_id;
         $comprobante_fiscal->nro_comprobante = $nro_comprobante;
         $comprobante_fiscal->nro_comprobante_id = $numero;
         $comprobante_fiscal->tipo_cambio = $comprobante->tipo_cambio;
@@ -246,7 +346,6 @@ class ComprobantesController extends Controller
             $comprobante_fiscal_detalle->comprobante_fiscal_id = $comprobante_fiscal->id;
             $comprobante_fiscal_detalle->plancuenta_id = $datos->plancuenta_id;
             $comprobante_fiscal_detalle->plancuentaauxiliar_id = $datos->plancuentaauxiliar_id;
-            $comprobante_fiscal_detalle->proyecto_id = $datos->proyecto_id;
             $comprobante_fiscal_detalle->centro_id = $datos->centro_id;
             $comprobante_fiscal_detalle->glosa = $datos->glosa;
             $comprobante_fiscal_detalle->debe = $datos->debe;
@@ -274,12 +373,12 @@ class ComprobantesController extends Controller
         set_time_limit(0);ini_set('memory_limit', '1G');
         $comprobante = DB::table('comprobantes as a')
                     ->join('users as b','b.id','a.user_id')
-                    ->join('socios as c','c.id','a.socio_id')
+                    ->join('proyectos as c','c.id','a.proyecto_id')
                     ->leftjoin('users as d','d.id','a.user_autorizado_id')
                     ->where('a.id',$comprobante_id)
                     ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
                     DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
-                    'a.status','a.concepto','c.empresa','d.name as autorizado','a.fecha','a.copia','a.monto','a.tipo_cambio','a.ufv','a.entregado_recibido')
+                    'a.status','a.concepto','c.nombre','d.name as autorizado','a.fecha','a.copia','a.monto','a.tipo_cambio','a.ufv','a.entregado_recibido')
                     ->first();
         if($comprobante->status == 0){
             $estado = 'PENDIENTE';
@@ -292,11 +391,10 @@ class ComprobantesController extends Controller
         }
         $comprobante_detalle = DB::table('comprobantes_detalles as a')
                             ->join('plan_cuentas as b','b.id','a.plancuenta_id')
-                            ->join('proyectos as c','c.id','a.proyecto_id')
                             ->join('centros as d','d.id','a.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
-                            ->select('b.codigo','b.nombre as plancuenta','c.nombre as proyecto','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe',
-                                    'a.haber','e.id as plancuentaauxiliar_id','a.cheque_nro','c.abreviatura as ab_proyecto','d.abreviatura as ab_centro')
+                            ->select('b.codigo','b.nombre as plancuenta','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe',
+                                    'a.haber','e.id as plancuentaauxiliar_id','a.cheque_nro','d.abreviatura as ab_centro')
                             ->where('a.comprobante_id',$comprobante_id)
                             ->where('a.deleted_at',null)
                             ->orderBy('a.id','desc')->get();

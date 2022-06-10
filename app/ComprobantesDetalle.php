@@ -14,7 +14,6 @@ class ComprobantesDetalle extends Model
         'comprobante_id',
         'plancuenta_id',
         'plancuentaauxiliar_id',
-        'proyecto_id',
         'centro_id',
         'glosa',
         'debe',

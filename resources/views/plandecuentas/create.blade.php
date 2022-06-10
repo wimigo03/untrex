@@ -55,7 +55,12 @@
                             {!! Form::select('cheque', array('1'=>'Si','0'=>'No'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('cheque') ? ' is-invalid' : '' ), 'id' => 'cheque']) !!}
                             {!! $errors->first('cheque','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
-                        <div class="col-md-8 text-right">
+                        <div class="col-md-2">
+                            {{Form::label('Moneda','Moneda',['class' => 'd-inline'])}}
+                            {!! Form::select('moneda', array('BOLIVIANOS'=>'BOLIVIANOS','DOLARES'=>'DOLARES'), null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('moneda') ? ' is-invalid' : '' ), 'id' => 'moneda']) !!}
+                            {!! $errors->first('moneda','<span class="invalid-feedback d-block">:message</span>') !!}
+                        </div>
+                        <div class="col-md-6 text-right">
                             <br>
                             <a href="{{--route('fondos_a_rendir.index')--}}" class="btn btn-danger font-verdana-bg">
                                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;

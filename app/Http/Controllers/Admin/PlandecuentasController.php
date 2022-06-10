@@ -5,58 +5,73 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PlanCuentas;
+use App\Proyectos;
 use DB;
 
 class PlandecuentasController extends Controller
 {
     public function index(){
-
-        $plancuentas = PlanCuentas::where('parent_id', '0')->where('estado',1)->orderBy('id', 'asc')->get();
-		$html = $this->arbol($plancuentas);
-        return view('plandecuentas.index',compact('html'));
+        $proyecto_id = null;
+        $plancuentas = null;
+        $html = "";
+        $proyectos  = Proyectos::where('estado',1)->get();
+        return view('plandecuentas.index',compact('proyecto_id','plancuentas','html','proyectos'));
     }
 
-    public function arbol($plancuenta, $state = 1){
-        $numero = 1;
-        $html2 = "";
-        foreach($plancuenta as $row) {
-            $html2 .= '<ul id="menu-group-'.$numero.'" class="nav menu"> ';
-            $html2 .= '<li class="item-'.$numero.' deeper parent">';
-            $html2 .= '<a class="" href="#">
-                        <span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$numero;
-            if($state){
-                $html2 .= '-1" class="sign"><i class="icon-plus icon-white"></i></span>';
-            }else{
-                $html2 .= '-1" class=""><i class="icon-plus icon-white"></i></span>';
-            }
-            $html2 .= '<span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$numero.'-1" class="lbl">'. $row->codigo . " " . $row->nombre.'</span>';
-            $html2 .= '</a>';
-            $plancuenta_tree = PlanCuentas::where('estado', '1')->where('parent_id', $row->id)->orderBy('id', 'asc')->get();
-            $html2 .= $this->categoryTree2($plancuenta_tree, $row->id, $numero, 1);
-            $html2 .= '</li>';
-            $numero++;
-            $html2 .= '</ul>';
+    public function search(Request $request){
+        if($request->proyecto_id != null){
+            $proyecto_id = $request->proyecto_id;
+            $proyectos  = Proyectos::where('estado',1)->get();
+            $planCuentas = PlanCuentas::where('parent_id', '0')
+                                        ->where('proyecto_id', $proyecto_id)
+                                        ->where('estado',1)
+                                        ->orderBy('id', 'asc')
+                                        ->get();
+            $html = $this->tree($planCuentas);
+            return view('plandecuentas.index',compact('proyecto_id','proyectos','planCuentas','html'));
+        }else{
+            $proyecto_id = null;
+            $proyectos  = Proyectos::where('estado',1)->get();
+            $planCuentas = null;
+            $html = "";
+            return view('plandecuentas.index',compact('proyecto_id','proyectos','planCuentas','html'));
         }
-        return $html2;
     }
 
-    public function categoryTree2($plancuenta, $parent_id = 0,$num_sub,$numero,$state = 1){
-        $html = '<ul class="children nav-child unstyled small collapse" id="sub-item-'.$num_sub.'-'.$numero.'">';
-        foreach($plancuenta as $row) {
-            $numero++;
-            if ($row->parent_id == $parent_id) {
-                $html .= '<li class="item-' . $numero . ' deeper parent">';
-                $html .= '<a class="" href="#">
-                            <span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$num_sub.'-'.$row->id;
-                if($state){
-                    $html .= '" class="sign"><i class="icon-plus icon-white"></i></span>';
-                }else{
-                    $html .= '" class=""><i class="icon-plus icon-white"></i></span>';
-                }
-                $html .= '<span data-value="'.$row->id.'" data-codigo="'.$row->codigo.'" data-toggle="collapse" data-parent="#menu-group-'.$numero.'" href="#sub-item-'.$num_sub.'-'.$row->id.'" class="lbl">'. $row->codigo." ".$row->nombre.'</span>';
-                $html .= '</a>';
-                $plancuenta2 = PlanCuentas::where('estado', '1')->where('parent_id', $row->id)->where('deleted_at',null)->orderBy('id', 'asc')->get();
-                $html .= $this->categoryTree2($plancuenta2, $row->id, $num_sub, $row->id, $html);
+    private function tree($plancuentas){
+        $tree  = '<ul id="treeview-plan-cuentas" class = "filetree" >';
+        $tree .=    '<li class = "tree-view" ></li>';
+        foreach ($plancuentas as $planCuenta){
+           $tree .=     '<li class = "closed" >';
+           $tree .=         '<span class = "folder" style="cursor: pointer;">';
+           $tree .=             " (" . $planCuenta->codigo . ") " . $planCuenta->nombre;
+           $tree .=         '</span>';
+           $tree .=         '<input type = "hidden" class = "plan_cuenta_id" value = "' . $planCuenta->id . '">';
+            if(count($planCuenta->hijos)){
+                $tree .= $this->vistaHijo($planCuenta);
+            }
+        }
+        $tree .= '<ul>';
+        return $tree;
+    }
+
+    public function vistaHijo($planCuenta){
+        $html ='<ul>';
+        //TODO: cambiar a orden ascendete los hijos
+        foreach ($planCuenta->hijos as $arr){
+            if(count($arr->hijos)){
+                $html .= '<li class = "closed">';
+                $html .=    '<span class = "folder">';
+                $html .=        " (" . $arr->codigo . ") " . $arr->nombre;
+                $html .=    '</span>';
+                $html .=    '<input type = "hidden" class = "plan_cuenta_id " value = "' . $arr->id . '">';                  
+                $html .=    $this->vistaHijo($arr);
+            }else{
+                $html .= '<li>';
+                $html .=    '<span class = "file" style="cursor: pointer;">';
+                $html .=        " (" . $arr->codigo . ") " . $arr->nombre;
+                $html .=    '</span>';                                 
+                $html .=    '<input type = "hidden" class = "plan_cuenta_id " value = "' . $arr->id . '">';                  
                 $html .= '</li>';
             }
         }
@@ -64,8 +79,26 @@ class PlandecuentasController extends Controller
         return $html;
     }
 
-    public function create($id){
-        if($id == "create-dependiente" || $id == null){
+    public function getSelectedData($id){
+        $planCuenta = PlanCuentas::find($id);
+        if($planCuenta != null){
+            $status_code = '200';
+            /*$moneda = Moneda::find($planCuenta->moneda_id);
+            if($moneda != null){
+                $planCuenta->moneda = $moneda->nombre;
+            }*/
+        }else{
+            $status_code = '404';
+        }
+        return response()->json([
+            'status_code' => $status_code,
+            'data' => $planCuenta
+        ]);
+    }
+
+    public function create(Request $request){
+        $id = $request->crear_plan_cuenta_id;
+        if($id == null){
             return back()->with('danger','La peticion no puede ser procesada...');
         }
         $parent = PlanCuentas::find($id);
@@ -79,7 +112,8 @@ class PlandecuentasController extends Controller
            'nombre_dependiente' => 'required',
            //'descripcion' => 'required',
            'cuenta_detalle' => 'required',
-           'cheque' => 'required'  
+           'cheque' => 'required',
+           'moneda' => 'required'
         ]);
 
         $codigo = $request->codigo_padre.".".((PlanCuentas::where('parent_id', $request->parent_id)->count())+1);
@@ -90,13 +124,15 @@ class PlandecuentasController extends Controller
         $datos->descripcion = strtoupper($request->descripcion);
         $datos->cuenta_detalle = $request->cuenta_detalle;
         $datos->cheque = $request->cheque;
+        $datos->moneda = $request->moneda;
         $datos->estado = 1;
         $datos->save();
 
         return redirect()->route('plandecuentas.index')->with('message','Se agrego un nuevo plan de cuentas...');
     }
 
-    public function editar($id){
+    public function editar(Request $request){
+        $id = $request->editar_plan_cuenta_id;
         $datos = PlanCuentas::find($id);
         if($datos->cuenta_detalle == 1){
             $cuenta_detalle = "Si";
@@ -113,7 +149,6 @@ class PlandecuentasController extends Controller
     }
 
     public function update(Request $request){
-        
         $datos = PlanCuentas::find($request->plancuenta_id);
         $datos->nombre = $request->nombre_dependiente;
         $datos->descripcion = $request->descripcion;

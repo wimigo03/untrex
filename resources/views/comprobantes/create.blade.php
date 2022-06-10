@@ -44,9 +44,9 @@
                             {!! $errors->first('moneda','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
-                            {{ Form::label('socio','Socio',['class' => 'd-inline font-verdana-bg'])}}
-                            {!! Form::select('socio', $socios, null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm ' . ( $errors->has('socio') ? ' is-invalid' : '' )]) !!}
-                            {!! $errors->first('socio','<span class="invalid-feedback d-block">:message</span>') !!}
+                            {{ Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
+                            {!! Form::select('proyecto', $proyectos, null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm' . ( $errors->has('proyecto') ? ' is-invalid' : '' )]) !!}
+                            {!! $errors->first('proyecto','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
                             <div class="row">
@@ -88,7 +88,7 @@
                             <a href="{{route('comprobantes.index')}}" class="btn btn-danger font-verdana-bg">
                                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
                             </a>
-                            <button type="submit" class="btn btn-primary font-verdana-bg">
+                            <button type="submit" class="btn btn-success font-verdana-bg">
                                 <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Registrar&nbsp;
                             </button>
                         </div>

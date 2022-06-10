@@ -5,17 +5,47 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PlanCuentasAuxiliares;
+use App\Proyectos;
 use DB;
 
 class PlandecuentasAuxiliaresController extends Controller
 {
-    public function index(){
-        $plancuentasauxiliares = PlanCuentasAuxiliares::where('estado',1)->orderBy('id', 'desc')->paginate();
-        return view('plandecuentasauxiliares.index',compact('plancuentasauxiliares'));
+    public function index(Request $request){
+        $plancuentasauxiliares = PlanCuentasAuxiliares::where('proyecto_id',$request->proyecto_id)->where('estado',1)->orderBy('id', 'desc')->paginate();
+        $proyecto = Proyectos::where('id',$request->proyecto_id)->first();
+        return view('plandecuentasauxiliares.index',compact('plancuentasauxiliares','proyecto'));
+    }
+    
+    public function indexAjax($proyecto_id){
+        return datatables()
+            ->query(DB::table('plan_cuentas_auxiliares as a')
+            ->where('proyecto_id',$proyecto_id)
+            ->where('estado',1)
+            ->select('a.id as plancuentaauxiliar_id',
+                    DB::raw("DATE_FORMAT(a.created_at,'%d/%m/%Y') as fecha_auxiliar"),
+                    DB::raw("if(a.tipo = '1','PROVEEDOR',if(a.tipo = '2','TRABAJADOR',if(a.tipo = '3','CLIENTE','OTRO'))) as tipo_auxiliar"),
+                    'a.nombre',
+                    DB::raw("if(a.estado = '1','ACTIVO','NO ACTIVO') as estado_auxiliar")))
+            ->filterColumn('fecha_auxiliar', function($query, $keyword) {
+                $sql = "DATE_FORMAT(a.created_at,'%d/%m/%Y')  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            ->filterColumn('tipo_auxiliar', function($query, $keyword) {
+                $sql = "if(a.tipo = '1','PROVEEDOR',if(a.tipo = '2','TRABAJADOR',if(a.tipo = '3','CLIENTE','OTRO')))  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            ->filterColumn('estado_auxiliar', function($query, $keyword) {
+                $sql = "if(a.estado = '1','ACTIVO','NO ACTIVO')  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            /*->addColumn('btnActions','tipo-cambio.partials.actions')
+            ->rawColumns(['btnActions'])*/
+            ->toJson();
     }
 
-    public function create(){
-        return view('plandecuentasauxiliares.create');
+    public function create($proyecto_id){
+        $proyecto = Proyectos::where('id',$proyecto_id)->first();
+        return view('plandecuentasauxiliares.create',compact('proyecto'));
     }
 
     public function store(Request $request){
@@ -25,12 +55,13 @@ class PlandecuentasAuxiliaresController extends Controller
         ]);
 
         $datos = new PlanCuentasAuxiliares();
+        $datos->proyecto_id = $request->proyecto_id;
         $datos->tipo = $request->tipo;
         $datos->nombre = strtoupper($request->auxiliar);
         $datos->estado = 1;
         $datos->save();
 
-        return redirect()->route('plandecuentasauxiliares.index')->with('message','Se agrego un nuevo auxiliar...');
+        return redirect()->route('plandecuentas.index')->with('message','Se agrego un nuevo auxiliar...');
     }
 
     public function editar($id){

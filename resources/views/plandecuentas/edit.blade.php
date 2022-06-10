@@ -60,8 +60,8 @@
                             <a href="{{--route('fondos_a_rendir.index')--}}" class="btn btn-danger font-verdana-bg">
                                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
                             </a>
-                            <button type="submit" class="btn btn-success font-verdana-bg">
-                                <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Agregar&nbsp;
+                            <button type="submit" class="btn btn-primary font-verdana-bg">
+                                <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Actualizar&nbsp;
                             </button>
                         </div>
                     </div>

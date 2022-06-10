@@ -46,8 +46,8 @@
                         {!! Form::text('Concepto',$comprobante_fiscal->concepto, ['readonly' => true,'class' => 'form-control form-control-sm font-verdana-bg']) !!}
                     </div>
                     <div class="col-md-3">
-                        {{ Form::label('Socio','Socio',['class' => 'd-inline font-verdana-bg'])}}
-                        {!! Form::text('Socio',$comprobante_fiscal->empresa, ['readonly' => true,'class' => 'form-control form-control-sm font-verdana-bg']) !!}
+                        {{ Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
+                        {!! Form::text('Proyecto',$comprobante_fiscal->nombre, ['readonly' => true,'class' => 'form-control form-control-sm font-verdana-bg']) !!}
                     </div>
                     <div class="col-md-2">
                         {{ Form::label('Fecha','Fecha',['class' => 'd-inline font-verdana-bg'])}}
@@ -87,7 +87,6 @@
                                     <tr class="font-verdana">
                                         <td class="text-center p-1"><b>NRO</b></td>
                                         <td class="text-center p-1"><b>CUENTA</b></td>
-                                        <td class="text-center p-1"><b>PROYECTO</b></td>
                                         <td class="text-center p-1"><b>CENTRO</b></td>
                                         <td class="text-center p-1"><b>AUXILIAR</b></td>
                                         <td class="text-center p-1"><b>GLOSA</b></td>
@@ -103,7 +102,6 @@
                                         <tr class="font-verdana">
                                             <td width="1%" class="text-left p-1">{{ $num++ }}</td>
                                             <td class="text-left p-1">{{ $datos->codigo . ' - ' . $datos->plancuenta }}</td>
-                                            <td class="text-center p-1">{{ $datos->proyecto }}</td>
                                             <td class="text-center p-1">{{ $datos->centro }}</td>
                                             <td class="text-left p-1">{{ $datos->auxiliar }}</td>
                                             <td class="text-left p-1">{{ strtoupper($datos->glosa) }}</td>
@@ -112,7 +110,7 @@
                                         </tr>
                                     @endforeach
                                         <tr class="font-verdana">
-                                            <td colspan="6" class="text-center p-1"><b>TOTAL</b></td>
+                                            <td colspan="5" class="text-center p-1"><b>TOTAL</b></td>
                                             <td class="text-right p-1"><b>{{number_format($total_debe,2,'.',',')}}</b></td>
                                             <td class="text-right p-1"><b>{{number_format($total_haber,2,'.',',')}}</b></td>
                                         </tr>

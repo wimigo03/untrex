@@ -13,7 +13,6 @@ class ComprobantesFiscalesDetalle extends Model
         'comprobante_fiscal_id',
         'plancuenta_id',
         'plancuentaauxiliar_id',
-        'proyecto_id',
         'centro_id',
         'glosa',
         'debe',

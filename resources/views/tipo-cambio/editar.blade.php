@@ -16,10 +16,11 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>CREAR COTIZACION</b></div>
+                <div class="card-title"><b>MODIFICAR COTIZACION</b></div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['cotizaciones.store'],'onsubmit' => "return validacion_form()"]) !!}
+                {!! Form::model(Request::all(),['route'=> ['tipo_cambio.update'],'onsubmit' => "return validacion_form()"]) !!}
+                    {{Form::hidden('tipo_cambio_id',$tipo_cambio->id)}}
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-3">
                             <div class="row">
@@ -30,38 +31,40 @@
                                     <em><span id="message" class="text-danger font-verdana-sm"></span></em>
                                 </div>
                             </div>
-                            {{Form::text('fecha',null,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'fecha','data-language' => 'es', 'placeholder' => 'dd/mm/yyyy', 'autocomplete' => 'off', 'onkeyup' => 'countChars(this);'])}}
+                            {{Form::text('fecha',\Carbon\Carbon::parse($tipo_cambio->fecha)->format('d/m/Y'),['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'fecha','data-language' => 'es', 'placeholder' => 'dd/mm/yyyy', 'autocomplete' => 'off', 'onkeyup' => 'countChars(this);'])}}
                             {!! $errors->first('fecha','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
+                    </div>
+                    <div class="form-group row font-verdana-bg">
                         <div class="col-md-3">
                             {{Form::label('Dolar_oficial','Dolar oficial',['class' => 'd-inline'])}}
-                            {{Form::text('dolar_oficial',null,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'dolar_oficial', 'onkeypress' => 'return valideKey(event);'])}}
+                            {{Form::text('dolar_oficial',$tipo_cambio->dolar_oficial,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'dolar_oficial', 'onkeypress' => 'return valideKey(event);'])}}
                             {!! $errors->first('dolar_oficial','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
                             {{Form::label('Dolar_compra','Dolar Compra',['class' => 'd-inline'])}}
-                            {{Form::text('dolar_compra',null,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'dolar_compra', 'onkeypress' => 'return valideKey(event);'])}}
+                            {{Form::text('dolar_compra',$tipo_cambio->dolar_compra,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'dolar_compra', 'onkeypress' => 'return valideKey(event);'])}}
                             {!! $errors->first('dolar_compra','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-3">
                             {{Form::label('Dolar_venta','Dolar Venta',['class' => 'd-inline'])}}
-                            {{Form::text('dolar_venta',null,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'dolar_venta', 'onkeypress' => 'return valideKey(event);'])}}
+                            {{Form::text('dolar_venta',$tipo_cambio->dolar_venta,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'dolar_venta', 'onkeypress' => 'return valideKey(event);'])}}
                             {!! $errors->first('dolar_venta','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                     </div>
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-3">
                             {{Form::label('Ufv','Ufv',['class' => 'd-inline'])}}
-                            {{Form::text('ufv',null,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'ufv', 'onkeypress' => 'return valideKey(event);'])}}
+                            {{Form::text('ufv',$tipo_cambio->ufv,['class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'ufv', 'onkeypress' => 'return valideKey(event);'])}}
                             {!! $errors->first('ufv','<span class="invalid-feedback d-block">:message</span>') !!}
                         </div>
                         <div class="col-md-9 text-right">
                             <br>
-                            <a href="{{route('cotizaciones.index')}}" class="btn btn-danger font-verdana-bg">
+                            <a href="{{route('tipo_cambio.index')}}" class="btn btn-danger font-verdana-bg">
                                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
                             </a>
-                            <button type="submit" class="btn btn-primary font-verdana-bg">
-                                <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Salvar&nbsp;
+                            <button type="submit" class="btn btn-success font-verdana-bg">
+                                <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Actualizar&nbsp;
                             </button>
                         </div>
                     </div>

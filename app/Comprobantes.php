@@ -11,7 +11,7 @@ class Comprobantes extends Model
     protected $table = 'comprobantes';
     protected $fillable = [
         'user_id',
-        'socio_id',
+        'proyecto_id',
         'user_autorizado_id',
         'nro_comprobante',
         'nro_comprobante_id',

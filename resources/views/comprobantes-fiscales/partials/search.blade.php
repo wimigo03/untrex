@@ -15,8 +15,8 @@
         {{Form::text('nro_comprobante',null,['class'=>'form-control form-control-sm font-verdana-bg','id'=>'nro_comprobante'])}}
     </div>
     <div class="col-md-3">
-        {{Form::label('socio','Socio',['class' => 'd-inline font-verdana-bg'])}}
-        {!! Form::select('socio',$socios,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2','id'=>'socios']) !!}
+        {{Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
+        {!! Form::select('proyecto',$proyectos,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2','id'=>'proyectos']) !!}
     </div>
     <div class="col-md-2">
         {{Form::label('tipo','Tipo',['class' => 'd-inline font-verdana-bg'])}}

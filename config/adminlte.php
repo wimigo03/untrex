@@ -255,7 +255,7 @@ return [
         ],*/
         [
             'text'        => 'Cotizaciones',
-            'route'         => 'cotizaciones.index',
+            'route'         => 'tipo_cambio.index',
             'icon'        => 'fas fa-funnel-dollar',
             'label_color' => 'success',
         ],
@@ -265,12 +265,12 @@ return [
             'icon'        => 'fas fa-sitemap',
             'label_color' => 'success',
         ],
-        [
+        /*[
             'text'        => 'Plan de cuentas Aux.',
             'route'         => 'plandecuentasauxiliares.index',
             'icon'        => 'fas fa-list',
             'label_color' => 'success',
-        ],
+        ],*/
         [
             'text'    => 'Comprobantes',
             'icon'    => 'fas fa-list-alt',

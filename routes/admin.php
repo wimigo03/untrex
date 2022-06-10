@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\PlandecuentasController;
 use App\Http\Controllers\Admin\PlandecuentasAuxiliaresController;
-use App\Http\Controllers\Admin\CotizacionesController;
+use App\Http\Controllers\Admin\TipoCambioController;
 use App\Http\Controllers\Admin\ComprobantesController;
 use App\Http\Controllers\Admin\ComprobantesDetalleController;
 use App\Http\Controllers\Admin\ComprobantesFiscalesController;
@@ -45,28 +45,35 @@ Route::get('/comprobantes/pdf/{comprobante_id}', [ComprobantesController::class,
 Route::get('/comprobantes/rechazar/{comprobante_id}', [ComprobantesController::class, 'rechazar'])->name('comprobantes.rechazar');
 Route::get('/comprobantes/aprobar/{comprobante_id}', [ComprobantesController::class, 'aprobar'])->name('comprobantes.aprobar');
 Route::get('/comprobantes/show/{comprobante_id}', [ComprobantesController::class, 'show'])->name('comprobantes.show');
+Route::post('/comprobantes/update', [ComprobantesController::class, 'update'])->name('comprobantes.update');
+Route::get('/comprobantes/editar/{comprobante_id}', [ComprobantesController::class, 'editar'])->name('comprobantes.editar');
 Route::post('/comprobantes/store', [ComprobantesController::class, 'store'])->name('comprobantes.store');
 route::get('/comprobantes/create', [ComprobantesController::class, 'create'])->name('comprobantes.create');
 route::post('/comprobantes/search', [ComprobantesController::class, 'search'])->name('comprobantes.search');
 route::get('/comprobantes/indexAjax', [ComprobantesController::class, 'indexAjax'])->name('comprobantes.indexAjax');
 route::get('/comprobantes', [ComprobantesController::class, 'index'])->name('comprobantes.index');
-//Cotizaciones
-//route::get('/cotizacionesAjax', [CotizacionesController::class, 'indexAjax'])->name('cotizaciones.indexAjax');
-Route::post('/cotizaciones/search', [CotizacionesController::class, 'search'])->name('cotizaciones.search');
-Route::post('/cotizaciones/store', [CotizacionesController::class, 'store'])->name('cotizaciones.store');
-route::get('/cotizaciones/create', [CotizacionesController::class, 'create'])->name('cotizaciones.create');
-route::get('/cotizaciones', [CotizacionesController::class, 'index'])->name('cotizaciones.index');
+//Tipo de cambio
+Route::post('/tipo-cambio/update', [TipoCambioController::class, 'update'])->name('tipo_cambio.update');
+route::get('/tipo-cambio/editar/{id}', [TipoCambioController::class, 'editar'])->name('tipo_cambio.editar');
+Route::post('/tipo-cambio/store', [TipoCambioController::class, 'store'])->name('tipo_cambio.store');
+route::get('/tipo-cambio/create', [TipoCambioController::class, 'create'])->name('tipo_cambio.create');
+route::get('/tipo-cambio/indexAjax', [TipoCambioController::class, 'indexAjax'])->name('tipo_cambio.indexAjax');
+Route::post('/tipo-cambio/search', [TipoCambioController::class, 'search'])->name('tipo_cambio.search');
+route::get('/tipo-cambio', [TipoCambioController::class, 'index'])->name('tipo_cambio.index');
 //Plan de cuentas auxiliares
 Route::post('/plandecuentasauxiliares/store', [PlandecuentasAuxiliaresController::class, 'store'])->name('plandecuentasauxiliares.store');
-route::get('/plandecuentasauxiliares/create', [PlandecuentasAuxiliaresController::class, 'create'])->name('plandecuentasauxiliares.create');
-route::get('/plandecuentasauxiliares', [PlandecuentasAuxiliaresController::class, 'index'])->name('plandecuentasauxiliares.index');
+route::get('/plandecuentasauxiliares/create/{proyecto_id}', [PlandecuentasAuxiliaresController::class, 'create'])->name('plandecuentasauxiliares.create');
+route::get('/plandecuentasauxiliares/indexAjax/{proyecto_id}', [PlandecuentasAuxiliaresController::class, 'indexAjax'])->name('plandecuentasauxiliares.indexAjax');
+route::post('/plandecuentasauxiliares', [PlandecuentasAuxiliaresController::class, 'index'])->name('plandecuentasauxiliares.index');
 //Plan de cuentas
 Route::post('/plandecuentas/store/editar', [PlandecuentasController::class, 'update'])->name('store_editar_dependiente');
 Route::post('/plandecuentas/store', [PlandecuentasController::class, 'store'])->name('store_dependiente');
 Route::get('/plandecuentas/cargar/{id}', [PlandecuentasController::class, 'ajaxSeleccionar'])->name('seleccionar-cargo');
-route::get('/plandecuentas/editar/{id}', [PlandecuentasController::class, 'editar'])->name('editar_dependiente');
-route::get('/plandecuentas/editar/{id}', [PlandecuentasController::class, 'editar'])->name('editar_dependiente');
-route::get('/plandecuentas/create/{id}', [PlandecuentasController::class, 'create'])->name('create_dependiente');
+route::post('/plandecuentas/editar', [PlandecuentasController::class, 'editar'])->name('plandecuentas.editar_dependiente');
+//route::get('/plandecuentas/editar/{id}', [PlandecuentasController::class, 'editar'])->name('editar_dependiente');
+route::post('/plandecuentas/create', [PlandecuentasController::class, 'create'])->name('plandecuentas.create_dependiente');
+Route::get('/plandecuentas/get-selected-data/{id}',[PlandecuentasController::class, 'getSelectedData'])->name('plandecuentas.get-selected-data');
+Route::get('/plandecuentas/search', [PlandecuentasController::class, 'search'])->name('plandecuentas.search');
 route::get('/plandecuentas', [PlandecuentasController::class, 'index'])->name('plandecuentas.index');
 route::get('', [HomeController::class, 'index']);
 

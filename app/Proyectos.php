@@ -10,9 +10,11 @@ class Proyectos extends Model
 {
     protected $table = 'proyectos';
     protected $fillable = [
-        'empresa_id',
+        'consorcio_id',
         'nombre',
-        'abreviatura'
+        'abreviatura',
+        'ubicacion',
+        'estado'
     ];
     use SoftDeletes;
     protected $dates =['deleted_at'];

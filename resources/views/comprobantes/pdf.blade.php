@@ -67,6 +67,13 @@
 			<tr>
 				<td>
 					<table border="0" width="100%" cellpadding="2">
+						<tr>
+							<td valign="top" colspan="3">
+								<font size="10px">
+									<b>PROYECTO:</b>&nbsp;{{strtoupper($comprobante->nombre)}}
+								</font>
+							</td>
+						</tr>
 						@if($comprobante->tipo_comprobante != 'TRASPASO')
 							<tr>
 								<td valign="top" colspan="3">
@@ -79,14 +86,14 @@
 							<tr>
 								<td valign="top" colspan="3">
 									<font size="10px">
-										<b>Por Concepto de:</b>&nbsp;{{strtoupper($comprobante->concepto)}}
+										<b>POR CONCEPTO DE:</b>&nbsp;{{strtoupper($comprobante->concepto)}}
 									</font>
 								</td>
 							</tr>
 							<tr>
 								<td width="5%" valign="top">
 									<font size="10px">
-										<b>Tipo de Moneda:</b>&nbsp;{{ $comprobante->moneda }}.
+										<b>TIPO DE MONEDA:</b>&nbsp;{{ $comprobante->moneda }}.
 									</font>
 								</td>
 								<td width="5%" valign="top">
@@ -113,7 +120,7 @@
 				<tr bgcolor="#6c757d">
 					<td width="7%" align="left"><font color="#ffffff" size="9px"><b>CODIGO</b></font></td>
 					<td width="40%" align="center"><font color="#ffffff" size="9px"><b>DESCRIPCION / GLOSA</b></font></td>
-					<td align="center"><font color="#ffffff" size="9px"><b>PROY./CEN.</b></font></td>
+					<td align="center"><font color="#ffffff" size="9px"><b>CENTRO</b></font></td>
 					<td align="center"><font color="#ffffff" size="9px"><b>DEBE(BS.)</b></font></td>
 					<td align="center"><font color="#ffffff" size="9px"><b>HABER(BS.)</b></font></td>
 					<td align="center"><font color="#ffffff" size="9px"><b>DEBE($US)</b></font></td>
@@ -202,11 +209,11 @@
 							@endif
 						</font></td>
 						<td align="center" valign="top"><font size="9px">
-							@if($datos_detalle->proyecto)
+							{{--@if($datos_detalle->proyecto)
 								{{$datos_detalle->ab_proyecto}}
-							@endif
+							@endif--}}
 							@if($datos_detalle->centro)
-							/ {{ $datos_detalle->ab_centro }}
+							{{ $datos_detalle->ab_centro }}
 							@endif
 						</font></td>
 						<td align="right" valign="top"><font size="9px">{{ number_format($debe_bs,2,'.',',')  }}</font></td>

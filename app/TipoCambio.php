@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
-class Cotizaciones extends Model
+class TipoCambio extends Model
 {
-    protected $table = 'cotizaciones';
+    protected $table = 'tipo_cambio';
     protected $fillable = [
         'fecha',
         'ufv',

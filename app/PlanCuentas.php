@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\PlanCuentas;
 use DB;
 
 class PlanCuentas extends Model
@@ -20,4 +21,8 @@ class PlanCuentas extends Model
     ];
     use SoftDeletes;
     protected $dates =['deleted_at'];
+
+    public function hijos(){
+        return $this->hasMany(PlanCuentas::class,'parent_id','id');
+      }
 }

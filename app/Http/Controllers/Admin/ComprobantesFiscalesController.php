@@ -22,7 +22,7 @@ class ComprobantesFiscalesController extends Controller
         $fechaActual = Carbon::now();
         $cotizacion = TipoCambio::where('fecha',Carbon::now()->toDateString())->first();
         if($cotizacion == null){
-            return redirect()->route('cotizaciones.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
+            return redirect()->route('tipo_cambio.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
         }
         $proyectos = Proyectos::pluck('nombre','id');
         $back = true;

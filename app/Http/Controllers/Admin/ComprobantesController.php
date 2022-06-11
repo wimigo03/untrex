@@ -37,9 +37,15 @@ class ComprobantesController extends Controller
         return datatables()
             ->query(DB::table('comprobantes as a')
             ->join('proyectos as b','b.id','a.proyecto_id')
-            ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.abreviatura','a.monto','a.status','a.copia',
+            ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.concepto','b.abreviatura',
+                    DB::raw("FORMAT(a.monto, 2) as monto"),
+                    'a.status','a.copia',
                     DB::raw("if(a.status = '0','BORRADOR',if(a.status = '1', 'APROBADO','ANULADO')) as status_search"),
                     DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha_comprobante")))
+            ->filterColumn('monto', function($query, $keyword) {
+                $sql = "FORMAT(a.monto, 2) like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
             ->filterColumn('status_search', function($query, $keyword) {
                 $sql = "if(a.status = '0','BORRADOR',if(a.status = '1', 'APROBADO', 'ANULADO'))  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);

@@ -61,7 +61,7 @@
                     {data: 'nro_comprobante', name:'a.nro_comprobante', class:'text-center p-1 font-verdana'},
                     {data: 'concepto', name:'a.concepto', class:'text-left p-1 font-verdana'},
                     {data: 'abreviatura', name:'b.abreviatura', class:'text-center p-1 font-verdana'},
-                    {data: 'monto', name:'a.monto', class:'text-right p-1 font-verdana'},
+                    {data: 'monto', name:'monto', class:'text-right p-1 font-verdana'},
                     {data: 'status_search', name:'status_search', class:'text-center p-1 font-verdana',render: function(data, type, row){
                         if(row.status_search === 'BORRADOR'){
                             return '<span class="btn btn-xs btn-secondary font-verdana-sm"><b>BORRADOR</b></span>';

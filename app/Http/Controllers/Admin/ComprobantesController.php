@@ -205,6 +205,7 @@ class ComprobantesController extends Controller
            $comprobante_1->entregado_recibido = $request->entregado_recibido;
            $comprobante_1->concepto = $request->concepto;
            $comprobante_1->update();
+           return redirect()->route('comprobantesdetalles.create',$comprobante_1)->with('message','Los datos ingresados se actualizaron correctamente...');
         }else{
             $ultimoComprobante = Comprobantes::whereNotNull('nro_comprobante')
                                                 ->where('tipo',$request->tipo_2)
@@ -267,9 +268,8 @@ class ComprobantesController extends Controller
             $comprobante_1->concepto = 'ANULADO POR EDICION DE CABECERA EL NUMERO COMPROBANTE ES ' . $comprobante_2->nro_comprobante;
             $comprobante_1->status = 2;
             $comprobante_1->update();
+            return redirect()->route('comprobantesdetalles.create',$comprobante_2)->with('message','Los datos ingresados se actualizaron correctamente...');
         }
-        
-        return redirect()->route('comprobantesdetalles.create',$comprobante_2)->with('message','Los datos ingresados se actualizaron correctamente...');
     }
 
     public function aprobar($comprobante_id){

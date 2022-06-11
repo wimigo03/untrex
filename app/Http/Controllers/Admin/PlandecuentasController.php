@@ -97,12 +97,13 @@ class PlandecuentasController extends Controller
     }
 
     public function create(Request $request){
+        $proyecto_id = $request->proyecto_id;
         $id = $request->crear_plan_cuenta_id;
         if($id == null){
             return back()->with('danger','La peticion no puede ser procesada...');
         }
         $parent = PlanCuentas::find($id);
-        return view('plandecuentas.create',compact('parent'));
+        return view('plandecuentas.create',compact('parent','proyecto_id'));
     }
 
     public function store(Request $request){
@@ -118,6 +119,7 @@ class PlandecuentasController extends Controller
 
         $codigo = $request->codigo_padre.".".((PlanCuentas::where('parent_id', $request->parent_id)->count())+1);
         $datos = new PlanCuentas();
+        $datos->proyecto_id = $request->proyecto_id;
         $datos->nombre = strtoupper($request->nombre_dependiente);
         $datos->codigo = $codigo;
         $datos->parent_id = $request->parent_id;

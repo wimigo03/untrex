@@ -11,6 +11,7 @@ class PlanCuentas extends Model
 {
     protected $table = 'plan_cuentas';
     protected $fillable = [
+        'proyecto_id',
         'nombre',
         'codigo',
         'parent_id',

@@ -23,6 +23,7 @@
                 {!! Form::model(Request::all(),['route'=> ['store_dependiente'],'onsubmit' => "return validacion_form()"]) !!}
                     <div class="form-group row font-verdana-bg">
                         <div class="col-md-2">
+                            {{Form::hidden('proyecto_id',$proyecto_id)}}
                             {{Form::hidden('parent_id',$parent->id,['readonly'=> true, 'id' => 'id_plancuenta'])}}
                             {{Form::label('Codigo_padre','Codigo Cuenta',['class' => 'd-inline'])}}
                             {{Form::text('codigo_padre',$parent->codigo,['readonly'=> true, 'class'=>'form-control form-control-sm', 'id' => 'codigo_padre'])}}

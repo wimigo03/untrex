@@ -57,6 +57,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     {!! Form::model(Request::all(),['route'=> ['plandecuentas.create_dependiente']]) !!}
+                                        {{Form::hidden('proyecto_id',$proyecto_id)}}
                                         {{Form::hidden('crear_plan_cuenta_id',null,['id' => 'js_crear_plan_cuenta_id'])}}
                                         <br>
                                         <button type="submit" class="btn btn-sm btn-block btn-success btn-accion-seleccionado" style="display: none">

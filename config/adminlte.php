@@ -254,34 +254,46 @@ return [
             'label_color' => 'success',
         ],*/
         [
-            'text'        => 'Cotizaciones',
+            'text'          => 'Cotizaciones',
             'route'         => 'tipo_cambio.index',
-            'icon'        => 'fas fa-funnel-dollar',
-            'label_color' => 'success',
+            'icon'          => 'fas fa-funnel-dollar',
+            'label_color'   => 'success',
         ],
         [
-            'text'        => 'Plan de cuentas',
+            'text'          => 'Plan de cuentas',
             'route'         => 'plandecuentas.index',
-            'icon'        => 'fas fa-sitemap',
-            'label_color' => 'success',
+            'icon'          => 'fas fa-sitemap',
+            'label_color'   => 'success',
         ],
-        /*[
-            'text'        => 'Plan de cuentas Aux.',
-            'route'         => 'plandecuentasauxiliares.index',
-            'icon'        => 'fas fa-list',
-            'label_color' => 'success',
-        ],*/
         [
             'text'    => 'Comprobantes',
             'icon'    => 'fas fa-list-alt',
             'submenu' => [
                 [
-                    'text' => 'Base 1',
-                    'route'         => 'comprobantes.index',
+                    'text'  => 'Base 1',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'comprobantes.index',
                 ],
                 [
-                    'text' => 'Base 2',
-                    'route'         => 'comprobantes.fiscales.index',
+                    'text'  => 'Base 2',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'comprobantes.fiscales.index',
+                ],
+            ],
+        ],
+        [
+            'text'    => 'Libro Mayor',
+            'icon'    => 'fas fa-book',
+            'submenu' => [
+                [
+                    'text'  => 'Por cuenta',
+                    'icon'  => 'fas fa-briefcase',
+                    'route' => 'libromayor.porcuenta.index',
+                ],
+                [
+                    'text'  => 'Por auxiliar',
+                    'icon'  => 'fas fa-briefcase',
+                    'route' => 'librobanco.index',
                 ],
             ],
         ],

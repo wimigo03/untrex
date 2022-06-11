@@ -10,7 +10,21 @@ use App\Http\Controllers\Admin\ComprobantesDetalleController;
 use App\Http\Controllers\Admin\ComprobantesFiscalesController;
 use App\Http\Controllers\Admin\ComprobantesFiscalesDetalleController;
 use App\Http\Controllers\Admin\FacturasController;
+use App\Http\Controllers\Admin\LibroMayorPorCuentaController;
+use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
+use App\Http\Controllers\Admin\LibroBancoController;
 
+//Libro banco
+route::get('/librobanco/banco/index', [LibroBancoController::class, 'index'])->name('librobanco.index');
+//Libro mayor por auxiliar
+route::get('/libromayor/porauxiliar/index', [LibroMayorPorAuxiliarController::class, 'index'])->name('libromayor.porauxiliar.index');
+//Libro mayor por cuenta
+Route::get('libromayor/porcuenta/excel/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'excel'])->name('libromayor.porcuenta.excel');
+Route::get('libromayor/porcuenta/auxiliarpdf/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'auxiliarPdf'])->name('libromayor.porcuenta.auxiliarPdf');
+Route::get('libromayor/porcuenta/generalpdf/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'generalPdf'])->name('libromayor.porcuenta.generalPdf');
+Route::get('/libromayor/porcuenta/seleccionar', [LibroMayorPorCuentaController::class, 'seleccionar']);
+route::post('/libromayor/porcuenta/search', [LibroMayorPorCuentaController::class, 'search'])->name('libromayor.porcuenta.search');
+route::get('/libromayor/porcuenta/index', [LibroMayorPorCuentaController::class, 'index'])->name('libromayor.porcuenta.index');
 //Facturas
 Route::post('/facturaComprobante/store_factura', [FacturasController::class, 'store_factura'])->name('facturas.comprobante.store.factura');
 Route::get('/facturaComprobante/delete/{factura_id}', [FacturasController::class, 'delete'])->name('facturas.comprobante.delete');

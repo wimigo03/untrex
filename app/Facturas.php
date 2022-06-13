@@ -10,7 +10,7 @@ class Facturas extends Model
 {
     protected $table = 'facturas';
     protected $fillable = [
-        'socio_id',
+        'proyecto_id',
         'proveedor_id',
         'fecha',
         'nit',
@@ -22,15 +22,16 @@ class Facturas extends Model
         'monto',
         'excento',
         'descuento',
-        'procedencia',
-        'tipo',
-        'estado',
-        'comprobante_id',
-        'plancuenta_id',
-        'plancuentaauxiliar_id',
-        'proyecto_id',
-        'centro_id',
-        'glosa'
+        'glosa',
+        'procedencia'
+        //'tipo',
+        //'estado',
+        //'comprobante_id',
+        //'plancuenta_id',
+        //'plancuentaauxiliar_id',
+        //'proyecto_id',
+        //'centro_id',
+        
     ];
     
     use SoftDeletes;

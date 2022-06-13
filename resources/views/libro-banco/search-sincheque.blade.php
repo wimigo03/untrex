@@ -6,10 +6,10 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>LIBRO MAYOR POR CUENTA - {{strtoupper($tipo)}} - {{strtoupper($proyecto->nombre)}}</b></div>
+                <div class="card-title"><b>LIBRO BANCO - {{strtoupper($proyecto->nombre)}}</b></div>
             </div>
             <div class="card-body">
-                @include('libro-mayor.por-cuenta.partials.encabezado-general')
+                @include('libro-banco.partials.encabezado')
                 @if ($comprobantes != null)
                     <div class="form-group row">
                         <div class="col-md-12">
@@ -18,12 +18,11 @@
                                     <tr class="font-verdana">
                                         <td class="text-center p-1"><b>FECHA</b></td>
                                         <td width="15%" colspan="2" class="text-center p-1"><b>COMPROBANTE</b></td>
-                                        <td class="text-center p-1"><b>CENTRO</b></td>
-                                        <td class="text-center p-1"><b>AUXILIAR</b></td>
-                                        <td class="text-center p-1"><b>CHEQUE</b></td>
+                                        <td class="text-center p-1"><b>Nro. CHEQUE</b></td>
+                                        <td class="text-center p-1"><b>CHEQUE ORDEN</b></td>
                                         <td class="text-center p-1"><b>GLOSA</b></td>
-                                        <td class="text-center p-1"><b>DEBE</b></td>
-                                        <td class="text-center p-1"><b>HABER</b></td>
+                                        <td class="text-center p-1"><b>ABONO</b></td>
+                                        <td class="text-center p-1"><b>DEBITO</b></td>
                                         <td class="text-center p-1"><b>SALDO</b></td>
                                     </tr>
                                 </thead>
@@ -46,9 +45,8 @@
                                                 </a>
                                             </td>
                                             <td class="text-center p-1 {{$color}}"><b>{{$estado}}</b></td>
-                                            <td class="text-center p-1">{{$datos->centro}}</td>
-                                            <td class="text-center p-1">{{$datos->auxiliar}}</td>
                                             <td class="text-center p-1">{{strtoupper($datos->cheque_nro)}}</td>
+                                            <td class="text-center p-1">{{strtoupper($datos->cheque_orden)}}</td>
                                             <td class="text-justify p-1">{{strtoupper($datos->glosa)}}</td>
                                             <td class="text-right p-1">{{number_format($datos->debe,2,'.',',')}}</td>
                                             <td class="text-right p-1">{{number_format($datos->haber,2,'.',',')}}</td>

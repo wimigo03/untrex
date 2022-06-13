@@ -51,15 +51,8 @@
         {{--<a href="{{ route('libromayor.porcuenta.excel',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Excel" class="btn btn-sm btn-success font-verdana-bg">
             <i class="fas fa-file-excel"></i>
         </a>--}}
-        @if ($tipo == 'General')
-            <a href="{{ route('libromayor.porcuenta.generalPdf',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
-                <i class="fas fa-file-pdf"></i>
-            </a>
-        @else
-            <a href="{{ route('libromayor.porcuenta.auxiliarPdf',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
-                <i class="fas fa-file-pdf"></i>
-            </a>
-        @endif
-        
+        <a href="{{ route('libromayor.porcuenta.generalPdf',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
+            <i class="fas fa-file-pdf"></i>
+        </a>
     </div>
 </div>

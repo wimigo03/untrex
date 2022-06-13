@@ -31,7 +31,6 @@ class LibroMayorPorCuentaController extends Controller
             'tipo' => 'required',
             'plancuenta_id' => 'required'
         ]);
-        //dd($request->all());
         if($request->tipo == 'General'){
             $datos = $this->searchGeneral($request->proyecto,$request->fecha_inicial,$request->fecha_final,$request->tipo,$request->plancuenta_id);
             $proyecto = $datos['proyecto'];
@@ -53,13 +52,9 @@ class LibroMayorPorCuentaController extends Controller
             $plancuenta = $datos['plancuenta'];
             $fecha_inicial = $datos['fecha_inicial'];
             $fecha_final = $datos['fecha_final'];
+            $find_auxiliares = $datos['find_auxiliares'];
             $auxiliares = $datos['auxiliares'];
-            //$comprobantes = $datos['comprobantes'];
-            $saldo = 0;//$datos['saldo'];
-            $saldo_final = 0;//$datos['saldo_final'];
-            $total_debe = 0;//$datos['total_debe'];
-            $total_haber = 0;//$datos['total_haber'];
-            return view('libro-mayor.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares','saldo','saldo_final','total_debe','total_haber'));
+            return view('libro-mayor.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','find_auxiliares','auxiliares'));
         }
     }
 
@@ -129,7 +124,6 @@ class LibroMayorPorCuentaController extends Controller
     }
 
     private function searchAuxiliar($proyecto_id,$fecha_inicial,$fecha_final,$tipo,$plancuenta_id){
-        //dd($proyecto_id,$fecha_inicial,$fecha_final,$tipo,$plancuenta_id);
         $fecha_inicial = substr($fecha_inicial,6,4) . '-' . substr($fecha_inicial,3,2) . '-' . substr($fecha_inicial,0,2);
         $fecha_final = substr($fecha_final,6,4) . '-' . substr($fecha_final,3,2) . '-' . substr($fecha_final,0,2);
         $gestion = Carbon::parse($fecha_inicial);
@@ -141,6 +135,17 @@ class LibroMayorPorCuentaController extends Controller
         $fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
+        $find_auxiliares = DB::table('comprobantes as a')
+                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+                            ->leftjoin('plan_cuentas_auxiliares as c','c.id','b.plancuentaauxiliar_id')
+                            ->select('c.id as plancuentaauxiliar_id','c.nombre as auxiliar')
+                            ->where('a.proyecto_id',$proyecto_id)
+                            ->where('b.plancuenta_id',$plancuenta_id)
+                            ->where('a.status','!=','2')
+                            ->where('a.fecha','>=',$fecha_inicial)
+                            ->where('a.fecha','<=',$fecha_final)
+                            ->groupBy('c.id','c.nombre')
+                            ->orderBy('c.id','asc')->get();
         $auxiliares = DB::table('comprobantes as a')
                             ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                             ->join('centros as c','c.id','b.centro_id')
@@ -156,19 +161,6 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('a.fecha','<=',$fecha_final)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
-        //dd($auxiliares);
-        $comprobantes = DB::table('comprobantes as a')
-                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
-                                ->join('centros as c','c.id','b.centro_id')
-                                ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
-                                ->where('a.proyecto_id',$proyecto_id)
-                                ->where('b.plancuenta_id',$plancuenta_id)
-                                ->where('a.status','!=','2')
-                                ->where('a.fecha','>=',$fecha_inicial)
-                                ->where('a.fecha','<=',$fecha_final)
-                                ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','c.abreviatura as centro',DB::raw("if(isnull(d.nombre),'S/N',d.nombre) as auxiliar"),'b.cheque_nro','b.glosa','b.debe','b.haber')
-                                ->orderBy('b.plancuentaauxiliar_id','asc')
-                                ->get();
         return ([
             'fecha_saldo_inicial'   =>  $fecha_saldo_inicial,
             'proyecto'              =>  $proyecto,
@@ -176,13 +168,56 @@ class LibroMayorPorCuentaController extends Controller
             'plancuenta'            =>  $plancuenta,
             'fecha_inicial'         =>  $fecha_inicial,
             'fecha_final'           =>  $fecha_final,
-            'auxiliares'            =>  $auxiliares,
-            'comprobantes'          =>  $comprobantes
-            //'saldo'             =>  $saldo,
-            //'saldo_final'       =>  $saldo_final,
-            //'total_debe'        =>  $total_debe,
-            //'total_haber'       =>  $total_haber
+            'find_auxiliares'       =>  $find_auxiliares,
+            'auxiliares'            =>  $auxiliares
         ]);
+    }
+
+    public function findauxiliar(Request $request){
+        $proyecto_id = $request->proyecto_id;
+        $fecha_inicial = $request->fecha_inicial;
+        $fecha_final = $request->fecha_final;
+        $tipo = $request->tipo;
+        $plancuenta_id = $request->plancuenta_id;
+        $plancuentaauxiliar_id = $request->plancuentaauxiliar_id;
+
+        $gestion = Carbon::parse($fecha_inicial);
+        if($gestion->month < 4){
+            $gestion = $gestion->year - 1;
+        }else{
+            $gestion = $gestion->year;
+        }
+        $fecha_saldo_inicial = $gestion . '-04-01';
+        $proyecto = Proyectos::where('id',$proyecto_id)->first();
+        $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
+        $find_auxiliares = DB::table('comprobantes as a')
+                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+                            ->leftjoin('plan_cuentas_auxiliares as c','c.id','b.plancuentaauxiliar_id')
+                            ->select('c.id as plancuentaauxiliar_id','c.nombre as auxiliar')
+                            ->where('a.proyecto_id',$proyecto_id)
+                            ->where('b.plancuenta_id',$plancuenta_id)
+                            ->where('a.status','!=','2')
+                            ->where('a.fecha','>=',$fecha_inicial)
+                            ->where('a.fecha','<=',$fecha_final)
+                            ->groupBy('c.id','c.nombre')
+                            ->orderBy('c.id','asc')->get();
+        $auxiliares = DB::table('comprobantes as a')
+                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+                            ->join('centros as c','c.id','b.centro_id')
+                            ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
+                            ->select('d.id as plancuentaauxiliar_id','d.nombre as auxiliar',
+                                        DB::raw("SUM(b.debe) as total_auxiliar_debe"),
+                                        DB::raw("SUM(b.haber) as total_auxiliar_haber"),
+                                        /*DB::raw("SUM($condicion) as saldoTotal")*/)
+                            ->where('a.proyecto_id',$proyecto_id)
+                            ->where('b.plancuenta_id',$plancuenta_id)
+                            ->where('b.plancuentaauxiliar_id',$plancuentaauxiliar_id)
+                            ->where('a.status','!=','2')
+                            ->where('a.fecha','>=',$fecha_inicial)
+                            ->where('a.fecha','<=',$fecha_final)
+                            ->groupBy('d.id','d.nombre')
+                            ->orderBy('d.id','asc')->get();
+        return view('libro-mayor.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','find_auxiliares','auxiliares','plancuentaauxiliar_id'));
     }
 
     public function seleccionar(Request $request){
@@ -247,13 +282,72 @@ class LibroMayorPorCuentaController extends Controller
             $total_debe += $datos->debe;
             $total_haber += $datos->haber;
         }
-        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf',compact(['proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber']));
+        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-general',compact(['proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber']));
         $pdf->setPaper('LETTER', 'portrait');//landscape
         return $pdf->stream();
     }
 
-    public function auxiliarPdf($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
-        dd("ok");
+    public function auxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
+        set_time_limit(0);ini_set('memory_limit', '1G');
+        $gestion = Carbon::parse($fecha_inicial);
+        if($gestion->month < 4){
+            $gestion = $gestion->year - 1;
+        }else{
+            $gestion = $gestion->year;
+        }
+        $fecha_saldo_inicial = $gestion . '-04-01';
+        $proyecto = Proyectos::where('id',$proyecto_id)->first();
+        $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
+        $auxiliares = DB::table('comprobantes as a')
+                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+                            ->join('centros as c','c.id','b.centro_id')
+                            ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
+                            ->select('d.id as plancuentaauxiliar_id','d.nombre as auxiliar',
+                                        DB::raw("SUM(b.debe) as total_auxiliar_debe"),
+                                        DB::raw("SUM(b.haber) as total_auxiliar_haber"),
+                                        /*DB::raw("SUM($condicion) as saldoTotal")*/)
+                            ->where('a.proyecto_id',$proyecto_id)
+                            ->where('b.plancuenta_id',$plancuenta_id)
+                            ->where('a.status','!=','2')
+                            ->where('a.fecha','>=',$fecha_inicial)
+                            ->where('a.fecha','<=',$fecha_final)
+                            ->groupBy('d.id','d.nombre')
+                            ->orderBy('d.id','asc')->get();
+        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares']));
+        $pdf->setPaper('LETTER', 'portrait');//landscape
+        return $pdf->stream();
+    }
+
+    public function auxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id){
+        set_time_limit(0);ini_set('memory_limit', '1G');
+        $gestion = Carbon::parse($fecha_inicial);
+        if($gestion->month < 4){
+            $gestion = $gestion->year - 1;
+        }else{
+            $gestion = $gestion->year;
+        }
+        $fecha_saldo_inicial = $gestion . '-04-01';
+        $proyecto = Proyectos::where('id',$proyecto_id)->first();
+        $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
+        $auxiliares = DB::table('comprobantes as a')
+                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+                            ->join('centros as c','c.id','b.centro_id')
+                            ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
+                            ->select('d.id as plancuentaauxiliar_id','d.nombre as auxiliar',
+                                        DB::raw("SUM(b.debe) as total_auxiliar_debe"),
+                                        DB::raw("SUM(b.haber) as total_auxiliar_haber"),
+                                        /*DB::raw("SUM($condicion) as saldoTotal")*/)
+                            ->where('a.proyecto_id',$proyecto_id)
+                            ->where('b.plancuenta_id',$plancuenta_id)
+                            ->where('b.plancuentaauxiliar_id',$plancuentaauxiliar_id)
+                            ->where('a.status','!=','2')
+                            ->where('a.fecha','>=',$fecha_inicial)
+                            ->where('a.fecha','<=',$fecha_final)
+                            ->groupBy('d.id','d.nombre')
+                            ->orderBy('d.id','asc')->get();
+        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares','plancuentaauxiliar_id']));
+        $pdf->setPaper('LETTER', 'portrait');//landscape
+        return $pdf->stream();
     }
     public function excel($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
         dd($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);

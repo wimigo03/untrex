@@ -15,14 +15,19 @@ use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
 use App\Http\Controllers\Admin\LibroBancoController;
 
 //Libro banco
-route::get('/librobanco/banco/index', [LibroBancoController::class, 'index'])->name('librobanco.index');
+Route::get('librobanco/pdf/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf'])->name('librobanco.pdf');
+route::post('/librobanco/search', [LibroBancoController::class, 'search'])->name('librobanco.search');
+Route::get('/librobanco/seleccionar', [LibroBancoController::class, 'seleccionar']);
+route::get('/librobanco/index', [LibroBancoController::class, 'index'])->name('librobanco.index');
 //Libro mayor por auxiliar
 route::get('/libromayor/porauxiliar/index', [LibroMayorPorAuxiliarController::class, 'index'])->name('libromayor.porauxiliar.index');
 //Libro mayor por cuenta
 Route::get('libromayor/porcuenta/excel/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'excel'])->name('libromayor.porcuenta.excel');
-Route::get('libromayor/porcuenta/auxiliarpdf/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'auxiliarPdf'])->name('libromayor.porcuenta.auxiliarPdf');
+Route::get('libromayor/porcuenta/auxiliarpdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat/{dat6}', [LibroMayorPorCuentaController::class, 'auxiliarPdf2'])->name('libromayor.porcuenta.auxiliarPdf2');
+Route::get('libromayor/porcuenta/auxiliarpdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'auxiliarPdf1'])->name('libromayor.porcuenta.auxiliarPdf1');
 Route::get('libromayor/porcuenta/generalpdf/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'generalPdf'])->name('libromayor.porcuenta.generalPdf');
 Route::get('/libromayor/porcuenta/seleccionar', [LibroMayorPorCuentaController::class, 'seleccionar']);
+route::post('/libromayor/porcuenta/findauxiliar', [LibroMayorPorCuentaController::class, 'findauxiliar'])->name('libromayor.porcuenta.findauxiliar');
 route::post('/libromayor/porcuenta/search', [LibroMayorPorCuentaController::class, 'search'])->name('libromayor.porcuenta.search');
 route::get('/libromayor/porcuenta/index', [LibroMayorPorCuentaController::class, 'index'])->name('libromayor.porcuenta.index');
 //Facturas
@@ -31,6 +36,13 @@ Route::get('/facturaComprobante/delete/{factura_id}', [FacturasController::class
 Route::post('/facturaComprobante/store', [FacturasController::class, 'store'])->name('facturas.comprobante.store');
 Route::get('/facturaComprobante/get_proveedor/{id}', [FacturasController::class, 'getProveedor']);
 Route::get('/facturaComprobante/{comprobante_id}', [FacturasController::class, 'comprobanteCreate'])->name('facturas.comprobante.create');
+
+Route::get('/facturas/delete/{factura_id}', [FacturasController::class, 'delete'])->name('facturas.delete');
+Route::post('/facturas/store', [FacturasController::class, 'store'])->name('facturas.store');
+Route::get('/facturas/get_proveedor/{id}', [FacturasController::class, 'getProveedor']);
+Route::get('/facturas/create/{id}', [FacturasController::class, 'create'])->name('facturas.create');
+route::get('/facturas/indexAjax', [FacturasController::class, 'indexAjax'])->name('facturas.indexAjax');
+route::get('/facturas/index', [FacturasController::class, 'index'])->name('facturas.index');
 //Comprobantes Fiscales Detalle
 Route::get('/comprobantesfiscalesdetalles/delete/{comprobante_detalle_id}', [ComprobantesFiscalesDetalleController::class, 'delete'])->name('comprobantesfiscalesdetalles.delete');
 Route::post('/comprobantesfiscalesdetalles/update', [ComprobantesFiscalesDetalleController::class, 'update'])->name('comprobantesfiscalesdetalles.update');

@@ -9,7 +9,7 @@
                 <div class="card-title"><b>LIBRO MAYOR POR AUXILIAR - {{strtoupper($tipo)}} - {{strtoupper($proyecto->nombre)}}</b></div>
             </div>
             <div class="card-body">
-                {{--@include('libro-mayor.por-cuenta.partials.encabezado')--}}
+                @include('libro-mayor.por-cuenta.partials.encabezado-auxiliar')
                 @if ($auxiliares != null)
                     <div class="form-group row">
                         <div class="col-md-12">
@@ -71,8 +71,18 @@
                                             }
                                         @endphp
                                         <tr class="font-verdana">
-                                            <td colspan="9" class="bg bg-secondary text-justify p-1"><b>{{$datos->auxiliar == null ? 'SIN AUXILIAR' : $datos->auxiliar}}</b></td>
-                                            {{--<td colspan="9" class="bg bg-secondary text-justify p-1"><b></b></td>--}}
+                                            <td colspan="9" class="bg bg-secondary text-center p-1"><b>{{$datos->auxiliar == null ? 'SIN AUXILIAR' : $datos->auxiliar}}</b></td>
+                                        </tr>
+                                        <tr class="font-verdana">
+                                            <td colspan="9" class="bg bg-danger text-center p-1">
+                                                SALDO INICIAL:&nbsp;Bs. {{number_format($saldo,2,'.',',')}}
+                                                &nbsp;|&nbsp;
+                                                SALDO FINAL:&nbsp;Bs. {{number_format($saldo_final,2,'.',',')}}
+                                                &nbsp;|&nbsp;
+                                                TOTAL DEBE:&nbsp;Bs. {{number_format($total_debe,2,'.',',')}}
+                                                &nbsp;|&nbsp;
+                                                TOTAL HABER:&nbsp;Bs. {{number_format($total_haber,2,'.',',')}}
+                                            </td>
                                         </tr>
                                             @foreach ($comprobantes_detalle as $data)
                                                 <tr class="font-verdana">
@@ -107,50 +117,14 @@
                                                     <td class="text-right p-1">{{number_format($saldo,2,'.',',')}}</td>
                                                 </tr>
                                             @endforeach
-                                        <tr class="font-verdana">
+                                        {{--<tr class="font-verdana">
                                             <td colspan="6" class="bg bg-danger text-justify p-1">TOTAL AUXILIAR</td>
                                             <td class="bg bg-danger text-right p-1">{{$datos->total_auxiliar_debe == null ? '0' : number_format($datos->total_auxiliar_debe,2,'.',',')}}</td>
                                             <td class="bg bg-danger text-right p-1">{{$datos->total_auxiliar_haber == null ? '0' : number_format($datos->total_auxiliar_haber,2,'.',',')}}</td>
-                                            <td class="bg bg-danger text-right p-1">EN PROCESO</td>
-                                        </tr>
+                                            <td class="bg bg-danger text-right p-1">{{number_format($saldo,2,'.',',')}}</td>
+                                        </tr>--}}
                                     @endforeach
                                 </tbody>
-                                {{--<tbody>
-                                    @foreach ($comprobantes as $datos)
-                                        <tr class="font-verdana">
-                                            <td class="text-center p-1">{{\Carbon\Carbon::parse($datos->fecha)->format('d/m/Y')}}</td>
-                                            @php
-                                                if($datos->status == 0){
-                                                    $estado = "P";
-                                                    $color = "text-secondary";
-                                                }else{
-                                                    $estado = "A";
-                                                    $color = "text-success";
-                                                }
-                                            @endphp
-                                            <td class="text-center p-1">
-                                                <a href="{{ route('comprobantes.show',$datos->comprobante_id) }}" target="_blank">
-                                                    {{$datos->nro_comprobante}}
-                                                </a>
-                                            </td>
-                                            <td class="text-center p-1 {{$color}}"><b>{{$estado}}</b></td>
-                                            <td class="text-center p-1">{{$datos->centro}}</td>
-                                            <td class="text-center p-1">{{$datos->auxiliar}}</td>
-                                            <td class="text-center p-1">{{strtoupper($datos->cheque_nro)}}</td>
-                                            <td class="text-justify p-1">{{strtoupper($datos->glosa)}}</td>
-                                            <td class="text-right p-1">{{number_format($datos->debe,2,'.',',')}}</td>
-                                            <td class="text-right p-1">{{number_format($datos->haber,2,'.',',')}}</td>
-                                            @php
-                                                if($datos->debe > 0){
-                                                    $saldo += $datos->debe;
-                                                }else{
-                                                    $saldo -= $datos->haber;
-                                                }
-                                            @endphp
-                                            <td class="text-right p-1">{{number_format($saldo,2,'.',',')}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>--}}
                             </table>
                         </div>
                     </div>
@@ -170,6 +144,7 @@
      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
-        })   
+        })
+        $('#plancuentaauxiliar_id').select2({placeholder: "--Buscar--"});   
     </script>
 @stop

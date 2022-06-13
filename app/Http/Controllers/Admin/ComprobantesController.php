@@ -271,7 +271,7 @@ class ComprobantesController extends Controller
                 $comprobanteDetalle->cheque_orden = $datos->cheque_orden;
                 $comprobanteDetalle->save();
             }
-            $comprobante_1->concepto = 'ANULADO POR EDICION DE CABECERA EL NUMERO COMPROBANTE ES ' . $comprobante_2->nro_comprobante;
+            $comprobante_1->concepto = 'ANULADO POR EDICION DE CABECERA EL NUEVO COMPROBANTE ES ' . $comprobante_2->nro_comprobante;
             $comprobante_1->status = 2;
             $comprobante_1->update();
             return redirect()->route('comprobantesdetalles.create',$comprobante_2)->with('message','Los datos ingresados se actualizaron correctamente...');

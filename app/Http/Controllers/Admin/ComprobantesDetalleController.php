@@ -19,6 +19,15 @@ class ComprobantesDetalleController extends Controller
     }
 
     public function create(Comprobantes $comprobante){
+        /*$comprobante_detalle = ComprobantesDetalle::get();
+        foreach($comprobante_detalle as $datos){
+            $string = $datos->cheque_nro;
+            $numero = (int) filter_var($string, FILTER_SANITIZE_NUMBER_INT); 
+            $update = ComprobantesDetalle::find($datos->id);
+            $update->cheque_nro = $numero;
+            $update->update();
+        }
+        dd("ok");*/
         $user = DB::table('users')->where('id',$comprobante->user_id)->first();
         $proyecto = DB::table('proyectos')->where('id',$comprobante->proyecto_id)->first();
         //$proyectos = DB::table('proyectos')->pluck('nombre','id');
@@ -76,6 +85,9 @@ class ComprobantesDetalleController extends Controller
     }
 
     public function finalizar(Request $request){
+        if(($request->total_debe == 0) && ($request->total_haber == 0)){
+            return back()->withInput()->with('danger','El debe y el haber no puede estar en 0...');
+        }
         if($request->total_debe != $request->total_haber){
             return back()->withInput()->with('danger','El total debe y haber no son iguales...');
         }

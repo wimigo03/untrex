@@ -10,13 +10,13 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>FACTURA COMPROBANTE</b></div>
+                <div class="card-title"><b>FORMULARIO DE FACTURAS</b></div>
             </div>
             <div class="card-body">
-                {!! Form::open(['route'=>'facturas.comprobante.store','id'=>'form-factura']) !!}
-                    @include('comprobantes-facturas.partials.form1')
+                {!! Form::open(['route'=>'facturas.store','id'=>'form-factura']) !!}
+                    @include('facturas.partials.form1')
                 {!! Form::close()!!}
-                {{--@include('comprobantes-facturas.partials.form2')--}}
+                    @include('facturas.partials.form2')
             </div>
         </div>
     </div>
@@ -146,7 +146,7 @@
                     {
                         $.ajax({
                             type: 'GET',
-                            url: '/admin/facturaComprobante/get_proveedor/'+proveedor_id,
+                            url: '/admin/facturas/get_proveedor/'+proveedor_id,
                             dataType: 'json',
                             data: {
                                 id: proveedor_id

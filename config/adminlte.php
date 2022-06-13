@@ -282,6 +282,12 @@ return [
             ],
         ],
         [
+            'text'          => 'Facturas',
+            'route'         => 'facturas.index',
+            'icon'          => 'fas fa-file-invoice',
+            'label_color'   => 'success',
+        ],
+        [
             'text'    => 'Libro Mayor',
             'icon'    => 'fas fa-book',
             'submenu' => [
@@ -290,12 +296,18 @@ return [
                     'icon'  => 'fas fa-briefcase',
                     'route' => 'libromayor.porcuenta.index',
                 ],
-                [
+                /*[
                     'text'  => 'Por auxiliar',
                     'icon'  => 'fas fa-briefcase',
                     'route' => 'librobanco.index',
-                ],
+                ],*/
             ],
+        ],
+        [
+            'text'          => 'Libro Banco',
+            'route'         => 'librobanco.index',
+            'icon'          => 'fas fa-book',
+            'label_color'   => 'success',
         ],
         //['header' => 'account_settings'],
         /*[

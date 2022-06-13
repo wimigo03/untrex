@@ -11,22 +11,51 @@ use App\PlanCuentas;
 use App\PlanCuentasAuxiliares;
 use App\Proveedores;
 use App\Facturas;
+use App\ComprobanteFacturas;
 use Carbon\Carbon;
 use DB;
 
 class FacturasController extends Controller
 {
     public function index(){
-        //index
+    //dd("index");
+    return view('facturas.index'/*,compact('comprobante')*/);
     }
 
-    public function comprobanteCreate($comprobante_id){
+    public function indexAjax(){
+        return datatables()
+            ->query(DB::table('facturas as a')
+            ->join('proveedores as b','b.id','a.proveedor_id')
+            ->join('comprobante_facturas as c','c.factura_id','a.id')
+            ->select('a.id as factura_id','b.razon_social','a.numero',
+                    DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha"),'a.glosa',
+                    DB::raw("FORMAT(a.monto, 2) as monto"),
+                    DB::raw("if(c.estado = '1','VALIDO','ANULADO') as estado_search")))
+            ->filterColumn('fecha', function($query, $keyword) {
+                    $sql = "DATE_FORMAT(a.fecha,'%d/%m/%Y')  like ?";
+                    $query->whereRaw($sql, ["%{$keyword}%"]);
+                    })
+            ->filterColumn('monto', function($query, $keyword) {
+                $sql = "FORMAT(a.monto, 2) like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            ->filterColumn('estado_search', function($query, $keyword) {
+                $sql = "if(c.estado = '1','VALIDO','ANULADO')  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+            //->addColumn('btnActions','comprobantes.partials.actions')
+            //->rawColumns(['btnActions'])
+            ->toJson();
+    }
+
+    public function create($comprobante_id){
         $comprobante = DB::table('comprobantes')->where('id',$comprobante_id)->first();
-        $socio = DB::table('socios')->where('id',$comprobante->socio_id)->first();
-        $proyectos = DB::table('proyectos')->pluck('nombre','id');
-        $centros = DB::table('centros')->pluck('nombre','id');
+        //dd($comprobante);
+        //$socio = 0;//DB::table('socios')->where('id',$comprobante->socio_id)->first();
+        //$proyectos = DB::table('proyectos')->pluck('nombre','id');
+        //$centros = DB::table('centros')->pluck('nombre','id');
         $proveedores = DB::table('proveedores')->where('nombre_comercial','!=','S/N')->where('status',1)->where('deleted_at',null)->pluck('nombre_comercial','id');
-        $plan_cuentas_1 = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
+        /*$plan_cuentas_1 = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
                                     ->where('estado',1)                                    
                                     ->where('cuenta_detalle','1')
                                     ->pluck('nombre','id');
@@ -42,10 +71,10 @@ class FacturasController extends Controller
                                     ->where('estado',1)                                    
                                     ->where('cuenta_detalle','1')
                                     ->pluck('nombre','id');
-        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::where('estado',1)->pluck('nombre','id');
-        $facturas = Facturas::where('comprobante_id',$comprobante_id)->where('deleted_at',null)->get();
-
-        return view('comprobantes-facturas.create',compact('comprobante','proveedores','socio','proyectos','centros','plan_cuentas_1','plan_cuentas_iva','plan_cuentas_2','plan_cuentas_auxiliares','facturas'));
+        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::where('estado',1)->pluck('nombre','id');*/
+        $facturas = DB::table('facturas as a')->where('proyecto_id',$comprobante->proyecto_id)->where('deleted_at',null)->get();
+        //dd($facturas);
+        return view('facturas.create',compact('comprobante','proveedores','facturas'));
     }
 
     public function getProveedor($id){
@@ -57,7 +86,7 @@ class FacturasController extends Controller
         }
     }
 
-    public function store(Request $request){dd("No terminado");
+    public function store(Request $request){
         $request->validate([
             'numero'=> 'required|numeric',
             'monto'=> 'required|numeric',
@@ -68,22 +97,23 @@ class FacturasController extends Controller
             'nro_dui'=> 'string|max:60',
             'nro_autorizacion'=> 'required|string|max:60',
             'razon_social'=> 'required',
-            'proyecto'=> 'required',
-            'plan_cuenta_debe'=> 'required',
-            'plan_cuenta_auxiliar'=> 'required',
-            'centro'=> 'required',
+            //'proyecto'=> 'required',
+            //'plan_cuenta_debe'=> 'required',
+            //'plan_cuenta_auxiliar'=> 'required',
+            //'centro'=> 'required',
             'excento'=> 'numeric|nullable',
-            'descuento'=> 'numeric|nullable',
-            'tipo'=> 'required',
-            'estado'=> 'required_if:tipo,VENTA'
+            'descuento'=> 'numeric|nullable'
+            //'tipo'=> 'required',
+            //'estado'=> 'required_if:tipo,VENTA'
         ]);
+        //dd($request->all());
         $fecha_factura = substr($request->fecha,6,4) . '-' . substr($request->fecha,3,2) . '-' . substr($request->fecha,0,2);
         $fecha_actual = date('Y-m-d');
         if($fecha_factura > $fecha_actual){
             return back()->withInput()->with('danger','No se pueden cargar facturas con fecha adelantada...');
         }
 
-        $estado = null;
+        /*$estado = null;
         if($request->tipo == 'COMPRA'){
             $tipo = 1;
         }else{
@@ -97,18 +127,15 @@ class FacturasController extends Controller
                     $estado = 3;
                 }
             }
-        }
+        }*/
 
-        $duplicado = Facturas::where('fecha',$fecha_factura)
-                            ->where('numero',$request->numero)
-                            ->where('nit',$request->nit)
-                            ->where('nro_autorizacion',$request->nro_autorizacion)->first();
+        $duplicado = Facturas::where('fecha',$fecha_factura)->where('numero',$request->numero)->where('nit',$request->nit)->where('nro_autorizacion',$request->nro_autorizacion)->first();
         if($duplicado != null){
             return back()->withInput()->with('danger','La factura que quiere declarar ya existe...');
         }
         
         $factura = new Facturas();
-        $factura->socio_id = $request->socio_id;
+        $factura->proyecto_id = $request->proyecto_id;
         $factura->proveedor_id = $request->proveedor;
         $factura->fecha = $fecha_factura;
         $factura->nit = $request->nit;
@@ -121,15 +148,21 @@ class FacturasController extends Controller
         $factura->excento = $request->excento;
         $factura->descuento = $request->descuento;
         $factura->procedencia = 1; // 1 es de comprobante
-        $factura->tipo = $tipo;
-        $factura->estado = $estado;
-        $factura->comprobante_id = $request->comprobante_id;
-        $factura->plancuenta_id = $request->plan_cuenta_debe;
-        $factura->plancuentaauxiliar_id = $request->plan_cuenta_auxiliar;
-        $factura->proyecto_id = $request->proyecto;
-        $factura->centro_id = $request->centro;
+        //$factura->tipo = $tipo;
+        //$factura->estado = $estado;
+        //$factura->comprobante_id = $request->comprobante_id;
+        //$factura->plancuenta_id = $request->plan_cuenta_debe;
+        //$factura->plancuentaauxiliar_id = $request->plan_cuenta_auxiliar;
+        //$factura->proyecto_id = $request->proyecto;
+        //$factura->centro_id = $request->centro;
         $factura->glosa = $request->glosa;
         $factura->save();
+
+        $comprobanteFactura = new ComprobanteFacturas();
+        $comprobanteFactura->comprobante_id = $request->comprobante_id; 
+        $comprobanteFactura->factura_id = $factura->id;
+        $comprobanteFactura->estado = 1;
+        $comprobanteFactura->save();
 
         return back()->with('info','Factura registrada exitosamente...');
     }
@@ -137,9 +170,12 @@ class FacturasController extends Controller
     public function delete($factura_id){
         $factura = Facturas::find($factura_id);
         $factura->delete();
+        $comprobanteFactura = ComprobanteFacturas::find($factura->id);
+        $comprobanteFactura->delete();
         return back()->with('info','Se elimino una factura...');
     }
 
+    //Esta funcion no se esta ocupando porque se cambio la estructura de las facturas
     public function store_factura(Request $request){
         //dd($request->all());
         $request->validate([

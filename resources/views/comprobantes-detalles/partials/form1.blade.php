@@ -80,16 +80,16 @@
         {!! Form::select('plan_cuenta',$plan_cuentas,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('plan_cuentas') ? ' is-invalid' : '' ),'id'=>'plan_cuentas']) !!}
         {!! $errors->first('plan_cuenta','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-2 cheque">
+    <div class="col-md-3 cheque">
         {{Form::label('tipo_transaccion','Tipo',['class' => 'd-inline font-verdana-bg'])}}
         {!! Form::select('tipo_transaccion', array('CHEQUE'=>'CHEQUE','TRANSFERENCIA'=>'TRANSFERENCIA'), null, ['class' => 'form-control form-control-sm ', 'placeholder' => '--Seleccionar--', 'id' => 'tipo_transaccion']) !!}
     </div>
-    <div class="col-md-2 cheque">
-        {{Form::label('cheque_nro','N° Cheque',['class' => 'd-inline font-verdana-bg'])}}
-        {{Form::text('cheque_nro',null,['class'=>'text-uppercase form-control form-control-sm'. ( $errors->has('cheque_nro') ? ' is-invalid' : '' ),'autocomplete'=>'off'])}}
+    <div class="col-md-3 cheque">
+        {{Form::label('cheque_nro','N° Cheque/Transferencia',['class' => 'd-inline font-verdana-bg'])}}
+        {{Form::text('cheque_nro',null,['class'=>'text-uppercase form-control form-control-sm'. ( $errors->has('cheque_nro') ? ' is-invalid' : '' ),'autocomplete'=>'off','onkeypress' => 'return valideKey(event);'])}}
         {!! $errors->first('cheque_nro','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-6 cheque">
+    <div class="col-md-7 cheque">
         {{Form::label('cheque_orden','A la Orden',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('cheque_orden',null,['class'=>'text-uppercase form-control form-control-sm'. ( $errors->has('cheque_orden') ? ' is-invalid' : '' ),'autocomplete'=>'off'])}}
         {!! $errors->first('cheque_orden','<span class="invalid-feedback d-block">:message</span>') !!}
@@ -128,7 +128,7 @@
         <button class="btn btn-primary font-verdana-bg" type="submit" id="insertar">
             <i class="fas fa-arrow-down"></i>&nbsp;Insertar
         </button>
-        <a href="{{route('facturas.comprobante.create', $comprobante->id)}}" class="btn btn-success font-verdana-bg">
+        <a href="{{route('facturas.create', $comprobante->id)}}" class="btn btn-success font-verdana-bg">
             <i class="fas fa-book" aria-hidden="true"></i>&nbsp;Facturas
         </a>
     </div>

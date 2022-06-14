@@ -1,6 +1,18 @@
 <div class="form-group row font-verdana-bg">
-    <div class="col-md-12">
+    <div class="col-md-8">
         <strong>CUENTA: </strong>{{$plancuenta->nombre}}
+    </div>
+    <div class="col-md-4 text-center">
+        <strong>TIPO: </strong>
+        @if ($tipo == 'Todo')
+            TRANSFERENCIA && CHEQUE 
+        @else
+            @if ($tipo == 'Transferencia')
+                TRANSFERENCIA 
+            @else
+                CHEQUE 
+            @endif
+        @endif
     </div>
 </div>
 <div class="form-group row font-verdana-bg">
@@ -51,8 +63,20 @@
         {{--<a href="{{ route('libromayor.porcuenta.excel',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Excel" class="btn btn-sm btn-success font-verdana-bg">
             <i class="fas fa-file-excel"></i>
         </a>--}}
-        <a href="{{ route('librobanco.pdf',['dat1' => $proyecto,'dat2' => $fecha_inicial,'dat3' => $fecha_final,'dat4' => $nro_cheque_inicial,'dat5' => $nro_cheque_final,'dat6' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
-            <i class="fas fa-file-pdf"></i>
-        </a>
+        @if ($tipo == 'Todo')
+            <a href="{{ route('librobanco.pdf1',['dat1' => $proyecto,'dat2' => $fecha_inicial,'dat3' => $fecha_final,'dat4' => $nro_inicial,'dat5' => $nro_final,'dat6' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
+                <i class="fas fa-file-pdf"></i>
+            </a>
+        @else
+            @if ($tipo == 'Transferencia')
+                <a href="{{ route('librobanco.pdf2',['dat1' => $proyecto,'dat2' => $fecha_inicial,'dat3' => $fecha_final,'dat4' => $nro_inicial,'dat5' => $nro_final,'dat6' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
+            @else
+                <a href="{{ route('librobanco.pdf3',['dat1' => $proyecto,'dat2' => $fecha_inicial,'dat3' => $fecha_final,'dat4' => $nro_inicial,'dat5' => $nro_final,'dat6' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
+                    <i class="fas fa-file-pdf"></i>
+                </a> 
+            @endif
+        @endif
     </div>
 </div>

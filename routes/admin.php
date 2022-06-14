@@ -15,7 +15,9 @@ use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
 use App\Http\Controllers\Admin\LibroBancoController;
 
 //Libro banco
-Route::get('librobanco/pdf/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf'])->name('librobanco.pdf');
+Route::get('librobanco/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf3'])->name('librobanco.pdf3');
+Route::get('librobanco/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf2'])->name('librobanco.pdf2');
+Route::get('librobanco/pdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf1'])->name('librobanco.pdf1');
 route::post('/librobanco/search', [LibroBancoController::class, 'search'])->name('librobanco.search');
 Route::get('/librobanco/seleccionar', [LibroBancoController::class, 'seleccionar']);
 route::get('/librobanco/index', [LibroBancoController::class, 'index'])->name('librobanco.index');

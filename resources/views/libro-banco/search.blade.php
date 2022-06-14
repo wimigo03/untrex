@@ -18,8 +18,8 @@
                                     <tr class="font-verdana">
                                         <td class="text-center p-1"><b>FECHA</b></td>
                                         <td width="15%" colspan="2" class="text-center p-1"><b>COMPROBANTE</b></td>
-                                        <td class="text-center p-1"><b>Nro. CHEQUE</b></td>
-                                        <td class="text-center p-1"><b>CHEQUE ORDEN</b></td>
+                                        <td class="text-center p-1"><b>CHEQ/TRANF</b></td>
+                                        <td class="text-center p-1"><b>A LA ORDEN</b></td>
                                         <td class="text-center p-1"><b>GLOSA</b></td>
                                         <td class="text-center p-1"><b>ABONO</b></td>
                                         <td class="text-center p-1"><b>DEBITO</b></td>
@@ -45,8 +45,18 @@
                                                 </a>
                                             </td>
                                             <td class="text-center p-1 {{$color}}"><b>{{$estado}}</b></td>
-                                            <td class="text-center p-1">{{strtoupper($datos->cheque_nro)}}</td>
-                                            <td class="text-center p-1">{{strtoupper($datos->cheque_orden)}}</td>
+                                            <td class="text-center p-1">
+                                                @if($datos->tipo_transaccion == 'TRANSFERENCIA')
+                                                    TF-{{strtoupper($datos->cheque_nro)}}
+                                                @else
+                                                    @if($datos->tipo_transaccion == 'CHEQUE')
+                                                        CH-{{strtoupper($datos->cheque_nro)}}
+                                                    @else
+                                                        STF/SCH
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="text-justify p-1">{{strtoupper($datos->cheque_orden)}}</td>
                                             <td class="text-justify p-1">{{strtoupper($datos->glosa)}}</td>
                                             <td class="text-right p-1">{{number_format($datos->debe,2,'.',',')}}</td>
                                             <td class="text-right p-1">{{number_format($datos->haber,2,'.',',')}}</td>
@@ -77,9 +87,9 @@
 
 @section('js')
     <script>
-     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
-        })   
+        })
     </script>
 @stop

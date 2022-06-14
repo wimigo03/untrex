@@ -28,10 +28,25 @@
     <script src="/datepicker/datepicker.es.js" type="text/javascript"></script>
     <script>
         $(document).ready(function() {
+            $('.cheque').hide();
             $('.select2').select2({
                 placeholder: "--Seleccionar--"
             });
         } );
+
+        $('#tipo').change(function() {
+            var tipo = $(this).val();
+            if(tipo!=null)
+            {
+                if(tipo.length!=0){
+                    if(tipo=='Todo'){
+                        $('.cheque').hide();
+                    }else{
+                        $('.cheque').show();
+                    }
+                }
+            }
+        });
 
         $("#fecha_inicial").datepicker({
             inline: false,
@@ -45,6 +60,17 @@
             autoClose: true
         });
 
+        function valideKey(evt){
+            var code = (evt.which) ? evt.which : evt.keyCode;
+            if(code==8){
+                return true;
+            }else if(code==46 || (code>=48 && code<=57)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
         function countCharsInicial(obj){
             var cont = obj.value.length;
             if(cont > 9){

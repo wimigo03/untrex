@@ -31,16 +31,21 @@
 </div>
 <div class="form-group row font-verdana-bg">
     <div class="col-md-2">
-        {{Form::label('Nro_cheque_inicial','Nro. Cheque Inicial',['class' => 'd-inline font-verdana-bg'])}}
-        {!! Form::text('nro_cheque_inicial',null, ['placeholder'=>'--Desde--','class' => 'form-control form-control-sm font-verdana-bg','id'=>'nro_cheque_inicial']) !!}
-        {!! $errors->first('nro_cheque_inicial','<span class="invalid-feedback d-block">Campo obligatorio.</span>') !!}
+        {{Form::label('tipo','Tipo',['class' => 'd-inline font-verdana-bg'])}}
+        {!! Form::select('tipo',array('Todo'=>'Todo','Cheque'=>'Cheque','Transferencia'=>'Transferencia'),null, ['class' => 'form-control form-control-sm','id'=>'tipo']) !!}
+        {!! $errors->first('tipo','<span class="invalid-feedback d-block">Tipo no seleccionado.</span>') !!}
     </div>
-    <div class="col-md-2">
-        {{Form::label('Nro_cheque_final','Nro. Cheque Final',['class' => 'd-inline font-verdana-bg'])}}
-        {!! Form::text('nro_cheque_final',null, ['placeholder'=>'--Hasta--','class' => 'form-control form-control-sm font-verdana-bg','id'=>'nro_cheque_final']) !!}
-        {!! $errors->first('nro_cheque_final','<span class="invalid-feedback d-block">Campo obligatorio.</span>') !!}
+    <div class="col-md-2 cheque">
+        {{Form::label('Nro_inicial','Nro. Inicial',['class' => 'd-inline font-verdana-bg'])}}
+        {!! Form::text('nro_inicial',null, ['placeholder'=>'--Desde--','class' => 'form-control form-control-sm font-verdana-bg','id'=>'nro_inicial','onkeypress' => 'return valideKey(event);']) !!}
+        {!! $errors->first('nro_inicial','<span class="invalid-feedback d-block">Campo obligatorio.</span>') !!}
     </div>
-    <div class="col-md-8">
+    <div class="col-md-2 cheque">
+        {{Form::label('Nro_final','Nro. Final',['class' => 'd-inline font-verdana-bg'])}}
+        {!! Form::text('nro_final',null, ['placeholder'=>'--Hasta--','class' => 'form-control form-control-sm font-verdana-bg','id'=>'nro_final','onkeypress' => 'return valideKey(event);']) !!}
+        {!! $errors->first('nro_final','<span class="invalid-feedback d-block">Campo obligatorio.</span>') !!}
+    </div>
+    <div class="col-md-6">
         {{Form::label('plancuenta_id','Cuenta',['class' => 'd-inline font-verdana-bg'])}}
         {!! Form::select('plancuenta_id',isset($plancuenta)?$plancuenta:array(''=>'--Seleccionar--'),null, ['disabled' => 'true','placeholder'=>'--Plan cuenta--','class' => 'form-control form-control-sm select2','id'=>'plancuenta_id']) !!}
         {!! $errors->first('plancuenta_id','<span class="invalid-feedback d-block">Cuenta no seleccionado.</span>') !!}

@@ -31,8 +31,11 @@
 			<td>
 				<table border="0" cellpadding="0px" cellspacing="10px" width="100%">
 					<tr>
-						<td colspan="6" align="left">
+						<td colspan="4" align="left">
 							<font size="10px"><b>CUENTA:&nbsp;</b>{{$plancuenta->nombre}}</font>
+						</td>			
+						<td colspan="2" align="center">
+							<font size="10px"><b>TIPO:&nbsp;</b>{{$tipo}}</font>
 						</td>
 					</tr>
 					<tr>
@@ -82,10 +85,11 @@
     <table width="100%" cellpadding="5px" cellspacing="0" border="0">
         <thead class="border-bottom">
             <tr>
-                <th align="center"><font size="10px">FECHA</font></th>
+                <th align="center"><font size="10px">N</font></th>
+				<th align="center"><font size="10px">FECHA</font></th>
                 <th colspan="2" align="center"><font size="10px">COMPROBANTE</font></th>
-                <th align="center"><font size="10px">NRO CHEQUE</font></th>
-				<th align="center"><font size="10px">CHEQUE ORDEN</font></th>
+                <th align="center"><font size="10px"><b>CHEQ/TRANF</b></font></th>
+				<th align="center"><font size="10px">A LA ORDEN</font></th>
                 <th align="center"><font size="10px">GLOSA</font></th>
                 <th align="center"><font size="10px">DEBE</font></th>
                 <th align="center"><font size="10px">HABER</font></th>
@@ -93,8 +97,14 @@
             </tr>
         </thead>
 		<tbody>
+			@php
+				$num = 1;
+			@endphp
 			@foreach ($comprobantes as $datos)
 				<tr>
+					<td align="center" valign="top">
+						<font size="9px">{{$num++}}</font>
+					</td>
 					<td align="center" valign="top">
 						<font size="9px">{{ \Carbon\Carbon::parse($datos->fecha)->format('d/m/Y') }}</font>
 					</td>
@@ -112,9 +122,19 @@
 						<font size="9px"><b>{{$estado}}</b></font>
 					</td>
 					<td align="center" valign="top">
-						<font size="9px">{{strtoupper($datos->cheque_nro)}}</font>
+						<font size="9px">
+							@if($datos->tipo_transaccion == 'TRANSFERENCIA')
+								TF-{{strtoupper($datos->cheque_nro)}}
+							@else
+								@if($datos->tipo_transaccion == 'CHEQUE')
+									CH-{{strtoupper($datos->cheque_nro)}}
+								@else
+									STF/SCH
+								@endif
+							@endif
+						</font>
 					</td>
-					<td align="center" valign="top">
+					<td align="left" valign="top">
 						<font size="9px">{{strtoupper($datos->cheque_orden)}}</font>
 					</td>
 					@php

@@ -94,7 +94,7 @@ class FacturasController extends Controller
             'proveedor'=> 'required',
             'fecha'=> 'required',
             'nit'=> 'required',
-            'nro_dui'=> 'string|max:60',
+            //'nro_dui'=> 'string|max:60',
             'nro_autorizacion'=> 'required|string|max:60',
             'razon_social'=> 'required',
             //'proyecto'=> 'required',

@@ -19,6 +19,7 @@
                                 <thead>
                                     <tr class="font-verdana">
                                         <td class="text-center p-1"><b>ID</b></td>
+                                        <td class="text-center p-1"><b>SOCIO</b></td>
                                         <td class="text-center p-1"><b>PROVEEDOR</b></td>
                                         <td class="text-center p-1"><b>NRO. FACTURA</b></td>
                                         <td class="text-center p-1"><b>FECHA</b></td>
@@ -57,6 +58,7 @@
                 "ajax":"{{ route('facturas.indexAjax') }}",
                 "columns": [
                     {data: 'factura_id', name:'a.id', class:'text-center p-1 font-verdana'},
+                    {data: 'socio', name:'d.abreviatura', class:'text-center p-1 font-verdana'},
                     {data: 'razon_social', name:'b.razon_social', class:'text-justify p-1 font-verdana'},
                     {data: 'numero', name:'a.numero', class:'text-center p-1 font-verdana'},
                     {data: 'fecha', name:'fecha', class:'text-center p-1 font-verdana'},

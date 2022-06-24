@@ -10,6 +10,7 @@ class Facturas extends Model
 {
     protected $table = 'facturas';
     protected $fillable = [
+        'socio_id',
         'proyecto_id',
         'proveedor_id',
         'fecha',

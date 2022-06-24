@@ -27,10 +27,12 @@ class FacturasController extends Controller
             ->query(DB::table('facturas as a')
             ->join('proveedores as b','b.id','a.proveedor_id')
             ->join('comprobante_facturas as c','c.factura_id','a.id')
+            ->join('socios as d','d.id','a.socio_id')
             ->select('a.id as factura_id','b.razon_social','a.numero',
                     DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha"),'a.glosa',
                     DB::raw("FORMAT(a.monto, 2) as monto"),
-                    DB::raw("if(c.estado = '1','VALIDO','ANULADO') as estado_search")))
+                    DB::raw("if(c.estado = '1','VALIDO','ANULADO') as estado_search"),
+                    'd.abreviatura as socio'))
             ->filterColumn('fecha', function($query, $keyword) {
                     $sql = "DATE_FORMAT(a.fecha,'%d/%m/%Y')  like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
@@ -72,9 +74,13 @@ class FacturasController extends Controller
                                     ->where('cuenta_detalle','1')
                                     ->pluck('nombre','id');
         $plan_cuentas_auxiliares = PlanCuentasAuxiliares::where('estado',1)->pluck('nombre','id');*/
-        $facturas = DB::table('facturas as a')->where('proyecto_id',$comprobante->proyecto_id)->where('deleted_at',null)->get();
-        //dd($facturas);
-        return view('facturas.create',compact('comprobante','proveedores','facturas'));
+        $proyecto = DB::table('proyectos as a')->where('id',$comprobante->proyecto_id)->where('deleted_at',null)->first();
+        $socios = DB::table('socios as a')->where('consorcio_id',$proyecto->consorcio_id)->where('deleted_at',null)->pluck('nombre','id');
+        $facturas = DB::table('facturas as a')
+                        ->join('socios as b','b.id','a.socio_id')
+                        ->where('a.proyecto_id',$comprobante->proyecto_id)
+                        ->where('a.deleted_at',null)->get();
+        return view('facturas.create',compact('comprobante','proveedores','facturas','socios'));
     }
 
     public function getProveedor($id){
@@ -102,7 +108,8 @@ class FacturasController extends Controller
             //'plan_cuenta_auxiliar'=> 'required',
             //'centro'=> 'required',
             'excento'=> 'numeric|nullable',
-            'descuento'=> 'numeric|nullable'
+            'descuento'=> 'numeric|nullable',
+            'socio'=> 'required',
             //'tipo'=> 'required',
             //'estado'=> 'required_if:tipo,VENTA'
         ]);
@@ -135,6 +142,7 @@ class FacturasController extends Controller
         }
         
         $factura = new Facturas();
+        $factura->socio_id = $request->socio;
         $factura->proyecto_id = $request->proyecto_id;
         $factura->proveedor_id = $request->proveedor;
         $factura->fecha = $fecha_factura;

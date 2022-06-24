@@ -4,6 +4,7 @@
             <thead>
                 <tr class="font-verdana">
                     <td class="text-center p-1"><b>ID</b></td>
+                    <td class="text-center p-1"><b>SOC.</b></td>
                     <td class="text-center p-1"><b>FECHA</b></td>
                     <td class="text-center p-1"><b>NIT</b></td>
                     <td class="text-center p-1"><b>RAZON SOCIAL</b></td>
@@ -27,6 +28,7 @@
                     @foreach ($facturas as $datos)
                         <tr class="font-verdana">
                             <td width="1%" class="text-left p-1">{{ $datos->id }}</td>
+                            <td class="text-center p-1">{{ $datos->abreviatura }}</td>
                             <td class="text-center p-1">{{\Carbon\Carbon::parse($datos->fecha)->format('d/m/Y')}}</td>
                             <td class="text-left p-1">
                                 <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="N° dui.  {{$datos->nro_dui}}">

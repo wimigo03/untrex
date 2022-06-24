@@ -1,5 +1,5 @@
 {{Form::hidden('comprobante_id',$comprobante->id)}}
-{{--{{Form::hidden('proyecto_id',$comprobante->proyecto_id)}}--}}
+{{Form::hidden('proyecto_id',$comprobante->proyecto_id)}}
 {{--{{Form::hidden('socio_id',$comprobante->socio_id)}}--}}
 <div class="form-group row">
     <div class="col-md-2">
@@ -72,6 +72,11 @@
             <div class="input-group-append "><span class="input-group-text">BS</span></div>
             {!! $errors->first('decuento','<span class="invalid-feedback d-block">:message</span>') !!}
         </div>
+    </div>
+    <div class="col-md-3">
+        {{Form::label('socio','Socio',['class' => 'd-inline font-verdana-bg'])}}
+        {!! Form::select('socio',$socios,null, ['placeholder' => '--Seleccionar--','class' => 'form-control form-control-sm select2'. ( $errors->has('socio') ? ' is-invalid' : '' ),'id'=>'socios']) !!}
+        {!! $errors->first('socio','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
     {{--<div class="col-md-2">
         {{Form::label('tipo','Tipo:',['class' => 'd-inline font-verdana-bg'])}}

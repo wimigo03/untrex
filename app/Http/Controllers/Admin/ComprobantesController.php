@@ -282,8 +282,8 @@ class ComprobantesController extends Controller
         /*try{
             DB::beginTransaction();*/
             $comprobante_detalle = ComprobantesDetalle::where('comprobante_id',$comprobante_id)->get();
-            $total_debe = $comprobante_detalle->sum('debe');
-            $total_haber = $comprobante_detalle->sum('haber');
+            $total_debe = round($comprobante_detalle->sum('debe'),2);
+            $total_haber = round($comprobante_detalle->sum('haber'),2);
             if($total_debe != $total_haber){
                 return back()->withInput()->with('danger','Imposible Aprobar el comprobante. El total debe y haber no son iguales...');
             }

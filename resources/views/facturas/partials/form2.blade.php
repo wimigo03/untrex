@@ -27,7 +27,7 @@
                     @endphp
                     @foreach ($facturas as $datos)
                         <tr class="font-verdana">
-                            <td width="1%" class="text-left p-1">{{ $datos->id }}</td>
+                            <td width="1%" class="text-left p-1">{{ $datos->factura_id }}</td>
                             <td class="text-center p-1">{{ $datos->abreviatura }}</td>
                             <td class="text-center p-1">{{\Carbon\Carbon::parse($datos->fecha)->format('d/m/Y')}}</td>
                             <td class="text-left p-1">
@@ -52,7 +52,7 @@
                             <td class="text-right p-1">{{ number_format($importe_base_c_f,2,'.',',') }}</td>
                             <td class="text-right p-1">{{ number_format($credito_fiscal,2,'.',',') }}</td>
                             <td class="text-center p-1">
-                                <a href="{{route('facturas.delete', $datos->id )}}" class="btn btn-xs btn-danger">
+                                <a href="{{route('facturas.delete', $datos->factura_id )}}" class="btn btn-xs btn-danger">
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </a>
                             </td>

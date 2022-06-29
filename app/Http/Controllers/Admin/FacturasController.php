@@ -78,6 +78,7 @@ class FacturasController extends Controller
         $socios = DB::table('socios as a')->where('consorcio_id',$proyecto->consorcio_id)->where('deleted_at',null)->pluck('nombre','id');
         $facturas = DB::table('facturas as a')
                         ->join('socios as b','b.id','a.socio_id')
+                        ->select('a.id as factura_id','b.abreviatura','a.fecha','a.nro_dui','a.nit','a.razon_social','a.numero','a.nro_autorizacion','a.cod_control','a.monto','a.excento','a.descuento')
                         ->where('a.proyecto_id',$comprobante->proyecto_id)
                         ->where('a.deleted_at',null)->get();
         return view('facturas.create',compact('comprobante','proveedores','facturas','socios'));

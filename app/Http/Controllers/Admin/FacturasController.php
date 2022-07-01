@@ -76,11 +76,18 @@ class FacturasController extends Controller
         $plan_cuentas_auxiliares = PlanCuentasAuxiliares::where('estado',1)->pluck('nombre','id');*/
         $proyecto = DB::table('proyectos as a')->where('id',$comprobante->proyecto_id)->where('deleted_at',null)->first();
         $socios = DB::table('socios as a')->where('consorcio_id',$proyecto->consorcio_id)->where('deleted_at',null)->pluck('nombre','id');
-        $facturas = DB::table('facturas as a')
+        $facturas = DB::table('comprobante_facturas as a')
+                        ->join('comprobantes as b','b.id','a.comprobante_id')
+                        ->join('facturas as c','c.id','a.factura_id')
+                        ->join('socios as d','d.id','c.socio_id')
+                        ->select('c.id as factura_id','d.abreviatura','c.fecha','c.nro_dui','c.nit','c.razon_social','c.numero','c.nro_autorizacion','c.cod_control','c.monto','c.excento','c.descuento')
+                        ->where('a.comprobante_id',$comprobante->id)
+                        ->where('a.deleted_at',null)->get();
+        /*$facturas = DB::table('facturas as a')
                         ->join('socios as b','b.id','a.socio_id')
                         ->select('a.id as factura_id','b.abreviatura','a.fecha','a.nro_dui','a.nit','a.razon_social','a.numero','a.nro_autorizacion','a.cod_control','a.monto','a.excento','a.descuento')
                         ->where('a.proyecto_id',$comprobante->proyecto_id)
-                        ->where('a.deleted_at',null)->get();
+                        ->where('a.deleted_at',null)->get();*/
         return view('facturas.create',compact('comprobante','proveedores','facturas','socios'));
     }
 

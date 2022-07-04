@@ -13,7 +13,16 @@ use App\Http\Controllers\Admin\FacturasController;
 use App\Http\Controllers\Admin\LibroMayorPorCuentaController;
 use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
 use App\Http\Controllers\Admin\LibroBancoController;
+use App\Http\Controllers\Admin\ProveedorController;
 
+//Proveedores
+Route::post('/proveedor/update', [ProveedorController::class, 'update'])->name('proveedor.update');
+Route::get('/proveedor/editar/{proveedor_id}', [ProveedorController::class, 'editar'])->name('proveedor.editar');
+Route::post('/proveedor/store', [ProveedorController::class, 'store'])->name('proveedor.store');
+Route::get('/proveedor/create', [ProveedorController::class, 'create'])->name('proveedor.create');
+route::post('/proveedor/search', [ProveedorController::class, 'search'])->name('proveedor.search');
+route::get('/proveedor/indexAjax', [ProveedorController::class, 'indexAjax'])->name('proveedor.indexAjax');
+route::get('/proveedor/index', [ProveedorController::class, 'index'])->name('proveedor.index');
 //Libro banco
 Route::get('librobanco/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf3'])->name('librobanco.pdf3');
 Route::get('librobanco/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf2'])->name('librobanco.pdf2');

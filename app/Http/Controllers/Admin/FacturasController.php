@@ -52,28 +52,7 @@ class FacturasController extends Controller
 
     public function create($comprobante_id){
         $comprobante = DB::table('comprobantes')->where('id',$comprobante_id)->first();
-        //dd($comprobante);
-        //$socio = 0;//DB::table('socios')->where('id',$comprobante->socio_id)->first();
-        //$proyectos = DB::table('proyectos')->pluck('nombre','id');
-        //$centros = DB::table('centros')->pluck('nombre','id');
         $proveedores = DB::table('proveedores')->where('nombre_comercial','!=','S/N')->where('status',1)->where('deleted_at',null)->pluck('nombre_comercial','id');
-        /*$plan_cuentas_1 = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
-                                    ->where('estado',1)                                    
-                                    ->where('cuenta_detalle','1')
-                                    ->pluck('nombre','id');
-        $plan_cuentas_iva = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
-                                        ->where('estado',1)                                    
-                                        ->where('cuenta_detalle','1')
-                                        ->where(function ($query) {
-                                            $query->where('id', 31)
-                                                ->orWhere('id', 177);
-                                        })
-                                        ->pluck('nombre','id');
-        $plan_cuentas_2 = PlanCuentas::select(DB::raw("CONCAT(codigo,'&nbsp;|&nbsp;',nombre) as nombre"),'id')
-                                    ->where('estado',1)                                    
-                                    ->where('cuenta_detalle','1')
-                                    ->pluck('nombre','id');
-        $plan_cuentas_auxiliares = PlanCuentasAuxiliares::where('estado',1)->pluck('nombre','id');*/
         $proyecto = DB::table('proyectos as a')->where('id',$comprobante->proyecto_id)->where('deleted_at',null)->first();
         $socios = DB::table('socios as a')->where('consorcio_id',$proyecto->consorcio_id)->where('deleted_at',null)->pluck('nombre','id');
         $facturas = DB::table('comprobante_facturas as a')
@@ -83,11 +62,6 @@ class FacturasController extends Controller
                         ->select('c.id as factura_id','d.abreviatura','c.fecha','c.nro_dui','c.nit','c.razon_social','c.numero','c.nro_autorizacion','c.cod_control','c.monto','c.excento','c.descuento')
                         ->where('a.comprobante_id',$comprobante->id)
                         ->where('a.deleted_at',null)->get();
-        /*$facturas = DB::table('facturas as a')
-                        ->join('socios as b','b.id','a.socio_id')
-                        ->select('a.id as factura_id','b.abreviatura','a.fecha','a.nro_dui','a.nit','a.razon_social','a.numero','a.nro_autorizacion','a.cod_control','a.monto','a.excento','a.descuento')
-                        ->where('a.proyecto_id',$comprobante->proyecto_id)
-                        ->where('a.deleted_at',null)->get();*/
         return view('facturas.create',compact('comprobante','proveedores','facturas','socios'));
     }
 
@@ -380,7 +354,7 @@ class FacturasController extends Controller
             }
             //DB::commit();
             //dd("Realizado");
-            return redirect()->route('comprobantesdetalles.create', $comprobante)->with('success','Factura guardada con exito..');
+            return redirect()->route('comprobantesdetalles.create', $comprobante)->with('message','Factura guardada con exito..');
         /*}catch(\Exception $th){
             DB::rollback();
             //dd("No realizado");

@@ -266,6 +266,12 @@ return [
             'label_color'   => 'success',
         ],
         [
+            'text'          => 'Proveedores',
+            'route'         => 'proveedor.index',
+            'icon'          => 'fas fa-user-secret',
+            'label_color'   => 'success',
+        ],
+        [
             'text'    => 'Comprobantes',
             'icon'    => 'fas fa-list-alt',
             'submenu' => [

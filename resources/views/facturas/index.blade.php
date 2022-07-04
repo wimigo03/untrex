@@ -6,35 +6,112 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>FACTURAS</b></div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="card-title"><b>FACTURAS</b></div>
+                    </div>
+                    @if (isset($facturas))
+                        <div class="col-md-2 text-right">
+                            <a href="{{route('facturas.index')}}" class="text-white">
+                                &nbsp;<i class="fas fa-reply" aria-hidden="true"></i>&nbsp;
+                            </a>
+                        </div>
+                    @endif
+                </div>
             </div>
             <div class="card-body">
-                {{--{!! Form::model(Request::all(),['route'=> ['comprobantes.search']]) !!}
-                    @include('comprobantes.partials.search')
-                {!! Form::close()!!}--}}
-                <div class="form-group row">
-                    <div class="col-md-12">
-                        <div class="table-responsive table-striped table-bordered">
-                            <table id="dataTable" class="display responsive" style="width:100%">
-                                <thead>
-                                    <tr class="font-verdana">
-                                        <td class="text-center p-1"><b>ID</b></td>
-                                        <td class="text-center p-1"><b>SOCIO</b></td>
-                                        <td class="text-center p-1"><b>PROVEEDOR</b></td>
-                                        <td class="text-center p-1"><b>NRO. FACTURA</b></td>
-                                        <td class="text-center p-1"><b>FECHA</b></td>
-                                        <td class="text-center p-1"><b>GLOSA</b></td>
-                                        <td class="text-center p-1"><b>MONTO</b></td>
-                                        <td class="text-center p-1"><b>ESTADO</b></td>
-                                        {{--<td class="text-center p-1"><i class="fa fa-bars" aria-hidden="true"></i></td>--}}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                <div class="card">
+                    <div class="card-body">
+                        {!! Form::model(Request::all(),['route'=> ['facturas.search']]) !!}
+                            @include('facturas.partials.search')
+                        {!! Form::close()!!}
+                    </div>
+                </div>
+                @if (isset($facturas))
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="table-responsive table-striped table-bordered">
+                                    <table id="table" class="display responsive" style="width:100%">
+                                        <thead>
+                                            <tr class="font-verdana">
+                                                <td class="text-center p-1"><b>ID</b></td>
+                                                <td class="text-center p-1"><b>SOCIO</b></td>
+                                                <td class="text-center p-1"><b>PROVEEDOR</b></td>
+                                                <td class="text-center p-1"><b>NRO. FACTURA</b></td>
+                                                <td class="text-center p-1"><b>FECHA</b></td>
+                                                <td class="text-center p-1"><b>GLOSA</b></td>
+                                                <td class="text-center p-1"><b>MONTO</b></td>
+                                                <td class="text-center p-1"><b>ESTADO</b></td>
+                                                {{--<td class="text-center p-1"><i class="fa fa-bars" aria-hidden="true"></i></td>--}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($facturas as $datos)
+                                                <tr class="font-verdana">
+                                                    <td class="text-center p-1">
+                                                        {{$datos->factura_id}}
+                                                    </td>
+                                                    <td class="text-center p-1">
+                                                        {{$datos->socio}}
+                                                    </td>
+                                                    <td class="text-center p-1">
+                                                        {{$datos->razon_social}}
+                                                    </td>
+                                                    <td class="text-center p-1">
+                                                        {{$datos->numero}}
+                                                    </td>
+                                                    <td class="text-center p-1">
+                                                        {{$datos->fecha}}
+                                                    </td>
+                                                    <td class="text-center p-1">
+                                                        {{$datos->glosa}}
+                                                    </td>
+                                                    <td class="text-center p-1">
+                                                        {{$datos->monto}}
+                                                    </td>
+                                                    <td class="text-center p-1">
+                                                        {{$datos->estado_search}}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                @else
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="table-responsive table-striped">
+                                    <table id="dataTable" class="display responsive" style="width:100%">
+                                        <thead>
+                                            <tr class="font-verdana">
+                                                <td class="text-center p-1"><b>ID</b></td>
+                                                <td class="text-center p-1"><b>SOCIO</b></td>
+                                                <td class="text-center p-1"><b>PROVEEDOR</b></td>
+                                                <td class="text-center p-1"><b>NRO. FACTURA</b></td>
+                                                <td class="text-center p-1"><b>FECHA</b></td>
+                                                <td class="text-center p-1"><b>GLOSA</b></td>
+                                                <td class="text-center p-1"><b>MONTO</b></td>
+                                                <td class="text-center p-1"><b>ESTADO</b></td>
+                                                {{--<td class="text-center p-1"><i class="fa fa-bars" aria-hidden="true"></i></td>--}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -109,6 +186,17 @@
                     document.getElementById("message").innerHTML = "(Formato no valido)";
                     document.getElementById("fecha").value = "";
                 }
+            }
+        }
+
+        function valideKey(evt){
+            var code = (evt.which) ? evt.which : evt.keyCode;
+            if(code==8){
+                return true;
+            }else if(code==46 || (code>=48 && code<=57)){
+                return true;
+            }else{
+                return false;
             }
         }
     </script>

@@ -52,6 +52,7 @@ Route::get('/facturas/delete/{factura_id}', [FacturasController::class, 'delete'
 Route::post('/facturas/store', [FacturasController::class, 'store'])->name('facturas.store');
 Route::get('/facturas/get_proveedor/{id}', [FacturasController::class, 'getProveedor']);
 Route::get('/facturas/create/{id}', [FacturasController::class, 'create'])->name('facturas.create');
+route::post('/facturas/search', [FacturasController::class, 'search'])->name('facturas.search');
 route::get('/facturas/indexAjax', [FacturasController::class, 'indexAjax'])->name('facturas.indexAjax');
 route::get('/facturas/index', [FacturasController::class, 'index'])->name('facturas.index');
 //Comprobantes Fiscales Detalle

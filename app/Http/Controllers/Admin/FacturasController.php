@@ -18,8 +18,9 @@ use DB;
 class FacturasController extends Controller
 {
     public function index(){
-    //dd("index");
-    return view('facturas.index'/*,compact('comprobante')*/);
+    $socios = DB::table('socios')->where('consorcio_id',1)->where('deleted_at',null)->pluck('nombre','id');//Mientras tanto es solo consorcio 1, Luego hay que generalizar
+    $proveedores = DB::table('proveedores')->where('status',1)->where('deleted_at',null)->pluck('razon_social','id');
+    return view('facturas.index',compact('socios','proveedores'));
     }
 
     public function indexAjax(){
@@ -53,6 +54,34 @@ class FacturasController extends Controller
             //->addColumn('btnActions','comprobantes.partials.actions')
             //->rawColumns(['btnActions'])
             ->toJson();
+    }
+
+    public function search(Request $request){
+        if($request->fecha != null){
+            $fecha = substr($request->fecha,6,4) . '-' . substr($request->fecha,3,2) . '-' . substr($request->fecha,0,2);
+        }else{
+            $fecha = null;
+        }
+        $socios = DB::table('socios')->where('consorcio_id',1)->where('deleted_at',null)->pluck('nombre','id');//Mientras tanto es solo consorcio 1, Luego hay que generalizar
+        $proveedores = DB::table('proveedores')->where('status',1)->where('deleted_at',null)->pluck('razon_social','id');
+        $facturas = DB::table('facturas as a')
+                        ->join('proveedores as b','b.id','a.proveedor_id')
+                        ->join('comprobante_facturas as c','c.factura_id','a.id')
+                        ->join('socios as d','d.id','a.socio_id')
+                        ->select('a.id as factura_id','b.razon_social','a.numero','a.fecha',
+                                DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha"),
+                                DB::raw("UPPER(a.glosa) as glosa"),
+                                DB::raw("FORMAT(a.monto, 2) as monto"),
+                                DB::raw("if(c.estado = '1','VALIDO','ANULADO') as estado_search"),
+                                'd.abreviatura as socio')
+                        ->where('a.socio_id','LIKE','%' . $request->socio . '%')
+                        ->where('a.proveedor_id','LIKE','%' . $request->proveedor . '%')
+                        ->where('a.numero','LIKE','%' . $request->nro_factura . '%')
+                        ->where('a.fecha','LIKE','%' . $fecha . '%')
+                        ->where('a.glosa','LIKE','%' . $request->glosa . '%')
+                        ->where('a.monto','LIKE','%' . $request->monto . '%')
+                        ->get();
+        return view('facturas.index',compact('socios','proveedores','facturas'));
     }
 
     public function create($comprobante_id){

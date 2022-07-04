@@ -28,7 +28,7 @@ class FacturasController extends Controller
             ->join('proveedores as b','b.id','a.proveedor_id')
             ->join('comprobante_facturas as c','c.factura_id','a.id')
             ->join('socios as d','d.id','a.socio_id')
-            ->select('a.id as factura_id','b.razon_social','a.numero',
+            ->select('a.id as factura_id','b.razon_social','a.numero','a.fecha',
                     DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha"),
                     DB::raw("UPPER(a.glosa) as glosa"),
                     DB::raw("FORMAT(a.monto, 2) as monto"),
@@ -57,7 +57,7 @@ class FacturasController extends Controller
 
     public function create($comprobante_id){
         $comprobante = DB::table('comprobantes')->where('id',$comprobante_id)->first();
-        $proveedores = DB::table('proveedores')->where('nombre_comercial','!=','S/N')->where('status',1)->where('deleted_at',null)->pluck('nombre_comercial','id');
+        $proveedores = DB::table('proveedores')->where('status',1)->where('deleted_at',null)->pluck('razon_social','id');
         $proyecto = DB::table('proyectos as a')->where('id',$comprobante->proyecto_id)->where('deleted_at',null)->first();
         $socios = DB::table('socios as a')->where('consorcio_id',$proyecto->consorcio_id)->where('deleted_at',null)->pluck('nombre','id');
         $facturas = DB::table('comprobante_facturas as a')

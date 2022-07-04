@@ -61,7 +61,7 @@
                     {data: 'socio', name:'d.abreviatura', class:'text-center p-1 font-verdana'},
                     {data: 'razon_social', name:'b.razon_social', class:'text-justify p-1 font-verdana'},
                     {data: 'numero', name:'a.numero', class:'text-center p-1 font-verdana'},
-                    {data: 'fecha', name:'fecha', class:'text-center p-1 font-verdana'},
+                    {data: 'fecha', name:'a.fecha', class:'text-center p-1 font-verdana'},
                     {data: 'glosa', name:'glosa', class:'text-justify p-1 font-verdana'},
                     {data: 'monto', name:'monto', class:'text-right p-1 font-verdana'},
                     {data: 'estado_search', name:'estado_search', class:'text-center p-1 font-verdana',render: function(data, type, row){
@@ -75,7 +75,7 @@
                     //{data: 'btnActions', class:'text-justify p-1'}
                 ],
                 "iDisplayLength": 10,
-                "order": [[ 0, "desc" ]],
+                "order": [[ 4, "desc" ]],
                 "language":{
                     "info": "Mostrando _START_ al _END_ de _TOTAL_","search": '',"searchPlaceholder": "Buscar",
                     "paginate": {"next": "<small><b>Siguiente</b></small>","previous": "<small><b>Anterior</b></small>",},

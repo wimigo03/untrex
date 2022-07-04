@@ -32,7 +32,7 @@
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <div class="table-responsive table-striped table-bordered">
+                                <div class="table-responsive table-striped">
                                     <table id="table" class="display responsive" style="width:100%">
                                         <thead>
                                             <tr class="font-verdana">
@@ -56,7 +56,7 @@
                                                     <td class="text-center p-1">
                                                         {{$datos->socio}}
                                                     </td>
-                                                    <td class="text-center p-1">
+                                                    <td class="text-justify p-1">
                                                         {{$datos->razon_social}}
                                                     </td>
                                                     <td class="text-center p-1">
@@ -65,14 +65,18 @@
                                                     <td class="text-center p-1">
                                                         {{$datos->fecha}}
                                                     </td>
-                                                    <td class="text-center p-1">
+                                                    <td class="text-justify p-1">
                                                         {{$datos->glosa}}
                                                     </td>
                                                     <td class="text-center p-1">
                                                         {{$datos->monto}}
                                                     </td>
                                                     <td class="text-center p-1">
-                                                        {{$datos->estado_search}}
+                                                        @if ($datos->estado_search == 'VALIDO')
+                                                            <span class="btn btn-xs btn-success font-verdana-sm"><b>VALIDO</b></span>
+                                                        @else
+                                                            <span class="btn btn-xs btn-danger font-verdana-sm"><b>ANULADO</b></span>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach

@@ -40,14 +40,4 @@
             </a>
         @endif
     </div>
-    {{--<div class="col-md-4 text-right"><br>
-        @if ($back == false)
-            <a href="{{route('comprobantes.index')}}" class="btn btn-primary font-verdana-bg">
-                <i class="fas fa-angle-double-left"></i>
-            </a>    
-        @endif
-        <a href="{{route('comprobantes.create')}}" class="btn btn-success font-verdana-bg">
-            <i class="fas fa-plus"></i>
-        </a>
-    </div>--}}
 </div>

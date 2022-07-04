@@ -62,7 +62,7 @@
                     {data: 'razon_social', name:'b.razon_social', class:'text-justify p-1 font-verdana'},
                     {data: 'numero', name:'a.numero', class:'text-center p-1 font-verdana'},
                     {data: 'fecha', name:'fecha', class:'text-center p-1 font-verdana'},
-                    {data: 'glosa', name:'a.glosa', class:'text-justify p-1 font-verdana',render:function(item){return item.toUpperCase()}},
+                    {data: 'glosa', name:'glosa', class:'text-justify p-1 font-verdana'},
                     {data: 'monto', name:'monto', class:'text-right p-1 font-verdana'},
                     {data: 'estado_search', name:'estado_search', class:'text-center p-1 font-verdana',render: function(data, type, row){
                         if(row.estado_search === 'VALIDO'){

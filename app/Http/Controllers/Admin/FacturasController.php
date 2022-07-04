@@ -29,12 +29,17 @@ class FacturasController extends Controller
             ->join('comprobante_facturas as c','c.factura_id','a.id')
             ->join('socios as d','d.id','a.socio_id')
             ->select('a.id as factura_id','b.razon_social','a.numero',
-                    DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha"),'a.glosa',
+                    DB::raw("DATE_FORMAT(a.fecha,'%d/%m/%Y') as fecha"),
+                    DB::raw("UPPER(a.glosa) as glosa"),
                     DB::raw("FORMAT(a.monto, 2) as monto"),
                     DB::raw("if(c.estado = '1','VALIDO','ANULADO') as estado_search"),
                     'd.abreviatura as socio'))
             ->filterColumn('fecha', function($query, $keyword) {
                     $sql = "DATE_FORMAT(a.fecha,'%d/%m/%Y')  like ?";
+                    $query->whereRaw($sql, ["%{$keyword}%"]);
+                    })
+            ->filterColumn('glosa', function($query, $keyword) {
+                    $sql = "UPPER(a.glosa)  like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
                     })
             ->filterColumn('monto', function($query, $keyword) {

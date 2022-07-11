@@ -251,7 +251,7 @@ class LibroMayorPorCuentaController extends Controller
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_saldo_inicial)
-                                ->where('a.fecha','<=',$fecha_inicial)
+                                ->where('a.fecha','<',$fecha_inicial)
                                 ->select('b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();

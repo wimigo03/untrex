@@ -13,6 +13,7 @@
             </div>
             <div class="card-body">
                 <div class="form-group row">
+                    
                     <div class="col-md-2">
                         {{ Form::label('Nro','Nro',['class' => 'd-inline font-verdana-bg'])}}
                         {!! Form::text('Nro',$comprobante->nro_comprobante, ['readonly' => true,'class' => 'form-control form-control-sm font-verdana-bg']) !!}

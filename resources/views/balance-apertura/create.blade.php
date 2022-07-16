@@ -8,18 +8,18 @@
             <div class="card-header bg-gradient-secondary text-white">
                 <div class="row">
                     <div class="col-md-10">
-                        <div class="card-title"><b>REGISTRO DE PROVEEDOR</b></div>
+                        <div class="card-title"><b>CREAR BALANCE DE APERTURA</b></div>
                     </div>
                     <div class="col-md-2 text-right">
-                        <a href="{{route('proveedor.index')}}" class="text-white">
+                        <a href="{{route('balanceapertura.index',$proyecto_id)}}" class="text-white">
                             &nbsp;<i class="fas fa-reply" aria-hidden="true"></i>&nbsp;
                         </a>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['proveedor.store'],'onsubmit' => "return validacion_form()"]) !!}
-                    @include('proveedor.partials.form-create')
+                {!! Form::model(Request::all(),['route'=> ['balanceapertura.store'],'onsubmit' => "return validacion_form()"]) !!}
+                    @include('balance-apertura.partials.form-create')
                 {!! Form::close()!!}
             </div>
         </div>
@@ -38,20 +38,35 @@
     <script type="text/javascript" src="/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            var ciudad_old = document.getElementById("ciudad_old").value;
-            if(ciudad_old != 10 || ciudad_old == ''){
-                $('.otra_ciudad').hide();
-            }else{
-                $('.otra_ciudad').show();
-            }
+            $('#tablaAjax').DataTable({
+                "processing":true,
+                "paginate":false,
+                "lengthMenu":false,
+                "info":false,
+                "iDisplayLength": -1,
+                "order": [[ 0, "asc" ]],
+                "language":{"info": "Mostrando _START_ al _END_ de _TOTAL_",
+                "search": '',
+                "searchPlaceholder": "Buscar",
+                "paginate": {"next": "<b>Siguiente</b>","previous": "<b>Anterior</b>"},
+                "lengthMenu": 'Mostrar <select class="form form-control-sm"><option value="-1">Todos</option></select> registros',
+                /*"lengthMenu": 'Mostrar <select class="form form-control-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="-1">Todos</option></select> registros',*/
+                "loadingRecords": "...Cargando...",
+                "processing": "...Procesando...",
+                "emptyTable": "No hay datos",
+                "zeroRecords": "No hay resultados para mostrar",
+                "infoEmpty": "Ningun registro encontrado",
+                "infoFiltered": "(filtrados de un total de _MAX_ registros)"
+                }
+            });
 
             $('.select2').select2({
                 placeholder: "--Seleccionar--"
-            });   
+            });
         } );
 
         function validacion_form() {
-            var opcion = confirm("Estas por registrar a un proveedor. ¿Estas seguro que desea continuar?");
+            var opcion = confirm("Estas por generar un nuevo balance de apertura. ¿Estas seguro que desea continuar?");
             if (opcion == true) {
                 return true;
                 } else {
@@ -62,21 +77,19 @@
 
         function valideKey(evt){
             var code = (evt.which) ? evt.which : evt.keyCode;
-            if(code==8){
-                return true;
-            }else if(code==46 || (code>=48 && code<=57)){
+            if(code==46 || (code>=48 && code<=57)){
                 return true;
             }else{
                 return false;
             }
         }
 
-        function copiarRazonSocial(dato){
+        /*function copiarRazonSocial(dato){
             var razon_social = document.getElementById("razon_social").value;
             document.getElementById("nombre_comercial").value = razon_social;
-        }
+        }*/
 
-        $('#ciudades').change(function() {
+        /*$('#ciudades').change(function() {
             var ciudad_id =  $(this).val();
             if(ciudad_id == 10){
                 $('.otra_ciudad').show();
@@ -85,6 +98,6 @@
                 document.getElementById("nueva_ciudad").value = "";
                 document.getElementById("abreviatura").value = "";
             }
-        });
+        });*/
     </script>
 @stop

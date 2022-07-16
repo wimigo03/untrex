@@ -254,6 +254,12 @@ return [
             'label_color' => 'success',
         ],*/
         [
+            'text'          => 'Consorcios',
+            'route'         => 'consorcios.index',
+            'icon'          => 'fas fa-city',
+            'label_color'   => 'success',
+        ],
+        [
             'text'          => 'Cotizaciones',
             'route'         => 'tipo_cambio.index',
             'icon'          => 'fas fa-funnel-dollar',
@@ -270,6 +276,22 @@ return [
             'route'         => 'proveedor.index',
             'icon'          => 'fas fa-user-secret',
             'label_color'   => 'success',
+        ],
+        [
+            'icon'    => 'fas fa-star-half',
+            'text'    => 'Balances',
+            'submenu' => [
+                [
+                    'text'  => 'Base 1',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'balanceapertura.proyectos',
+                ],
+                [
+                    'text'  => 'Base 2',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'balanceaperturaf.index',
+                ],
+            ],
         ],
         [
             'text'    => 'Comprobantes',

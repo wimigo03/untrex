@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ConsorciosController;
 use App\Http\Controllers\Admin\PlandecuentasController;
 use App\Http\Controllers\Admin\PlandecuentasAuxiliaresController;
 use App\Http\Controllers\Admin\TipoCambioController;
@@ -14,7 +15,20 @@ use App\Http\Controllers\Admin\LibroMayorPorCuentaController;
 use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
 use App\Http\Controllers\Admin\LibroBancoController;
 use App\Http\Controllers\Admin\ProveedorController;
+use App\Http\Controllers\Admin\BalanceAperturaController;
+use App\Http\Controllers\Admin\BalanceAperturaFController;
 
+//Balance de apertura Base II
+route::post('/balanceaperturaf/search', [BalanceAperturaFController::class, 'search'])->name('balanceaperturaf.search');
+route::get('/balanceaperturaf/index', [BalanceAperturaFController::class, 'index'])->name('balanceaperturaf.index');
+//Balance de apertura Base I
+Route::post('/balanceapertura/update', [BalanceAperturaController::class, 'update'])->name('balanceapertura.update');
+Route::get('/balanceapertura/editar/{balance_apertura_id}', [BalanceAperturaController::class, 'editar'])->name('balanceapertura.editar');
+Route::post('/balanceapertura/store', [BalanceAperturaController::class, 'store'])->name('balanceapertura.store');
+Route::get('/balanceapertura/create/{proyecto_id}', [BalanceAperturaController::class, 'create'])->name('balanceapertura.create');
+route::post('/balanceapertura/search', [BalanceAperturaController::class, 'search'])->name('balanceapertura.search');
+route::get('/balanceapertura/index/{proyecto_id}', [BalanceAperturaController::class, 'index'])->name('balanceapertura.index');
+route::get('/balanceapertura/proyectos', [BalanceAperturaController::class, 'proyectos'])->name('balanceapertura.proyectos');
 //Proveedores
 Route::post('/proveedor/update', [ProveedorController::class, 'update'])->name('proveedor.update');
 Route::get('/proveedor/editar/{proveedor_id}', [ProveedorController::class, 'editar'])->name('proveedor.editar');
@@ -113,5 +127,10 @@ route::post('/plandecuentas/create', [PlandecuentasController::class, 'create'])
 Route::get('/plandecuentas/get-selected-data/{id}',[PlandecuentasController::class, 'getSelectedData'])->name('plandecuentas.get-selected-data');
 Route::get('/plandecuentas/search', [PlandecuentasController::class, 'search'])->name('plandecuentas.search');
 route::get('/plandecuentas', [PlandecuentasController::class, 'index'])->name('plandecuentas.index');
+//Consorcios
+route::get('/consorcio/socios/{consorcio_id}', [ConsorciosController::class, 'socios'])->name('consorcios.socios');
+route::get('/consorcio/proyectos/{consorcio_id}', [ConsorciosController::class, 'proyectos'])->name('consorcios.proyectos');
+route::get('/consorcio/create', [ConsorciosController::class, 'create'])->name('consorcios.create');
+route::get('/consorcio/index', [ConsorciosController::class, 'index'])->name('consorcios.index');
+//Home
 route::get('', [HomeController::class, 'index']);
-

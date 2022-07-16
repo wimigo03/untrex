@@ -21,7 +21,7 @@ class ComprobantesController extends Controller
 {
     public function index(){
         $cotizacion = TipoCambio::where('fecha',Carbon::now()->toDateString())->first();
-        if($cotizacion == null){
+        if($cotizacion == null && Auth()->user()->id != 1){
             return redirect()->route('tipo_cambio.index')->with('message','Se debe actualizar el tipo de cambio para continuar...');    
         }
         $proyectos = Proyectos::pluck('nombre','id');
@@ -383,8 +383,8 @@ class ComprobantesController extends Controller
                     ->leftjoin('users as d','d.id','a.user_autorizado_id')
                     ->where('a.id',$comprobante_id)
                     ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
-                    DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
-                    'a.status','a.concepto','c.nombre','d.name as autorizado','a.fecha','a.copia','a.monto','a.tipo_cambio','a.ufv','a.entregado_recibido')
+                                DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
+                                'a.status','a.concepto','c.nombre','d.name as autorizado','a.fecha','a.copia','a.monto','a.tipo_cambio','a.ufv','a.entregado_recibido')
                     ->first();
         if($comprobante->status == 0){
             $estado = 'PENDIENTE';
@@ -397,7 +397,7 @@ class ComprobantesController extends Controller
         }
         $comprobante_detalle = DB::table('comprobantes_detalles as a')
                             ->join('plan_cuentas as b','b.id','a.plancuenta_id')
-                            ->join('centros as d','d.id','a.centro_id')
+                            ->leftjoin('centros as d','d.id','a.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as e','e.id','a.plancuentaauxiliar_id')
                             ->select('b.codigo','b.nombre as plancuenta','d.nombre as centro','e.nombre as auxiliar','a.glosa','a.debe',
                                     'a.haber','e.id as plancuentaauxiliar_id','a.cheque_nro','d.abreviatura as ab_centro')

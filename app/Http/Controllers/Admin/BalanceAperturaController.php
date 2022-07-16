@@ -51,13 +51,13 @@ class BalanceAperturaController extends Controller
             'gestion' => 'required',
             'moneda' => 'required'
         ]);
+        $fecha = $request->gestion  . '-04-01';
+        $cotizacion = TipoCambio::where('fecha',$fecha)->first();
+        if($cotizacion == null){
+            return back()->withInput()->with('info','Tipo de Cambio y UFV para el Balance de apertura no encontrado...');
+        }
         DB::beginTransaction();
-        try {
-            $fecha = $request->gestion  . '-04-01';
-            $cotizacion = TipoCambio::where('fecha',$fecha)->first();
-            if($cotizacion == null){
-                return back()->withInput()->with('info','Tipo de Cambio y UFV para el Balance de apertura no encontrado...');
-            }
+        try {   
             $fecha = Carbon::parse($fecha);
             $nro_comprobante = 'CT1-' . substr($fecha->toDateString(),2,2) . '04-0001';
             

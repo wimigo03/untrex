@@ -1,24 +1,24 @@
 @extends('adminlte::page')
-@section('title', 'Proveedor')
+@section('title', 'Balance de aperturas')
 @section('content')
 @include('components.flash_alerts')
 <div class="form-group row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-secondary text-white">
+            <div class="card-header bg-gradient-warning text-white">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="card-title"><b>BALANCE DE APERTURA</b></div>
                     </div>
                     <div class="col-md-4">
-                        {!! Form::select('proyecto_id',$proyectos,$proyecto_id, ['class' => 'form-control form-control-sm  bg-gray text-center', 'id' => 'proyecto_id']) !!}
+                        {!! Form::select('proyecto_id',$proyectos,$proyecto_id, ['class' => 'form-control form-control-sm bg-warning text-center', 'id' => 'proyecto_id']) !!}
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <a href="{{route('balanceapertura.create',$proyecto_id)}}" class="btn btn-success font-verdana-bg">
+                        <a href="{{route('balanceaperturaf.create',$proyecto_id)}}" class="btn btn-success font-verdana-bg">
                             <i class="fas fa-plus" aria-hidden="true"></i>&nbsp;Nuevo Balance
                         </a>
                     </div>
@@ -50,7 +50,7 @@
                                                         <table style="border-collapse:collapse; border: none;" align="center">
                                                             <tr>
                                                                 <td style="padding: 0;">
-                                                                    <a href="{{route('balanceapertura.editar', $datos->balance_apertura_id)}}" class="btn btn-xs btn-warning font-verdana-bg">
+                                                                    <a href="{{route('balanceaperturaf.editar', $datos->balance_apertura_id)}}" class="btn btn-xs btn-warning font-verdana-bg">
                                                                         &nbsp;<i class="fas fa-info-circle"></i>&nbsp;
                                                                     </a>
                                                                 </td>

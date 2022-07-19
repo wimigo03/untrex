@@ -141,7 +141,11 @@ class ComprobantesController extends Controller
                                         ->orderBy('nro_comprobante_id','desc')
                                         ->first();
         if($ultimoComprobante == null){
-            $numero = 1;
+            if(date('m', strtotime($fecha)) == '04' && $request->tipo == 3){
+                $numero = 2;
+            }else{
+                $numero = 1;
+            }
         }else{
             $numero = intval($ultimoComprobante != null ? $ultimoComprobante->nro_comprobante_id: 0) + 1;
         }

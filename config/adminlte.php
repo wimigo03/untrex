@@ -289,7 +289,7 @@ return [
                 [
                     'text'  => 'Base 2',
                     'icon'  => 'fas fa-list',
-                    'route' => 'balanceaperturaf.index',
+                    'route' => 'balanceaperturaf.proyectos',
                 ],
             ],
         ],
@@ -306,6 +306,22 @@ return [
                     'text'  => 'Base 2',
                     'icon'  => 'fas fa-list',
                     'route' => 'comprobantes.fiscales.index',
+                ],
+            ],
+        ],
+        [
+            'icon'    => 'fas fa-star-half',
+            'text'    => 'E. de Resultados',
+            'submenu' => [
+                [
+                    'text'  => 'Base 1',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'estadoresultado.proyectos',
+                ],
+                [
+                    'text'  => 'Base 2',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'estadoresultadof.proyectos',
                 ],
             ],
         ],

@@ -17,11 +17,32 @@ use App\Http\Controllers\Admin\LibroBancoController;
 use App\Http\Controllers\Admin\ProveedorController;
 use App\Http\Controllers\Admin\BalanceAperturaController;
 use App\Http\Controllers\Admin\BalanceAperturaFController;
+use App\Http\Controllers\Admin\EstadoResultadoController;
+use App\Http\Controllers\Admin\EstadoResultadoFController;
 
 //Balance de apertura Base II
+//route::post('/estadoresultadof/excel', [EstadoResultadoFController::class, 'excel'])->name('estadoresultadof.excel');
+route::post('/estadoresultadof/pdf', [EstadoResultadoFController::class, 'pdf'])->name('estadoresultadof.pdf');
+route::post('/estadoresultadof/search', [EstadoResultadoFController::class, 'search'])->name('estadoresultadof.search');
+route::get('/estadoresultadof/index/{proyecto_id}', [EstadoResultadoFController::class, 'index'])->name('estadoresultadof.index');
+route::get('/estadoresultadof/proyectos', [EstadoResultadoFController::class, 'proyectos'])->name('estadoresultadof.proyectos');
+//Estado de resultados
+//route::post('/estadoresultado/excel', [EstadoResultadoController::class, 'excel'])->name('estadoresultado.excel');
+route::post('/estadoresultado/pdf', [EstadoResultadoController::class, 'pdf'])->name('estadoresultado.pdf');
+route::post('/estadoresultado/search', [EstadoResultadoController::class, 'search'])->name('estadoresultado.search');
+route::get('/estadoresultado/index/{proyecto_id}', [EstadoResultadoController::class, 'index'])->name('estadoresultado.index');
+route::get('/estadoresultado/proyectos', [EstadoResultadoController::class, 'proyectos'])->name('estadoresultado.proyectos');
+//Balance de apertura Base II
+Route::get('/balanceaperturaf/aprobar/{balance_apertura_id}', [BalanceAperturaFController::class, 'aprobar'])->name('balanceaperturaf.aprobar');
+Route::post('/balanceaperturaf/update', [BalanceAperturaFController::class, 'update'])->name('balanceaperturaf.update');
+Route::get('/balanceaperturaf/editar/{balance_apertura_id}', [BalanceAperturaFController::class, 'editar'])->name('balanceaperturaf.editar');
+Route::post('/balanceaperturaf/store', [BalanceAperturaFController::class, 'store'])->name('balanceaperturaf.store');
+Route::get('/balanceaperturaf/create/{proyecto_id}', [BalanceAperturaFController::class, 'create'])->name('balanceaperturaf.create');
 route::post('/balanceaperturaf/search', [BalanceAperturaFController::class, 'search'])->name('balanceaperturaf.search');
-route::get('/balanceaperturaf/index', [BalanceAperturaFController::class, 'index'])->name('balanceaperturaf.index');
+route::get('/balanceaperturaf/index/{proyecto_id}', [BalanceAperturaFController::class, 'index'])->name('balanceaperturaf.index');
+route::get('/balanceaperturaf/proyectos', [BalanceAperturaFController::class, 'proyectos'])->name('balanceaperturaf.proyectos');
 //Balance de apertura Base I
+Route::get('/balanceapertura/aprobar/{balance_apertura_id}', [BalanceAperturaController::class, 'aprobar'])->name('balanceapertura.aprobar');
 Route::post('/balanceapertura/update', [BalanceAperturaController::class, 'update'])->name('balanceapertura.update');
 Route::get('/balanceapertura/editar/{balance_apertura_id}', [BalanceAperturaController::class, 'editar'])->name('balanceapertura.editar');
 Route::post('/balanceapertura/store', [BalanceAperturaController::class, 'store'])->name('balanceapertura.store');

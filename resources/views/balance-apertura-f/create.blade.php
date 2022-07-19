@@ -1,25 +1,25 @@
 @extends('adminlte::page')
-@section('title', 'Balance de apertura')
+@section('title', 'Balance de aperturas')
 @section('content')
 @include('components.flash_alerts')
 <div class="form-group row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-secondary text-white">
+            <div class="card-header bg-gradient-warning text-white">
                 <div class="row">
                     <div class="col-md-10">
-                        <div class="card-title"><b>ACTUALIZAR BALANCE DE APERTURA</b></div>
+                        <div class="card-title"><b>CREAR BALANCE DE APERTURA</b></div>
                     </div>
                     <div class="col-md-2 text-right">
-                        <a href="{{route('balanceapertura.index',$balance_apertura->proyecto_id)}}" class="text-white">
+                        <a href="{{route('balanceaperturaf.index',$proyecto_id)}}" class="text-white">
                             &nbsp;<i class="fas fa-reply" aria-hidden="true"></i>&nbsp;
                         </a>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['balanceapertura.update']]) !!}
-                    @include('balance-apertura.partials.form-editar')
+                {!! Form::model(Request::all(),['route'=> ['balanceaperturaf.store'],'onsubmit' => "return validacion_form()"]) !!}
+                    @include('balance-apertura-f.partials.form-create')
                 {!! Form::close()!!}
             </div>
         </div>
@@ -44,7 +44,7 @@
                 "lengthMenu":false,
                 "info":false,
                 "iDisplayLength": -1,
-                "order": [[ 0, "desc" ]],
+                "order": [[ 0, "asc" ]],
                 "language":{"info": "Mostrando _START_ al _END_ de _TOTAL_",
                 "search": '',
                 "searchPlaceholder": "Buscar",
@@ -64,6 +64,16 @@
                 placeholder: "--Seleccionar--"
             });
         } );
+
+        function validacion_form() {
+            var opcion = confirm("Estas por generar un nuevo balance de apertura. ¿Estas seguro que desea continuar?");
+            if (opcion == true) {
+                return true;
+                } else {
+                    return false;
+                    }
+            return true;
+        }
 
         function valideKey(evt){
             var code = (evt.which) ? evt.which : evt.keyCode;

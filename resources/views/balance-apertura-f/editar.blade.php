@@ -5,21 +5,21 @@
 <div class="form-group row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-secondary text-white">
+            <div class="card-header bg-gradient-warning text-white">
                 <div class="row">
                     <div class="col-md-10">
                         <div class="card-title"><b>ACTUALIZAR BALANCE DE APERTURA</b></div>
                     </div>
                     <div class="col-md-2 text-right">
-                        <a href="{{route('balanceapertura.index',$balance_apertura->proyecto_id)}}" class="text-white">
+                        <a href="{{route('balanceaperturaf.index',$balance_apertura->proyecto_id)}}" class="text-white">
                             &nbsp;<i class="fas fa-reply" aria-hidden="true"></i>&nbsp;
                         </a>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['balanceapertura.update']]) !!}
-                    @include('balance-apertura.partials.form-editar')
+                {!! Form::model(Request::all(),['route'=> ['balanceaperturaf.update']]) !!}
+                    @include('balance-apertura-f.partials.form-editar')
                 {!! Form::close()!!}
             </div>
         </div>

@@ -75,7 +75,7 @@
 <div class="form-group row">
     @if ($balance_apertura->estado == 1)
         <div class="col-md-5">
-            <input type="hidden" name="comprobante_id" value="{{$balance_apertura->comprobante_id}}">
+            <input type="hidden" name="comprobante_id" value="{{$balance_apertura->comprobante_fiscal_id}}">
             {{ Form::label('plancuenta','Cuenta',['class' => 'd-inline font-verdana-bg'])}}
             {!! Form::select('plancuenta', $plan_cuentas, null, ['placeholder' =>'--Seleccionar--','class' => 'form-control form-control-sm select2']) !!}
             {!! $errors->first('plancuenta','<span class="invalid-feedback d-block">:message</span>') !!}
@@ -127,14 +127,14 @@
         <a href="{{route('balanceapertura.index',$balance_apertura->proyecto_id)}}" class="btn btn-primary font-verdana-bg">
             <i class="fas fa-angle-double-left"></i>
         </a>
-        <a href="{{route('comprobantes.pdf', $comprobante->comprobante_id)}}" class="btn btn-warning font-verdana-bg" target="_blank">
+        <a href="{{route('comprobantes.fiscales.pdf', $comprobante->comprobante_id)}}" class="btn btn-warning font-verdana-bg" target="_blank">
             <i class="fas fa-print" aria-hidden="true"></i>
         </a>
     </div>
     @if ($balance_apertura->estado == 1)
         <div class="col-md-2 text-right">
             <br>
-            <a href="{{route('balanceapertura.aprobar',$balance_apertura->id)}}" class="btn btn-success font-verdana-bg">
+            <a href="{{route('balanceaperturaf.aprobar',$balance_apertura->id)}}" class="btn btn-success font-verdana-bg">
                 <i class="fas fa-check-circle"></i>&nbsp;Aprobar
             </a>
         </div>

@@ -4,22 +4,28 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-//use App\Proveedores;
-//use App\Ciudades;
-//use App\ComprobantesDetalle;
-//use App\PlanCuentas;
-//use App\PlanCuentasAuxiliares;
-//use App\Proveedores;
-//use App\Facturas;
-//use App\ComprobanteFacturas;
+use App\Proyectos;
+use App\TipoCambio;
+use App\ComprobantesFiscales;
+use App\BalanceAperturasFiscales;
+use App\ComprobantesFiscalesDetalle;
 use Carbon\Carbon;
 use DB;
 
 class BalanceAperturaFController extends Controller
 {
-    public function index(){dd("okF");
-        //$proveedor = DB::table('proveedores')->whereNotIn('ciudad',[1,2,3,4,5,6,7,8,9])->get();
-        return view('proveedor.index');
+    public function proyectos(){
+        $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
+        return view('balance-apertura-f.proyectos',compact('proyectos'));
+    }
+    public function index($proyecto_id){
+        $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
+        $balance_apertura = DB::table('balance_aperturas_fiscales as a')
+                                ->join('comprobantes_fiscales as b','b.id','a.comprobante_fiscal_id')
+                                ->where('a.proyecto_id',$proyecto_id)
+                                ->select('a.id as balance_apertura_id','b.nro_comprobante','a.fecha_creacion','a.gestion','a.moneda')
+                                ->get();
+        return view('balance-apertura-f.index',compact('balance_apertura','proyectos','proyecto_id'));
     }
 
     public function search(Request $request){
@@ -30,59 +36,58 @@ class BalanceAperturaFController extends Controller
                         ->get();
     }
 
-    public function create(){
-        dd("ok");
-        $ciudades = Ciudades::where('estado',1)->orderBy('id','asc')->pluck('nombre','id');
-        return view('proveedor.create',compact('ciudades'));
+    public function create($proyecto_id){
+        $anho_actual = date('Y');
+        for($i=($anho_actual-2);$i<=($anho_actual+2);$i++){
+            $gestion[$i] = $i;
+        }
+        $proyectos = Proyectos::pluck('nombre','id');
+        return view('balance-apertura-f.create',compact('proyectos','gestion','proyecto_id'));
     }
 
-    /*public function store(Request $request){
+    public function store(Request $request){
         $request->validate([
-            'razon_social' => 'required|max:120',
-            'nombre_comercial' => 'required|max:120',
-            'nit' => 'required|unique:proveedores,nit|max:15',
-            'ciudad' => 'required',
-            'tipo' => 'required',
-            //'nueva_ciudad'=> 'required_if:ciudad,10|max:120',//El campo nueva_ciudad es obligatorio a menos que ciudad esté en 10.
-            'nueva_ciudad'=> 'required_if:ciudad,10|max:120',//Si la ciudad es igual a 10 entonces el campo es obligatorio
-            'abreviatura' => 'required_if:ciudad,10|max:25',
-            'direccion' => 'required|max:120',
-            'email' => 'nullable|string|email|max:120'
+            'proyecto' => 'required',
+            'gestion' => 'required',
+            'moneda' => 'required'
         ]);
-        
+        $balance_apertura = DB::table('balance_aperturas_fiscales')->where('gestion',$request->gestion)->where('moneda',$request->moneda)->where('estado',1)->first();
+        if($balance_apertura != null){
+            return back()->withInput()->with('info','Ya existe un balance la gestion seleccionada...');
+        }
+        $fecha = $request->gestion  . '-04-01';
+        $cotizacion = TipoCambio::where('fecha',$fecha)->first();
+        if($cotizacion == null){
+            return back()->withInput()->with('info','Tipo de Cambio y UFV para el Balance de apertura no encontrado...');
+        }
         DB::beginTransaction();
         try {
-            if($request->ciudad == 10){
-                $ciudad = new Ciudades();
-                $ciudad->nombre = $request->nueva_ciudad;
-                $ciudad->abreviatura = $request->abreviatura;
-                $ciudad->estado = 1;
-                $ciudad->save();
+            $fecha = Carbon::parse($fecha);
+            $nro_comprobante = 'CT0-' . substr($fecha->toDateString(),2,2) . '04-0001';
+            
+            $comprobante = new ComprobantesFiscales();
+            $comprobante->user_id = Auth()->user()->id;
+            $comprobante->proyecto_id = $request->proyecto;
+            $comprobante->nro_comprobante = $nro_comprobante;
+            $comprobante->nro_comprobante_id = 1;
+            $comprobante->tipo_cambio = $cotizacion->dolar_oficial;
+            $comprobante->ufv = $cotizacion->ufv;
+            $comprobante->tipo = 3;
+            $comprobante->entregado_recibido = null;
+            $comprobante->fecha = $fecha;
+            $comprobante->concepto = 'BALANCE DE APERTURA';
+            $comprobante->moneda = $request->moneda;
+            $comprobante->status = 0;
+            $comprobante->save();
 
-                $ciudad_id = $ciudad->id;
-            }else{
-                $ciudad_id = $request->ciudad;
-            }
-            $proveedor = new Proveedores();
-            $proveedor->razon_social = $request->razon_social;
-            $proveedor->nombre_comercial = $request->nombre_comercial;
-            $proveedor->nit = $request->nit;
-            $proveedor->nro_cuenta = $request->nro_cuenta;
-            $proveedor->titular_cuenta = $request->titular_cuenta;
-            $proveedor->banco = $request->banco;
-            $proveedor->ciudad_id = $ciudad_id;
-            $proveedor->direccion = $request->direccion;
-            $proveedor->tipo = $request->tipo;
-            $proveedor->contacto1 = $request->contacto_1;
-            $proveedor->contacto2 = $request->contacto_2;
-            $proveedor->celular1 = $request->celular_1;
-            $proveedor->celular2 = $request->celular_2;
-            $proveedor->fijo1 = $request->fijo_1;
-            $proveedor->fijo2 = $request->fijo_2;
-            $proveedor->email = $request->email;
-            $proveedor->observaciones = $request->observaciones;
-            $proveedor->status = 1;
-            $proveedor->save();
+            $balance_apertura = new BalanceAperturasFiscales();
+            $balance_apertura->proyecto_id = $request->proyecto;
+            $balance_apertura->comprobante_fiscal_id = $comprobante->id;
+            $balance_apertura->fecha_creacion = date('Y-m-d');
+            $balance_apertura->gestion = $request->gestion;
+            $balance_apertura->moneda = $request->moneda;
+            $balance_apertura->estado = 1;
+            $balance_apertura->save();
 
             DB::commit();
         } catch (\Exception $e) {
@@ -90,79 +95,86 @@ class BalanceAperturaFController extends Controller
             //return response()->json(['message' => 'Error']);
             return back()->withInput()->with('danger','Hay un error en el sistema, por favor llamar al encargado de desarrollo...');
         }
-        return redirect()->route('proveedor.index')->with('message','Se agrego un nuevo proveedor al sistema..');
-    }*/
+        return redirect()->route('balanceaperturaf.index', $request->proyecto)->with('message','Se creo un nuevo balance de apertura...');
+    }
 
-    /*public function editar($proveedor_id){
-        $proveedor = Proveedores::where('id',$proveedor_id)->first();
-        $proveedor = DB::table('proveedores as a')
-                        ->where('a.id',$proveedor_id)
-                        ->select('a.id as proveedor_id','a.razon_social','a.nombre_comercial','a.nit','a.ciudad_id','a.tipo','a.nro_cuenta','a.titular_cuenta',
-                                    'a.banco','a.direccion','a.email','a.contacto1','a.celular1','a.fijo1','a.contacto2','a.celular2','a.fijo2','a.observaciones')
-                        ->first();
-        $ciudades = Ciudades::where('estado',1)->orderBy('id','asc')->pluck('nombre','id');
-        return view('proveedor.editar',compact('proveedor','ciudades'));
-    }*/
+    public function editar($balance_apertura_id){
+        $balance_apertura = DB::table('balance_aperturas_fiscales')->where('id',$balance_apertura_id)->first();
+        $comprobante = DB::table('comprobantes_fiscales as a')
+                            ->join('users as b','b.id','a.user_id')
+                            ->join('proyectos as c','c.id','a.proyecto_id')
+                            ->leftjoin('users as d','d.id','a.user_autorizado_id')
+                            ->where('a.id',$balance_apertura->comprobante_fiscal_id)
+                            ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
+                                        DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
+                                        'a.status','a.concepto','c.nombre','d.name as autorizado','a.fecha','a.monto')
+                            ->first();
+        $comprobante_detalle = DB::table('comprobantes_fiscales_detalles as a')
+                                    ->join('plan_cuentas as b','b.id','a.plancuenta_id')
+                                    ->leftjoin('plan_cuentas_auxiliares as c','c.id','a.plancuentaauxiliar_id')
+                                    ->join('centros as d','d.id','a.centro_id')
+                                    ->select('a.id as comprobante_detalle_id','b.codigo','b.nombre as cuenta','c.nombre as auxiliar',
+                                            'd.abreviatura as centro','a.glosa','a.debe','a.haber')
+                                    ->where('comprobante_fiscal_id',$balance_apertura->comprobante_fiscal_id)
+                                    ->get();
+        $total_debe = $comprobante_detalle->sum('debe');
+        $total_haber = $comprobante_detalle->sum('haber');
+        $plan_cuentas = DB::table('plan_cuentas')->where(function ($query) {
+                                            $query->where('codigo','LIKE','1%')
+                                                ->orWhere('codigo','LIKE','2%')
+                                                ->orWhere('codigo','LIKE','3%');
+                                        })
+                                        ->where('proyecto_id',$balance_apertura->proyecto_id)
+                                        ->where('cuenta_detalle',1)
+                                        ->where('estado','1')
+                                        ->orderBy('codigo')
+                                        ->pluck('nombre','id');
+        $auxiliares = DB::table('plan_cuentas_auxiliares')
+                                    ->where('proyecto_id',$balance_apertura->proyecto_id)
+                                    ->where('estado',1)
+                                    ->pluck('nombre','id');
+        $centros = DB::table('centros')->where('proyecto_id',$balance_apertura->proyecto_id)->pluck('nombre','id');
+        return view('balance-apertura-f.editar',compact('balance_apertura','comprobante','comprobante_detalle','total_debe','total_haber','plan_cuentas','auxiliares','centros'));
+    }
 
-    /*public function update(Request $request){
+    public function update(Request $request){
         $request->validate([
-            'razon_social' => 'required|max:120',
-            'nombre_comercial' => 'required|max:120',
-            'nit' => 'required|max:15',
-            'ciudad' => 'required',
-            'tipo' => 'required',
-            //'nueva_ciudad'=> 'required_if:ciudad,10|max:120',//El campo nueva_ciudad es obligatorio a menos que ciudad esté en 10.
-            'nueva_ciudad'=> 'required_if:ciudad,10|max:120',//Si la ciudad es igual a 10 entonces el campo es obligatorio
-            'abreviatura' => 'required_if:ciudad,10|max:25',
-            'direccion' => 'required|max:120',
-            'email' => 'nullable|string|email|max:120'
+            'plancuenta' => 'required',
+            'centro' => 'required'
         ]);
-        //dd($request->all());
-        $total_nit = Proveedores::where('nit',$request->nit)->where('status',1)->count('id');
-        if($total_nit > 1){
-            return back()->withInput()->with('danger','El nit que intenta introducir ya esta vinculado a otro proveedor...');
-        }
-        
         DB::beginTransaction();
         try {
-            if($request->ciudad == 10){
-                $ciudad = new Ciudades();
-                $ciudad->nombre = $request->nueva_ciudad;
-                $ciudad->abreviatura = $request->abreviatura;
-                $ciudad->estado = 1;
-                $ciudad->save();
-
-                $ciudad_id = $ciudad->id;
-            }else{
-                $ciudad_id = $request->ciudad;
-            }
-            $proveedor = Proveedores::find($request->proveedor_id);
-            $proveedor->razon_social = $request->razon_social;
-            $proveedor->nombre_comercial = $request->nombre_comercial;
-            $proveedor->nit = $request->nit;
-            $proveedor->nro_cuenta = $request->nro_cuenta;
-            $proveedor->titular_cuenta = $request->titular_cuenta;
-            $proveedor->banco = $request->banco;
-            $proveedor->ciudad_id = $ciudad_id;
-            $proveedor->direccion = $request->direccion;
-            $proveedor->tipo = $request->tipo;
-            $proveedor->contacto1 = $request->contacto_1;
-            $proveedor->contacto2 = $request->contacto_2;
-            $proveedor->celular1 = $request->celular_1;
-            $proveedor->celular2 = $request->celular_2;
-            $proveedor->fijo1 = $request->fijo_1;
-            $proveedor->fijo2 = $request->fijo_2;
-            $proveedor->email = $request->email;
-            $proveedor->observaciones = $request->observaciones;
-            $proveedor->status = 1;
-            $proveedor->update();
-
+            $comprobante_detalle = new ComprobantesFiscalesDetalle();
+            $comprobante_detalle->comprobante_fiscal_id = $request->comprobante_id;
+            $comprobante_detalle->plancuenta_id = $request->plancuenta;
+            $comprobante_detalle->plancuentaauxiliar_id = $request->auxiliar;
+            $comprobante_detalle->centro_id = $request->centro;
+            $comprobante_detalle->glosa = $request->concepto;
+            $comprobante_detalle->debe = $request->debe;
+            $comprobante_detalle->haber = $request->haber;
+            $comprobante_detalle->save();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             //return response()->json(['message' => 'Error']);
             return back()->withInput()->with('danger','Hay un error en el sistema, por favor llamar al encargado de desarrollo...');
         }
-        return redirect()->route('proveedor.index')->with('info','Los datos del proveedor fueron modificados...');
-    }*/
+        return back()->with('info','Los datos fueron actualizados...');
+    }
+
+    public function aprobar($balance_apertura_id){
+        $balance_apertura = BalanceAperturasFiscales::find($balance_apertura_id);
+        $comprobante_detalle = DB::table('comprobantes_fiscales_detalles')->where('comprobante_fiscal_id',$balance_apertura->comprobante_fiscal_id)->where('deleted_at',null)->get();
+        $total_debe = $comprobante_detalle->sum('debe');
+        $total_haber = $comprobante_detalle->sum('haber');
+        if($total_debe == 0 && $total_haber == 0){
+            return back()->withInput()->with('danger','No hay suficientes datos para procesar la peticion...');
+        }
+        if($total_debe != $total_haber){
+            return back()->withInput()->with('danger','El debe y el haber no coinciden...');
+        }
+        $balance_apertura->estado = 2;
+        $balance_apertura->update();
+        return redirect()->route('balanceaperturaf.index', $balance_apertura->proyecto_id)->with('message','Balance de apertura aprobado...');
+    }
 }

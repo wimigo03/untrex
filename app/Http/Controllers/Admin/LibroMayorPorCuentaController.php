@@ -74,6 +74,7 @@ class LibroMayorPorCuentaController extends Controller
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_saldo_inicial)
                                 ->where('a.fecha','<',$fecha_inicial)
+                                ->where('b.deleted_at',null)
                                 ->select('b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();
@@ -92,6 +93,7 @@ class LibroMayorPorCuentaController extends Controller
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_inicial)
                                 ->where('a.fecha','<=',$fecha_final)
+                                ->where('b.deleted_at',null)
                                 ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','c.abreviatura as centro',DB::raw("if(isnull(d.nombre),'S/N',d.nombre) as auxiliar"),'b.cheque_nro','b.glosa','b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();
@@ -139,6 +141,7 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('a.status','!=','2')
                             ->where('a.fecha','>=',$fecha_inicial)
                             ->where('a.fecha','<=',$fecha_final)
+                            ->where('b.deleted_at',null)
                             ->groupBy('c.id','c.nombre')
                             ->orderBy('c.id','asc')->get();
         $auxiliares = DB::table('comprobantes as a')
@@ -154,6 +157,7 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('a.status','!=','2')
                             ->where('a.fecha','>=',$fecha_inicial)
                             ->where('a.fecha','<=',$fecha_final)
+                            ->where('b.deleted_at',null)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
         return ([
@@ -194,6 +198,7 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('a.status','!=','2')
                             ->where('a.fecha','>=',$fecha_inicial)
                             ->where('a.fecha','<=',$fecha_final)
+                            ->where('b.deleted_at',null)
                             ->groupBy('c.id','c.nombre')
                             ->orderBy('c.id','asc')->get();
         $auxiliares = DB::table('comprobantes as a')
@@ -210,6 +215,7 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('a.status','!=','2')
                             ->where('a.fecha','>=',$fecha_inicial)
                             ->where('a.fecha','<=',$fecha_final)
+                            ->where('b.deleted_at',null)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
         return view('libro-mayor.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','find_auxiliares','auxiliares','plancuentaauxiliar_id'));
@@ -247,6 +253,7 @@ class LibroMayorPorCuentaController extends Controller
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_saldo_inicial)
                                 ->where('a.fecha','<',$fecha_inicial)
+                                ->where('b.deleted_at',null)
                                 ->select('b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();
@@ -265,6 +272,7 @@ class LibroMayorPorCuentaController extends Controller
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_inicial)
                                 ->where('a.fecha','<=',$fecha_final)
+                                ->where('b.deleted_at',null)
                                 ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','c.abreviatura as centro',DB::raw("if(isnull(d.nombre),'S/N',d.nombre) as auxiliar"),'b.cheque_nro','b.glosa','b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();
@@ -306,6 +314,7 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('a.status','!=','2')
                             ->where('a.fecha','>=',$fecha_inicial)
                             ->where('a.fecha','<=',$fecha_final)
+                            ->where('b.deleted_at',null)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
         $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares']));
@@ -338,6 +347,7 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('a.status','!=','2')
                             ->where('a.fecha','>=',$fecha_inicial)
                             ->where('a.fecha','<=',$fecha_final)
+                            ->where('b.deleted_at',null)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
         $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares','plancuentaauxiliar_id']));

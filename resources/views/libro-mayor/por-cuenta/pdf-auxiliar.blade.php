@@ -77,6 +77,7 @@
 										->where('a.status','!=','2')
 										->where('a.fecha','>=',$fecha_saldo_inicial)
 										->where('a.fecha','<=',$fecha_inicial)
+										->where('b.deleted_at',null)
 										->select('b.debe','b.haber')
 										->orderBy('a.fecha','asc')
 										->get();
@@ -95,6 +96,7 @@
 												->where('a.status','!=','2')
 												->where('a.fecha','>=',$fecha_inicial)
 												->where('a.fecha','<=',$fecha_final)
+												->where('b.deleted_at',null)
 												->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','c.abreviatura as centro',DB::raw("if(isnull(d.nombre),'S/N',d.nombre) as auxiliar"),'b.cheque_nro','b.glosa','b.debe','b.haber')
 												->orderBy('a.fecha','asc')
 												->get();

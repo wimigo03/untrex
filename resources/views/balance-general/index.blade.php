@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Estado de resultados')
+@section('title', 'Balance General')
 @section('content')
 @include('components.flash_alerts')
 <div class="form-group row">
@@ -8,16 +8,16 @@
             <div class="card-header bg-gradient-secondary text-white">
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="card-title"><b>ESTADO DE RESULTADOS</b></div>
+                        <div class="card-title"><b>BALANCE GENERAL</b></div>
                     </div>
                     <div class="col-md-4">
-                        {!! Form::select('proyecto_id',$proyectos,$proyecto_id, ['class' => 'form-control form-control-sm  bg-gray text-center', 'id' => 'proyecto_id']) !!}
+                        {!! Form::select('proyecto_id',$proyectos,$proyecto_id, ['class' => 'form-control form-control-sm bg-gray text-center', 'id' => 'proyecto_id']) !!}
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['estadoresultado.search']]) !!}
-                    @include('estado-resultado.partials.search')
+                {!! Form::model(Request::all(),['route'=> ['balancegeneral.search']]) !!}
+                    @include('balance-general.partials.search')
                 {!! Form::close()!!}
             </div>
         </div>
@@ -36,7 +36,7 @@
         $(document).ready(function() {
             $("#proyecto_id").change(function () {
 				if($("#proyecto_id option:selected").val() != null){
-					var url = '{{ route("estadoresultado.index", ":id") }}';
+					var url = '{{ route("balancegeneral.index", ":id") }}';
 					var id = $("#proyecto_id option:selected").val();
 					url = url.replace(':id', id);
 					window.location.href=url;

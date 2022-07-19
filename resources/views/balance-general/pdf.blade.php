@@ -14,7 +14,7 @@
         <tr>
             <td align="center">
                 <h2>_*{{$proyecto->consorcio . ' - ' . $proyecto->proyecto}}*_</h2>
-                <h2>ESTADO DE RESULTADO</h2>
+                <h2>BALANCE GENERAL</h2>
                 <font size="10px">
                     DEL {{Carbon\Carbon::parse($start_date)->format('d-m-Y')}}
                     AL {{Carbon\Carbon::parse($end_date)->format('d-m-Y')}}<br>
@@ -37,34 +37,34 @@
             </tr>
         </thead>
         <tbody {{--class="border-bottom"--}}>
-            @foreach ($ingresos as $ing)
+            @foreach ($activos as $activo)
                 @php
                     $nroPuntos = 1;
-                    for ($i=0; $i < strlen($ing->codigo); $i++) { 
-                        if($ing->codigo[$i] == '.'){
+                    for ($i=0; $i < strlen($activo->codigo); $i++) { 
+                        if($activo->codigo[$i] == '.'){
                             $nroPuntos++;
                         }
                     }
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
                 <tr>
-                    @if ($ing->id == 4)
-                        <td align="left"><font size="9px"><b>{{ $ing->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $ing->nombre  }}</b></font></td>
+                    @if ($activo->id == 4)
+                        <td align="left"><font size="9px"><b>{{ $activo->codigo }}</b></font></td>
+                        <td align="left"><font size="9px"><b>{{ $activo->nombre  }}</b></font></td>
                     @else
-                        <td align="left"><font size="9px">{{ $ing->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $ing->nombre  }}</font></td>
+                        <td align="left"><font size="9px">{{ $activo->codigo }}</font></td>
+                        <td align="left"><font size="9px">{{ $activo->nombre  }}</font></td>
                     @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
                         <td><font size="9px">&nbsp;</font></td>
                     @endfor
                     <td align="right">
                         <font size="9px">
-                            @if (isset($totales[$ing->id]))
-                                @if ($ing->id == 4)
-                                    <b>{{number_format($totales[$ing->id],2,'.',',')}}</b>
+                            @if (isset($totales[$activo->id]))
+                                @if ($activo->id == 4)
+                                    <b>{{number_format($totales[$activo->id],2,'.',',')}}</b>
                                 @else
-                                    {{number_format($totales[$ing->id],2,'.',',')}}
+                                    {{number_format($totales[$activo->id],2,'.',',')}}
                                 @endif
                             @endif
                             
@@ -78,34 +78,34 @@
                     @endfor
                 </tr>
             @endforeach
-            @foreach ($costos as $costo)
+            @foreach ($pasivos as $pasivo)
                 @php
                     $nroPuntos = 1;
-                    for ($i=0; $i < strlen($costo->codigo); $i++) { 
-                        if($costo->codigo[$i] == '.'){
+                    for ($i=0; $i < strlen($pasivo->codigo); $i++) { 
+                        if($pasivo->codigo[$i] == '.'){
                             $nroPuntos++;
                         }
                     }
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
                 <tr>
-                    @if ($costo->id == 5)
-                        <td align="left"><font size="9px"><b>{{ $costo->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $costo->nombre }}</b></font></td>
+                    @if ($pasivo->id == 5)
+                        <td align="left"><font size="9px"><b>{{ $pasivo->codigo }}</b></font></td>
+                        <td align="left"><font size="9px"><b>{{ $pasivo->nombre }}</b></font></td>
                     @else
-                        <td align="left"><font size="9px">{{ $costo->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $costo->nombre  }}</font></td>
+                        <td align="left"><font size="9px">{{ $pasivo->codigo }}</font></td>
+                        <td align="left"><font size="9px">{{ $pasivo->nombre  }}</font></td>
                     @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
                         <td><font size="8px">&nbsp;</font></td>
                     @endfor
                         <td align="right">
                             <font size="9px">
-                                @if (isset($totales[$costo->id]))
-                                    @if ($costo->id == 5)
-                                        <b>{{number_format($totales[$costo->id],2,'.',',') }}</b>
+                                @if (isset($totales[$pasivo->id]))
+                                    @if ($pasivo->id == 5)
+                                        <b>{{number_format($totales[$pasivo->id],2,'.',',') }}</b>
                                     @else
-                                        {{number_format($totales[$costo->id],2,'.',',') }}
+                                        {{number_format($totales[$pasivo->id],2,'.',',') }}
                                     @endif
                                 @endif
                             </font>
@@ -118,34 +118,34 @@
                     @endfor
                 </tr>
             @endforeach
-            @foreach ($gastos as $gasto)
+            @foreach ($patrimonios as $patrimonio)
                 @php
                     $nroPuntos = 1;
-                    for ($i=0; $i < strlen($gasto->codigo); $i++) { 
-                        if($gasto->codigo[$i] == '.'){
+                    for ($i=0; $i < strlen($patrimonio->codigo); $i++) { 
+                        if($patrimonio->codigo[$i] == '.'){
                             $nroPuntos++;
                         }
                     }
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
                 <tr>
-                    @if ($gasto->id == 6)
-                        <td align="left"><font size="9px"><b>{{ $gasto->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $gasto->nombre  }}</b></font></td>
+                    @if ($patrimonio->id == 6)
+                        <td align="left"><font size="9px"><b>{{ $patrimonio->codigo }}</b></font></td>
+                        <td align="left"><font size="9px"><b>{{ $patrimonio->nombre  }}</b></font></td>
                     @else
-                        <td align="left"><font size="9px">{{ $gasto->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $gasto->nombre  }}</font></td>
+                        <td align="left"><font size="9px">{{ $patrimonio->codigo }}</font></td>
+                        <td align="left"><font size="9px">{{ $patrimonio->nombre  }}</font></td>
                     @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
                     <td><font size="9px">&nbsp;</font></td>
                     @endfor
                     <td align="right">
                         <font size="9px">
-                            @if (isset($totales[$gasto->id]))
-                                @if ($gasto->id == 6)
-                                    <b>{{number_format($totales[$gasto->id],2,'.',',') }}</b>
+                            @if (isset($totales[$patrimonio->id]))
+                                @if ($patrimonio->id == 6)
+                                    <b>{{number_format($totales[$patrimonio->id],2,'.',',') }}</b>
                                 @else
-                                    {{number_format($totales[$gasto->id],2,'.',',') }}
+                                    {{number_format($totales[$patrimonio->id],2,'.',',') }}
                                 @endif
                             @endif
                         </font>
@@ -160,14 +160,14 @@
             @endforeach
         </tbody>
         <tfoot>
-            <td><strong><font size="9px">TOTAL:</font></strong></td>
+            <td align="left"><strong><font size="9px">TOTAL:</font></strong></td>
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td align="right"><font size="9px"><b>{{number_format($total,2,'.',',')}}</b></font></td>
+            <td align="right"><strong><font size="9px">CAPITAL&nbsp;</strong></font></td>
+            <td align="right"><strong><font size="9px">{{number_format($capital,2,'.',',')}}&nbsp;</strong></font></td>
+            <td align="left"><strong>&nbsp;<font size="9px">{{number_format($activo_pasivo,2,'.',',')}}</strong></font></td>
+            <td align="left"><strong><font size="9px">&nbsp;ACTIVO + PASIVO</strong></font></td>
         </tfoot>
     </table>
     {{--<div class="page-break"></div>--}}

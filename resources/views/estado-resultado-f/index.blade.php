@@ -17,7 +17,7 @@
             </div>
             <div class="card-body">
                 {!! Form::model(Request::all(),['route'=> ['estadoresultadof.search']]) !!}
-                    @include('estado-resultado.partials.search')
+                    @include('estado-resultado-f.partials.search')
                 {!! Form::close()!!}
             </div>
         </div>
@@ -36,13 +36,16 @@
         $(document).ready(function() {
             $("#proyecto_id").change(function () {
 				if($("#proyecto_id option:selected").val() != null){
-					var url = '{{ route("balanceapertura.index", ":id") }}';
+					var url = '{{ route("estadoresultado.index", ":id") }}';
 					var id = $("#proyecto_id option:selected").val();
 					url = url.replace(':id', id);
 					window.location.href=url;
 				}
 			});
             $('.select2').select2({
+                placeholder: "--Todos--"
+            });
+            $('#gestion').select2({
                 placeholder: "--Seleccionar--"
             });
         });

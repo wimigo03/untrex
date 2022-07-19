@@ -407,7 +407,7 @@ class ComprobantesController extends Controller
                                     'a.haber','e.id as plancuentaauxiliar_id','a.cheque_nro','d.abreviatura as ab_centro')
                             ->where('a.comprobante_id',$comprobante_id)
                             ->where('a.deleted_at',null)
-                            ->orderBy('a.id','desc')->get();
+                            ->orderBy('a.id','asc')->get();
         $total_debe = $comprobante_detalle->sum('debe');
         $total_haber = $comprobante_detalle->sum('haber');
         $numberLetras = new NumeroALetras();

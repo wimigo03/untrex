@@ -9,16 +9,16 @@ use App\TipoCambio;
 use App\PlanCuentas;
 use App\Comprobantes;
 use App\BalanceAperturas;
-use App\ComprobantesFiscalesDetalle;
+use App\ComprobantesDetalle;
 use Carbon\Carbon;
 use DB;
 use PDF;
 
-class EstadoResultadoFController extends Controller
+class BalanceGeneralController extends Controller
 {
     public function proyectos(){
         $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
-        return view('estado-resultado-f.proyectos',compact('proyectos'));
+        return view('balance-general.proyectos',compact('proyectos'));
     }
     public function index($proyecto_id){
         $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
@@ -26,7 +26,7 @@ class EstadoResultadoFController extends Controller
         for($i=($anho_actual-2);$i<=($anho_actual+2);$i++){
             $gestion[$i] = $i;
         }
-        return view('estado-resultado-f.index',compact('proyectos','proyecto_id','gestion'));
+        return view('balance-general.index',compact('proyectos','proyecto_id','gestion'));
     }
 
     public function search(Request $request){
@@ -78,34 +78,35 @@ class EstadoResultadoFController extends Controller
         }
         $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
         $proyecto_id = $request->proyecto_id;
-        $ingresos = PlanCuentas::where('codigo','like','4%')
+        $activos = PlanCuentas::where('codigo','like','1%')
                                 ->where('proyecto_id',$proyecto_id)
                                 ->where('estado','1')
                                 ->orderBy('codigo')
                                 ->get();
-        $costos = PlanCuentas::where('codigo','like','5%')
+        $pasivos = PlanCuentas::where('codigo','like','2%')
                                 ->where('proyecto_id',$proyecto_id)
                                 ->where('estado','1')
                                 ->orderBy('codigo')
                                 ->get();
-        $gastos = PlanCuentas::where('codigo','like','6%')
+        $patrimonios = PlanCuentas::where('codigo','like','3%')
                                 ->where('proyecto_id',$proyecto_id)
                                 ->where('estado','1')
                                 ->orderBy('codigo')
                                 ->get();
         $totales = [];
         $cuentas = array();
-        $tipoOperacion = "-+";
-        $planCuentaId = $ingresos[0]->id;
-        $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $tipoOperacion = "+-";
-        $planCuentaId = $costos[0]->id;
+        $planCuentaId = $activos[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
-        $planCuentaId = $gastos[0]->id;
+        $tipoOperacion = "-+";
+        $planCuentaId = $pasivos[0]->id;
+        $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
+        $planCuentaId = $patrimonios[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $nroMaxColumna = 6;
-        $total = $totales[$ingresos[0]->id] - $totales[$costos[0]->id] - $totales[$gastos[0]->id];
-        return view('estado-resultado-f.show',compact('ingresos','costos','gastos','totales','cuentas','proyectos','proyecto_id','start_date','end_date','status_text','nroMaxColumna','total'));
+        $capital = $totales[$patrimonios[0]->id];
+        $activo_pasivo = $totales[$activos[0]->id] + $totales[$pasivos[0]->id];
+        return view('balance-general.show',compact('activos','pasivos','patrimonios','totales','cuentas','proyectos','proyecto_id','start_date','end_date','status_text','nroMaxColumna','capital','activo_pasivo'));
     }
 
     public function pdf(Request $request){
@@ -131,51 +132,52 @@ class EstadoResultadoFController extends Controller
                         ->select('a.nombre as proyecto','b.nombre as consorcio')
                         ->where('a.id',$proyecto_id)->first();
         set_time_limit(0);ini_set('memory_limit', '1G'); 
-        $ingresos = PlanCuentas::where('codigo','like','4%')
+        $activos = PlanCuentas::where('codigo','like','1%')
                                 ->where('proyecto_id',$proyecto_id)
                                 ->where('estado','1')
                                 ->orderBy('codigo')
                                 ->get();
-        $costos = PlanCuentas::where('codigo','like','5%')
+        $pasivos = PlanCuentas::where('codigo','like','2%')
                                 ->where('proyecto_id',$proyecto_id)
                                 ->where('estado','1')
                                 ->orderBy('codigo')
                                 ->get();
-        $gastos = PlanCuentas::where('codigo','like','6%')
+        $patrimonios = PlanCuentas::where('codigo','like','3%')
                                 ->where('proyecto_id',$proyecto_id)
                                 ->where('estado','1')
                                 ->orderBy('codigo')
                                 ->get();
         $totales = [];
         $cuentas = array();
-        $tipoOperacion = "-+";
-        $planCuentaId = $ingresos[0]->id;
-        $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $tipoOperacion = "+-";
-        $planCuentaId = $costos[0]->id;
+        $planCuentaId = $activos[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
-        $planCuentaId = $gastos[0]->id;
+        $tipoOperacion = "-+";
+        $planCuentaId = $pasivos[0]->id;
+        $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
+        $planCuentaId = $patrimonios[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $nroMaxColumna = 6;
-        $total = $totales[$ingresos[0]->id] - $totales[$costos[0]->id] - $totales[$gastos[0]->id];
-        $pdf = PDF::loadView('estado-resultado-f.pdf',compact('ingresos','costos','gastos','totales','cuentas','proyecto','start_date','end_date','status_text','nroMaxColumna','total'));
+        $capital = $totales[$patrimonios[0]->id];
+        $activo_pasivo = $totales[$activos[0]->id] + $totales[$pasivos[0]->id];
+        $pdf = PDF::loadView('balance-general.pdf',compact('activos','pasivos','patrimonios','totales','cuentas','proyecto','start_date','end_date','status_text','nroMaxColumna','capital','activo_pasivo'));
         $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream('Estado_de_Resultado.pdf');
+        return $pdf->stream('Balance_General.pdf');
     }
     
     public function sum_total_account_gestion($plan_cuenta_id,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion, &$totales, &$cuentas){
         $totalFinal = 0;
         $planCuenta = PlanCuentas::find($plan_cuenta_id);
         if($planCuenta->cuenta_detalle == '1'){
-            $comprobantes = ComprobantesFiscalesDetalle::join('comprobantes_fiscales as c','c.id','comprobantes_fiscales_detalles.comprobante_fiscal_id')
-                                                        ->where('comprobantes_fiscales_detalles.plancuenta_id',$plan_cuenta_id)
-                                                        ->whereBetween('c.fecha',[$start_date,$end_date])
-                                                        ->where('c.proyecto_id',$proyecto_id)
-                                                        ->whereIn('c.status',$status)
-                                                        ->orderBy('comprobantes_fiscales_detalles.plancuentaauxiliar_id')
-                                                        ->orderBy('c.fecha')
-                                                        ->select('c.id','c.fecha','comprobantes_fiscales_detalles.plancuenta_id as idplancuenta','c.nro_comprobante','comprobantes_fiscales_detalles.glosa','debe','haber','comprobantes_fiscales_detalles.cheque_nro','comprobantes_fiscales_detalles.cheque_orden','c.status','comprobantes_fiscales_detalles.plancuentaauxiliar_id as cuentaAux')
-                                                        ->get();
+            $comprobantes = ComprobantesDetalle::join('comprobantes as c','c.id','comprobantes_detalles.comprobante_id')
+                                                ->where('comprobantes_detalles.plancuenta_id',$plan_cuenta_id)
+                                                ->whereBetween('c.fecha',[$start_date,$end_date])
+                                                ->where('c.proyecto_id',$proyecto_id)
+                                                ->whereIn('c.status',$status)
+                                                ->orderBy('comprobantes_detalles.plancuentaauxiliar_id')
+                                                ->orderBy('c.fecha')
+                                                ->select('c.id','c.fecha','comprobantes_detalles.plancuenta_id as idplancuenta','c.nro_comprobante','comprobantes_detalles.glosa','debe','haber','comprobantes_detalles.cheque_nro','comprobantes_detalles.cheque_orden','c.status','comprobantes_detalles.plancuentaauxiliar_id as cuentaAux')
+                                                ->get();
             $total = 0;
             foreach ($comprobantes as $comp) {
                 if($tipoOperacion == "-+"){

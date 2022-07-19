@@ -126,7 +126,10 @@ class EstadoResultadoController extends Controller
             array_push($status,1);
             array_push($status,0);
         }
-        $proyecto = DB::table('proyectos')->where('id',$proyecto_id)->first();
+        $proyecto = DB::table('proyectos as a')
+                        ->join('consorcios as b','b.id','a.consorcio_id')
+                        ->select('a.nombre as proyecto','b.nombre as consorcio')
+                        ->where('a.id',$proyecto_id)->first();
         set_time_limit(0);ini_set('memory_limit', '1G'); 
         $ingresos = PlanCuentas::where('codigo','like','4%')
                                 ->where('proyecto_id',$proyecto_id)

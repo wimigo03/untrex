@@ -13,6 +13,7 @@
     <table border="0" width="100%">
         <tr>
             <td align="center">
+                <h2>{{$proyecto->consorcio . ' - ' . $proyecto->proyecto}}</h2>
                 <h2>ESTADO DE RESULTADO</h2>
                 <font size="10px">
                     DEL {{Carbon\Carbon::parse($start_date)->format('d-m-Y')}}
@@ -24,7 +25,7 @@
     </table><br>
     <table width="100%" cellpadding="1px" cellspacing="0" border="1">
         <thead {{--class="border-bottom"--}}>
-            <tr>
+            <tr bgcolor="#adb5bd">
                 <th align="left"><font size="10px">CODIGO</font></th>
                 <th align="left"><font size="10px">CUENTA</font></th>
                 <th></th>
@@ -47,15 +48,24 @@
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
                 <tr>
-                    <td align="left"><font size="9px">{{ $ing->codigo }}</font></td>
-                    <td align="left"><font size="9px">{{ $ing->nombre  }}</font></td>
+                    @if ($ing->id == 4)
+                        <td align="left"><font size="9px"><b>{{ $ing->codigo }}</b></font></td>
+                        <td align="left"><font size="9px"><b>{{ $ing->nombre  }}</b></font></td>
+                    @else
+                        <td align="left"><font size="9px">{{ $ing->codigo }}</font></td>
+                        <td align="left"><font size="9px">{{ $ing->nombre  }}</font></td>
+                    @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
                         <td><font size="9px">&nbsp;</font></td>
                     @endfor
                     <td align="right">
                         <font size="9px">
                             @if (isset($totales[$ing->id]))
-                                {{number_format($totales[$ing->id],2,'.',',') }}
+                                @if ($ing->id == 4)
+                                    <b>{{number_format($totales[$ing->id],2,'.',',')}}</b>
+                                @else
+                                    {{number_format($totales[$ing->id],2,'.',',')}}
+                                @endif
                             @endif
                         </font>
                     </td>
@@ -78,15 +88,24 @@
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
                 <tr>
-                    <td align="left"><font size="9px">{{ $costo->codigo }}</font></td>
-                    <td align="left"><font size="9px">{{ $costo->nombre  }}</font></td>
+                    @if ($costo->id == 5)
+                        <td align="left"><font size="9px"><b>{{ $costo->codigo }}</b></font></td>
+                        <td align="left"><font size="9px"><b>{{ $costo->nombre }}</b></font></td>
+                    @else
+                        <td align="left"><font size="9px">{{ $costo->codigo }}</font></td>
+                        <td align="left"><font size="9px">{{ $costo->nombre  }}</font></td>
+                    @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
                         <td><font size="8px">&nbsp;</font></td>
                     @endfor
                         <td align="right">
                             <font size="9px">
                                 @if (isset($totales[$costo->id]))
-                                    {{number_format($totales[$costo->id],2,'.',',') }}
+                                    @if ($costo->id == 5)
+                                        <b>{{number_format($totales[$costo->id],2,'.',',') }}</b>
+                                    @else
+                                        {{number_format($totales[$costo->id],2,'.',',') }}
+                                    @endif
                                 @endif
                             </font>
                         </td>
@@ -109,15 +128,24 @@
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
                 <tr>
-                    <td align="left"><font size="9px">{{ $gasto->codigo }}</font></td>
-                    <td align="left"><font size="9px">{{ $gasto->nombre  }}</font></td>
+                    @if ($gasto->id == 6)
+                        <td align="left"><font size="9px"><b>{{ $gasto->codigo }}</b></font></td>
+                        <td align="left"><font size="9px"><b>{{ $gasto->nombre  }}</b></font></td>
+                    @else
+                        <td align="left"><font size="9px">{{ $gasto->codigo }}</font></td>
+                        <td align="left"><font size="9px">{{ $gasto->nombre  }}</font></td>
+                    @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
                     <td><font size="9px">&nbsp;</font></td>
                     @endfor
                     <td align="right">
                         <font size="9px">
                             @if (isset($totales[$gasto->id]))
-                                {{number_format($totales[$gasto->id],2,'.',',') }}
+                                @if ($gasto->id == 6)
+                                    <b>{{number_format($totales[$gasto->id],2,'.',',') }}</b>
+                                @else
+                                    {{number_format($totales[$gasto->id],2,'.',',') }}
+                                @endif
                             @endif
                         </font>
                     </td>
@@ -138,7 +166,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td align="right"><font size="9px">{{number_format($total,2,'.',',')}}</font></td>
+            <td align="right"><font size="9px"><b>{{number_format($total,2,'.',',')}}</b></font></td>
         </tfoot>
     </table>
     {{--<div class="page-break"></div>--}}

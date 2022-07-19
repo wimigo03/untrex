@@ -279,7 +279,7 @@ return [
         ],
         [
             'icon'    => 'fas fa-star-half',
-            'text'    => 'Balances',
+            'text'    => 'Balance de apertura',
             'submenu' => [
                 [
                     'text'  => 'Base 1',
@@ -310,18 +310,42 @@ return [
             ],
         ],
         [
-            'icon'    => 'fas fa-star-half',
-            'text'    => 'E. de Resultados',
+            'text'    => 'Reportes',
+            'icon'    => 'fas fa-fw fa-share',
             'submenu' => [
                 [
-                    'text'  => 'Base 1',
-                    'icon'  => 'fas fa-list',
-                    'route' => 'estadoresultado.proyectos',
+                    'icon'    => 'fas fa-star-half',
+                    'text'    => 'E. de Resultados',
+                    'url'     => '#',
+                    'submenu' => [
+                        [
+                            'text'  => 'Base 1',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'estadoresultado.proyectos',
+                        ],
+                        [
+                            'text'  => 'Base 2',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'estadoresultadof.proyectos',
+                        ],
+                    ],
                 ],
                 [
-                    'text'  => 'Base 2',
-                    'icon'  => 'fas fa-list',
-                    'route' => 'estadoresultadof.proyectos',
+                    'icon'    => 'fas fa-star-half',
+                    'text'    => 'Balance General',
+                    'url'     => '#',
+                    'submenu' => [
+                        [
+                            'text'  => 'Base 1',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'balancegeneral.proyectos',
+                        ],
+                        [
+                            'text'  => 'Base 2',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'balancegeneralf.proyectos',
+                        ],
+                    ],
                 ],
             ],
         ],

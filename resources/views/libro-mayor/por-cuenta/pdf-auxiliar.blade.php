@@ -20,8 +20,8 @@
                     NIT: {{ $empresa->nit }}</font>--}}
             </td>
             <td align="center">
-                <h3>_*LIBRO MAYOR POR CUENTA - AUXILIAR*_</h3>
-				<h3>{{strtoupper($proyecto->nombre)}}</h3>
+                <h4>_*LIBRO MAYOR POR CUENTA - AUXILIAR*_</h4>
+				<h4>{{strtoupper($proyecto->nombre)}}</h4>
             </td>
             <td width="20%" align="center">&nbsp;</td>
         </tr>
@@ -32,19 +32,19 @@
 				<table border="0" cellpadding="0px" cellspacing="10px" width="100%">
 					<tr>
 						<td align="left">
-							<font size="10px"><b>CUENTA:&nbsp;</b>{{$plancuenta->nombre}}</font>
+							<font size="9px"><b>CUENTA:&nbsp;</b>{{$plancuenta->nombre}}</font>
 						</td>
 						<td align="right">
-							<font size="10px"><b>DESDE:&nbsp;</b></font>
+							<font size="9px"><b>DESDE:&nbsp;</b></font>
 						</td>
 						<td align="right">
-							<font size="10px">{{ \Carbon\Carbon::parse($fecha_inicial)->format('d/m/Y') }}</font>
+							<font size="9px">{{ \Carbon\Carbon::parse($fecha_inicial)->format('d/m/Y') }}</font>
 						</td>
 						<td align="right">
-							<font size="10px"><b>HASTA:&nbsp;</b></font>
+							<font size="9px"><b>HASTA:&nbsp;</b></font>
 						</td>
 						<td align="right">
-							<font size="10px">{{ \Carbon\Carbon::parse($fecha_final)->format('d/m/Y') }}</font>
+							<font size="9px">{{ \Carbon\Carbon::parse($fecha_final)->format('d/m/Y') }}</font>
 						</td>
 					</tr>
 				</table>
@@ -54,14 +54,14 @@
     <table width="100%" cellpadding="5px" cellspacing="0" border="0">
         <thead class="border-bottom">
             <tr>
-                <th align="center"><font size="10px">FECHA</font></th>
-                <th colspan="2" align="center"><font size="10px">COMPROBANTE</font></th>
-				<th align="center"><font size="10px">CENTRO</font></th>
-                <th align="center"><font size="10px">CHEQUE</font></th>
-                <th align="center"><font size="10px">GLOSA</font></th>
-                <th align="center"><font size="10px">DEBE</font></th>
-                <th align="center"><font size="10px">HABER</font></th>
-                <th align="center"><font size="10px">SALDO</font></th>
+                <th align="center"><font size="9px">FECHA</font></th>
+                <th colspan="2" align="center"><font size="9px">COMPROBANTE</font></th>
+				<th align="center"><font size="9px">CENTRO</font></th>
+                <th align="center"><font size="9px">CHEQUE</font></th>
+                <th align="center"><font size="9px">GLOSA</font></th>
+                <th align="center"><font size="9px">DEBE</font></th>
+                <th align="center"><font size="9px">HABER</font></th>
+                <th align="center"><font size="9px">SALDO</font></th>
             </tr>
         </thead>
 		<tbody>
@@ -111,12 +111,12 @@
 					}
 				@endphp
 				<tr bgcolor="#f7f7f7">
-					<td colspan="9" align="center"><font size="10px"><b>{{$datos->auxiliar == null ? 'SIN AUXILIAR' : $datos->auxiliar}}</b></font></td>
+					<td colspan="9" align="center"><font size="9px"><b>{{$datos->auxiliar == null ? 'SIN AUXILIAR' : $datos->auxiliar}}</b></font></td>
 				</tr>
 				{{--<tr bgcolor="#d9534f">--}}
 				<tr bgcolor="#f7f7f7">
 					<td colspan="9" align="center">
-						<font size="10px">
+						<font size="9px">
 							SALDO INICIAL:&nbsp;Bs. {{number_format($saldo,2,'.',',')}}
 							&nbsp;|&nbsp;
 							SALDO FINAL:&nbsp;Bs. {{number_format($saldo_final,2,'.',',')}}
@@ -129,7 +129,7 @@
 				</tr>
 					@foreach ($comprobantes_detalle as $data)
 						<tr>
-							<td align="center"><font size="10px">{{\Carbon\Carbon::parse($data->fecha)->format('d/m/Y')}}</font></td>
+							<td align="center"><font size="9px">{{\Carbon\Carbon::parse($data->fecha)->format('d/m/Y')}}</font></td>
 							@php
 								if($data->status == 0){
 									$estado = "P";
@@ -139,13 +139,13 @@
 									$color = "#5cb85c";
 								}
 							@endphp
-							<td align="center"><font size="10px">{{$data->nro_comprobante}}</font></td>
-							<td align="center"><font size="10px" color="{{$color}}"><b>{{$estado}}</b></font></td>
-							<td align="center"><font size="10px">{{$data->centro}}</font></td>
-							<td align="center"><font size="10px">{{strtoupper($data->cheque_nro)}}</font></td>
-							<td align="left"><font size="10px">{{strtoupper($data->glosa)}}</font></td>
-							<td align="right"><font size="10px">{{number_format($data->debe,2,'.',',')}}</font></td>
-							<td align="right"><font size="10px">{{number_format($data->haber,2,'.',',')}}</font></td>
+							<td width="15%" align="center"><font size="9px">{{$data->nro_comprobante}}</font></td>
+							<td width="5%" align="center"><font size="9px" color="{{$color}}"><b>{{$estado}}</b></font></td>
+							<td align="center"><font size="9px">{{$data->centro}}</font></td>
+							<td align="center"><font size="9px">{{strtoupper($data->cheque_nro)}}</font></td>
+							<td align="justify"><font size="9px">{{strtoupper($data->glosa)}}</font></td>
+							<td align="right"><font size="9px">{{number_format($data->debe,2,'.',',')}}</font></td>
+							<td align="right"><font size="9px">{{number_format($data->haber,2,'.',',')}}</font></td>
 							@php
 								if($data->debe > 0){
 									$saldo += $data->debe;
@@ -153,7 +153,7 @@
 									$saldo -= $data->haber;
 								}
 							@endphp
-							<td align="right"><font size="10px">{{number_format($saldo,2,'.',',')}}</font></td>
+							<td align="right"><font size="9px">{{number_format($saldo,2,'.',',')}}</font></td>
 						</tr>
 					@endforeach
 			@endforeach

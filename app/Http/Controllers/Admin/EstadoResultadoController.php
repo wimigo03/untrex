@@ -17,11 +17,19 @@ use PDF;
 class EstadoResultadoController extends Controller
 {
     public function proyectos(){
-        $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
+        if(Auth()->user()->id == 1){
+            $proyectos = DB::table('proyectos')->pluck('nombre','id');    
+        }else{
+            $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
+        }
         return view('estado-resultado.proyectos',compact('proyectos'));
     }
     public function index($proyecto_id){
-        $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
+        if(Auth()->user()->id == 1){
+            $proyectos = DB::table('proyectos')->pluck('nombre','id');    
+        }else{
+            $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
+        }
         $anho_actual = date('Y');
         for($i=($anho_actual-2);$i<=($anho_actual+2);$i++){
             $gestion[$i] = $i;
@@ -52,7 +60,7 @@ class EstadoResultadoController extends Controller
             }
             $start_date_carbon = Carbon::parse($start_date);
             $end_date_carbon = Carbon::parse($end_date);
-            if($start_date_carbon->month >= 4){
+            /*if($start_date_carbon->month >= 4){
                 if(($end_date_carbon->month < 4 && $end_date_carbon->year != $start_date_carbon->year + 1) || ($end_date_carbon->month >= 4 && $end_date_carbon->year != $start_date_carbon->year)){
                     return back()->withInput()->with('danger','Debe Seleccionar fechas dentro de una sola gestion...');
                 }
@@ -63,7 +71,7 @@ class EstadoResultadoController extends Controller
                         return back()->withInput()->with('danger','Debe Seleccionar fechas dentro de una sola gestion...');
                     }
                 }
-            }
+            }*/
             $start_date = $start_date_carbon->toDateString();
             $end_date = $end_date_carbon->toDateString();
         }

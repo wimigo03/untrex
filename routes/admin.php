@@ -82,9 +82,11 @@ route::get('/librobanco/index', [LibroBancoController::class, 'index'])->name('l
 //Libro mayor por auxiliar
 route::get('/libromayor/porauxiliar/index', [LibroMayorPorAuxiliarController::class, 'index'])->name('libromayor.porauxiliar.index');
 //Libro mayor por cuenta
-Route::get('libromayor/porcuenta/excel/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'excel'])->name('libromayor.porcuenta.excel');
+Route::get('libromayor/porcuenta/auxiliarExcel2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat/{dat6}', [LibroMayorPorCuentaController::class, 'auxiliarExcel2'])->name('libromayor.porcuenta.auxiliarExcel2');
+Route::get('libromayor/porcuenta/auxiliarExcel1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'auxiliarExcel1'])->name('libromayor.porcuenta.auxiliarExcel1');
 Route::get('libromayor/porcuenta/auxiliarpdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat/{dat6}', [LibroMayorPorCuentaController::class, 'auxiliarPdf2'])->name('libromayor.porcuenta.auxiliarPdf2');
 Route::get('libromayor/porcuenta/auxiliarpdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'auxiliarPdf1'])->name('libromayor.porcuenta.auxiliarPdf1');
+Route::get('libromayor/porcuenta/generalExcel/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'generalExcel'])->name('libromayor.porcuenta.generalExcel');
 Route::get('libromayor/porcuenta/generalpdf/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}', [LibroMayorPorCuentaController::class, 'generalPdf'])->name('libromayor.porcuenta.generalPdf');
 Route::get('/libromayor/porcuenta/seleccionar', [LibroMayorPorCuentaController::class, 'seleccionar']);
 route::post('/libromayor/porcuenta/findauxiliar', [LibroMayorPorCuentaController::class, 'findauxiliar'])->name('libromayor.porcuenta.findauxiliar');

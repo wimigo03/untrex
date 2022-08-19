@@ -47,35 +47,37 @@
                     }
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
-                <tr>
-                    @if ($ing->id == 4)
-                        <td align="left"><font size="9px"><b>{{ $ing->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $ing->nombre  }}</b></font></td>
-                    @else
-                        <td align="left"><font size="9px">{{ $ing->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $ing->nombre  }}</font></td>
-                    @endif
-                    @for ($i = 0; $i < $nroColumna; $i++)
-                        <td><font size="9px">&nbsp;</font></td>
-                    @endfor
-                    <td align="right">
-                        <font size="9px">
-                            @if (isset($totales[$ing->id]))
-                                @if ($ing->id == 4)
-                                    <b>{{number_format($totales[$ing->id],2,'.',',')}}</b>
-                                @else
-                                    {{number_format($totales[$ing->id],2,'.',',')}}
+                @if (isset($totales[$ing->id]) && $totales[$ing->id] != 0)
+                    <tr>
+                        @if ($ing->id == 4)
+                            <td align="left"><font size="9px"><b>{{ $ing->codigo }}</b></font></td>
+                            <td align="left"><font size="9px"><b>{{ $ing->nombre  }}</b></font></td>
+                        @else
+                            <td align="left"><font size="9px">{{ $ing->codigo }}</font></td>
+                            <td align="left"><font size="9px">{{ $ing->nombre  }}</font></td>
+                        @endif
+                        @for ($i = 0; $i < $nroColumna; $i++)
+                            <td><font size="9px">&nbsp;</font></td>
+                        @endfor
+                        <td align="right">
+                            <font size="9px">
+                                @if (isset($totales[$ing->id]))
+                                    @if ($ing->id == 4)
+                                        <b>{{number_format($totales[$ing->id],2,'.',',')}}</b>
+                                    @else
+                                        {{number_format($totales[$ing->id],2,'.',',')}}
+                                    @endif
                                 @endif
-                            @endif
-                        </font>
-                    </td>
-                    @php
-                        $nroColumna = $nroMaxColumna - $nroColumna -1;
-                    @endphp
-                    @for ($i = 0; $i < $nroColumna; $i++)
-                        <td><font size="9px">&nbsp;</font></td>
-                    @endfor
-                </tr>
+                            </font>
+                        </td>
+                        @php
+                            $nroColumna = $nroMaxColumna - $nroColumna -1;
+                        @endphp
+                        @for ($i = 0; $i < $nroColumna; $i++)
+                            <td><font size="9px">&nbsp;</font></td>
+                        @endfor
+                    </tr>
+                @endif
             @endforeach
             @foreach ($costos as $costo)
                 @php
@@ -87,35 +89,37 @@
                     }
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
-                <tr>
-                    @if ($costo->id == 5)
-                        <td align="left"><font size="9px"><b>{{ $costo->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $costo->nombre }}</b></font></td>
-                    @else
-                        <td align="left"><font size="9px">{{ $costo->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $costo->nombre  }}</font></td>
-                    @endif
-                    @for ($i = 0; $i < $nroColumna; $i++)
-                        <td><font size="8px">&nbsp;</font></td>
-                    @endfor
-                        <td align="right">
-                            <font size="9px">
-                                @if (isset($totales[$costo->id]))
-                                    @if ($costo->id == 5)
-                                        <b>{{number_format($totales[$costo->id],2,'.',',') }}</b>
-                                    @else
-                                        {{number_format($totales[$costo->id],2,'.',',') }}
+                @if (isset($totales[$costo->id]) && $totales[$costo->id] != 0)
+                    <tr>
+                        @if ($costo->id == 5)
+                            <td align="left"><font size="9px"><b>{{ $costo->codigo }}</b></font></td>
+                            <td align="left"><font size="9px"><b>{{ $costo->nombre }}</b></font></td>
+                        @else
+                            <td align="left"><font size="9px">{{ $costo->codigo }}</font></td>
+                            <td align="left"><font size="9px">{{ $costo->nombre  }}</font></td>
+                        @endif
+                        @for ($i = 0; $i < $nroColumna; $i++)
+                            <td><font size="8px">&nbsp;</font></td>
+                        @endfor
+                            <td align="right">
+                                <font size="9px">
+                                    @if (isset($totales[$costo->id]))
+                                        @if ($costo->id == 5)
+                                            <b>{{number_format($totales[$costo->id],2,'.',',') }}</b>
+                                        @else
+                                            {{number_format($totales[$costo->id],2,'.',',') }}
+                                        @endif
                                     @endif
-                                @endif
-                            </font>
-                        </td>
-                    @php
-                        $nroColumna = $nroMaxColumna - $nroColumna - 1;
-                    @endphp
-                    @for ($i = 0; $i < $nroColumna; $i++)
-                        <td><font size="9px">&nbsp;</font></td>
-                    @endfor
-                </tr>
+                                </font>
+                            </td>
+                        @php
+                            $nroColumna = $nroMaxColumna - $nroColumna - 1;
+                        @endphp
+                        @for ($i = 0; $i < $nroColumna; $i++)
+                            <td><font size="9px">&nbsp;</font></td>
+                        @endfor
+                    </tr>
+                @endif
             @endforeach
             @foreach ($gastos as $gasto)
                 @php
@@ -127,35 +131,37 @@
                     }
                     $nroColumna = $nroMaxColumna - $nroPuntos;
                 @endphp
-                <tr>
-                    @if ($gasto->id == 6)
-                        <td align="left"><font size="9px"><b>{{ $gasto->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $gasto->nombre  }}</b></font></td>
-                    @else
-                        <td align="left"><font size="9px">{{ $gasto->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $gasto->nombre  }}</font></td>
-                    @endif
-                    @for ($i = 0; $i < $nroColumna; $i++)
-                    <td><font size="9px">&nbsp;</font></td>
-                    @endfor
-                    <td align="right">
-                        <font size="9px">
-                            @if (isset($totales[$gasto->id]))
-                                @if ($gasto->id == 6)
-                                    <b>{{number_format($totales[$gasto->id],2,'.',',') }}</b>
-                                @else
-                                    {{number_format($totales[$gasto->id],2,'.',',') }}
+                @if (isset($totales[$gasto->id]) && $totales[$gasto->id] != 0)
+                    <tr>
+                        @if ($gasto->id == 6)
+                            <td align="left"><font size="9px"><b>{{ $gasto->codigo }}</b></font></td>
+                            <td align="left"><font size="9px"><b>{{ $gasto->nombre  }}</b></font></td>
+                        @else
+                            <td align="left"><font size="9px">{{ $gasto->codigo }}</font></td>
+                            <td align="left"><font size="9px">{{ $gasto->nombre  }}</font></td>
+                        @endif
+                        @for ($i = 0; $i < $nroColumna; $i++)
+                        <td><font size="9px">&nbsp;</font></td>
+                        @endfor
+                        <td align="right">
+                            <font size="9px">
+                                @if (isset($totales[$gasto->id]))
+                                    @if ($gasto->id == 6)
+                                        <b>{{number_format($totales[$gasto->id],2,'.',',') }}</b>
+                                    @else
+                                        {{number_format($totales[$gasto->id],2,'.',',') }}
+                                    @endif
                                 @endif
-                            @endif
-                        </font>
-                    </td>
-                    @php
-                        $nroColumna = $nroMaxColumna - $nroColumna - 1;
-                    @endphp
-                    @for ($i = 0; $i < $nroColumna; $i++)
-                    <td><font size="9px">&nbsp;</font></td>
-                    @endfor
-                </tr>
+                            </font>
+                        </td>
+                        @php
+                            $nroColumna = $nroMaxColumna - $nroColumna - 1;
+                        @endphp
+                        @for ($i = 0; $i < $nroColumna; $i++)
+                        <td><font size="9px">&nbsp;</font></td>
+                        @endfor
+                    </tr>
+                @endif
             @endforeach
         </tbody>
         <tfoot>

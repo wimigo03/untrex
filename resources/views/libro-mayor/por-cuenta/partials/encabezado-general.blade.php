@@ -48,9 +48,9 @@
         <a href="{{route('libromayor.porcuenta.index')}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Regresar" class="btn btn-sm btn-primary font-verdana-bg">
             <i class="fas fa-angle-double-left"></i>
         </a>
-        {{--<a href="{{ route('libromayor.porcuenta.excel',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Excel" class="btn btn-sm btn-success font-verdana-bg">
+        <a href="{{ route('libromayor.porcuenta.generalExcel',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Excel" class="btn btn-sm btn-success font-verdana-bg">
             <i class="fas fa-file-excel"></i>
-        </a>--}}
+        </a>
         <a href="{{ route('libromayor.porcuenta.generalPdf',['dat1' => $proyecto,'dat2' => $tipo,'dat3' => $fecha_inicial,'dat4' => $fecha_final,'dat5' => $plancuenta->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="Exportar a Pdf" class="btn btn-sm btn-danger font-verdana-bg" target="_blank">
             <i class="fas fa-file-pdf"></i>
         </a>

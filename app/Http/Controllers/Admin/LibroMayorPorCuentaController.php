@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Luecano\NumeroALetras\NumeroALetras;
-use App\Proyectos;
-use App\PlanCuentas;
-use Carbon\Carbon;
 use DB;
 use PDF;
-
+use Carbon\Carbon;
+use App\Proyectos;
+use App\PlanCuentas;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Luecano\NumeroALetras\NumeroALetras;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LibroMayorPorCuentaGeneralExport;
+use App\Exports\LibroMayorPorCuentaAuxiliar1Export;
+use App\Exports\LibroMayorPorCuentaAuxiliar2Export;
 class LibroMayorPorCuentaController extends Controller
 {
     public function index(){
@@ -235,6 +238,38 @@ class LibroMayorPorCuentaController extends Controller
 
     public function generalPdf($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
         set_time_limit(0);ini_set('memory_limit', '1G');
+        $datos = $this->getGeneralPdf($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);
+        $proyecto = $datos['proyecto'];
+        $tipo = $datos['tipo'];
+        $plancuenta = $datos['plancuenta'];
+        $fecha_inicial = $datos['fecha_inicial'];
+        $comprobantes = $datos['comprobantes'];
+        $saldo = $datos['saldo'];
+        $saldo_final = $datos['saldo_final'];
+        $total_debe = $datos['total_debe'];
+        $total_haber = $datos['total_haber'];
+        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-general',compact(['proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber']));
+        $pdf->setPaper('LETTER', 'portrait');//landscape
+        return $pdf->stream();
+    }
+
+    public function generalExcel($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
+        set_time_limit(0);ini_set('memory_limit', '1G');
+        $datos = $this->getGeneralPdf($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);
+        $proyecto = $datos['proyecto'];
+        $tipo = $datos['tipo'];
+        $plancuenta = $datos['plancuenta'];
+        $fecha_inicial = $datos['fecha_inicial'];
+        $comprobantes = $datos['comprobantes'];
+        $saldo = $datos['saldo'];
+        $saldo_final = $datos['saldo_final'];
+        $total_debe = $datos['total_debe'];
+        $total_haber = $datos['total_haber'];
+        $file_name = 'LibroMayorPorCuentaGeneral';
+        return Excel::download(new LibroMayorPorCuentaGeneralExport($proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$comprobantes,$saldo,$saldo_final,$total_debe,$total_haber),$file_name . '.xlsx');
+    }
+
+    public function getGeneralPdf($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
         $gestion = Carbon::parse($fecha_inicial);
         if($gestion->month < 4){
             $gestion = $gestion->year - 1;
@@ -285,13 +320,43 @@ class LibroMayorPorCuentaController extends Controller
             $total_debe += $datos->debe;
             $total_haber += $datos->haber;
         }
-        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-general',compact(['proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
+
+        return ([
+            'proyecto' => $proyecto,
+            'tipo' => $tipo,
+            'plancuenta' => $plancuenta,
+            'fecha_inicial' => $fecha_inicial,
+            'comprobantes' => $comprobantes,
+            'saldo' => $saldo,
+            'saldo_final' => $saldo_final,
+            'total_debe' => $total_debe,
+            'total_haber' => $total_haber
+        ]);
     }
 
     public function auxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
         set_time_limit(0);ini_set('memory_limit', '1G');
+        $datos = $this->getAuxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);
+        $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
+        $proyecto = $datos['proyecto'];
+        $plancuenta = $datos['plancuenta'];
+        $auxiliares = $datos['auxiliares'];
+        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares']));
+        $pdf->setPaper('LETTER', 'portrait');//landscape
+        return $pdf->stream();
+    }
+
+    public function auxiliarExcel1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
+        $datos = $this->getAuxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);
+        $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
+        $proyecto = $datos['proyecto'];
+        $plancuenta = $datos['plancuenta'];
+        $auxiliares = $datos['auxiliares'];
+        $file_name = 'LibroMayorPorCuentaAuxiliar';
+        return Excel::download(new LibroMayorPorCuentaAuxiliar1Export($fecha_saldo_inicial,$proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$auxiliares),$file_name . '.xlsx');
+    }
+
+    private function getAuxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
         $gestion = Carbon::parse($fecha_inicial);
         if($gestion->month < 4){
             $gestion = $gestion->year - 1;
@@ -317,13 +382,37 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('b.deleted_at',null)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
-        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
+        return ([
+            'fecha_saldo_inicial' => $fecha_saldo_inicial,
+            'proyecto' => $proyecto,
+            'plancuenta' => $plancuenta,
+            'auxiliares' => $auxiliares
+        ]);
     }
 
     public function auxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id){
         set_time_limit(0);ini_set('memory_limit', '1G');
+        $datos = $this->getAuxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id);
+        $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
+        $proyecto = $datos['proyecto'];
+        $plancuenta = $datos['plancuenta'];
+        $auxiliares = $datos['auxiliares'];
+        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares','plancuentaauxiliar_id']));
+        $pdf->setPaper('LETTER', 'portrait');//landscape
+        return $pdf->stream();
+    }
+
+    public function auxiliarExcel2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id){
+        $datos = $this->getAuxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id);
+        $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
+        $proyecto = $datos['proyecto'];
+        $plancuenta = $datos['plancuenta'];
+        $auxiliares = $datos['auxiliares'];
+        $file_name = 'LibroMayorPorCuentaAuxiliar';
+        return Excel::download(new LibroMayorPorCuentaAuxiliar2Export($fecha_saldo_inicial,$proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$auxiliares,$plancuentaauxiliar_id),$file_name . '.xlsx');
+    }
+
+    private function getAuxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id){
         $gestion = Carbon::parse($fecha_inicial);
         if($gestion->month < 4){
             $gestion = $gestion->year - 1;
@@ -350,11 +439,11 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('b.deleted_at',null)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
-        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares','plancuentaauxiliar_id']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
-    }
-    public function excel($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
-        dd($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);
+        return ([
+            'fecha_saldo_inicial' => $fecha_saldo_inicial,
+            'proyecto' => $proyecto,
+            'plancuenta' => $plancuenta,
+            'auxiliares' => $auxiliares
+        ]);
     }
 }

@@ -52,7 +52,7 @@ class BalanceGeneralFController extends Controller
             }
             $start_date_carbon = Carbon::parse($start_date);
             $end_date_carbon = Carbon::parse($end_date);
-            if($start_date_carbon->month >= 4){
+            /*if($start_date_carbon->month >= 4){
                 if(($end_date_carbon->month < 4 && $end_date_carbon->year != $start_date_carbon->year + 1) || ($end_date_carbon->month >= 4 && $end_date_carbon->year != $start_date_carbon->year)){
                     return back()->withInput()->with('danger','Debe Seleccionar fechas dentro de una sola gestion...');
                 }
@@ -63,7 +63,7 @@ class BalanceGeneralFController extends Controller
                         return back()->withInput()->with('danger','Debe Seleccionar fechas dentro de una sola gestion...');
                     }
                 }
-            }
+            }*/
             $start_date = $start_date_carbon->toDateString();
             $end_date = $end_date_carbon->toDateString();
         }

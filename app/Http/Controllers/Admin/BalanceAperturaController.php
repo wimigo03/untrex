@@ -15,7 +15,12 @@ use DB;
 class BalanceAperturaController extends Controller
 {
     public function proyectos(){
-        $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
+        $proyectos = DB::table('user_proyectos as a')
+                            ->join('proyectos as b','b.id','a.proyecto_id')
+                            ->where('a.user_id',auth()->user()->id)
+                            ->where('a.estado','1')
+                            ->select('b.id','b.nombre')
+                            ->pluck('nombre','id');
         return view('balance-apertura.proyectos',compact('proyectos'));
     }
     public function index($proyecto_id){

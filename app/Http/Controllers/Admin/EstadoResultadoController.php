@@ -17,19 +17,21 @@ use PDF;
 class EstadoResultadoController extends Controller
 {
     public function proyectos(){
-        if(Auth()->user()->id == 1){
-            $proyectos = DB::table('proyectos')->pluck('nombre','id');    
-        }else{
-            $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
-        }
+        $proyectos = DB::table('user_proyectos as a')
+                            ->join('proyectos as b','b.id','a.proyecto_id')
+                            ->where('a.user_id',auth()->user()->id)
+                            ->where('a.estado','1')
+                            ->select('b.id','b.nombre')
+                            ->pluck('nombre','id');
         return view('estado-resultado.proyectos',compact('proyectos'));
     }
     public function index($proyecto_id){
-        if(Auth()->user()->id == 1){
-            $proyectos = DB::table('proyectos')->pluck('nombre','id');    
-        }else{
-            $proyectos = DB::table('proyectos')->where('user_id',Auth()->user()->id)->pluck('nombre','id');
-        }
+        $proyectos = DB::table('user_proyectos as a')
+                            ->join('proyectos as b','b.id','a.proyecto_id')
+                            ->where('a.user_id',auth()->user()->id)
+                            ->where('a.estado','1')
+                            ->select('b.id','b.nombre')
+                            ->pluck('nombre','id');
         $anho_actual = date('Y');
         for($i=($anho_actual-2);$i<=($anho_actual+2);$i++){
             $gestion[$i] = $i;

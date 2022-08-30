@@ -36,7 +36,7 @@
         $(document).ready(function() {
             $("#proyecto_id").change(function () {
 				if($("#proyecto_id option:selected").val() != null){
-					var url = '{{ route("estadoresultado.index", ":id") }}';
+					var url = '{{ route("estadoresultadof.index", ":id") }}';
 					var id = $("#proyecto_id option:selected").val();
 					url = url.replace(':id', id);
 					window.location.href=url;

@@ -14,7 +14,12 @@ class PlandecuentasController extends Controller
         $proyecto_id = null;
         $plancuentas = null;
         $html = "";
-        $proyectos  = Proyectos::where('estado',1)->get();
+        $proyectos = DB::table('user_proyectos as a')
+                            ->join('proyectos as b','b.id','a.proyecto_id')
+                            ->where('a.user_id',auth()->user()->id)
+                            ->where('a.estado','1')
+                            ->select('b.id','b.nombre')
+                            ->get();
         return view('plandecuentas.index',compact('proyecto_id','plancuentas','html','proyectos'));
     }
 

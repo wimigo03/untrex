@@ -253,12 +253,12 @@ return [
             'label'       => 4,
             'label_color' => 'success',
         ],*/
-        [
+        /*[
             'text'          => 'Consorcios',
             'route'         => 'consorcios.index',
             'icon'          => 'fas fa-city',
             'label_color'   => 'success',
-        ],
+        ],*/
         [
             'text'          => 'Cotizaciones',
             'route'         => 'tipo_cambio.index',

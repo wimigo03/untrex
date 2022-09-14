@@ -61,7 +61,6 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -161,7 +160,6 @@
                                             </tbody>
                                             <tfoot class="font-verdana">
                                                 <td><strong>TOTAL:</strong></td>
-                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>

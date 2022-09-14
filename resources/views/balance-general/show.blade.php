@@ -61,7 +61,6 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -155,7 +154,6 @@
                                             </tbody>
                                             <tfoot class="font-verdana">
                                                 <td class="text-left p-1"><strong>TOTAL:</strong></td>
-                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td class="text-right p-1"><strong>CAPITAL&nbsp;<i class="fas fa-arrow-alt-circle-right"></i></strong></td>

@@ -33,7 +33,6 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody {{--class="border-bottom"--}}>
@@ -161,7 +160,6 @@
         </tbody>
         <tfoot>
             <td align="left"><strong><font size="9px">TOTAL:</font></strong></td>
-            <td></td>
             <td></td>
             <td></td>
             <td align="right"><strong><font size="9px">CAPITAL&nbsp;</strong></font></td>

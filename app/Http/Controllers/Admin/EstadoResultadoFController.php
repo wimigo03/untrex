@@ -113,7 +113,7 @@ class EstadoResultadoFController extends Controller
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $planCuentaId = $gastos[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
-        $nroMaxColumna = 6;
+        $nroMaxColumna = 5;
         $total = $totales[$ingresos[0]->id] - $totales[$costos[0]->id] - $totales[$gastos[0]->id];
         return view('estado-resultado-f.show',compact('ingresos','costos','gastos','totales','cuentas','proyectos','proyecto_id','start_date','end_date','status_text','nroMaxColumna','total'));
     }
@@ -166,7 +166,7 @@ class EstadoResultadoFController extends Controller
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $planCuentaId = $gastos[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
-        $nroMaxColumna = 6;
+        $nroMaxColumna = 5;
         $total = $totales[$ingresos[0]->id] - $totales[$costos[0]->id] - $totales[$gastos[0]->id];
         $pdf = PDF::loadView('estado-resultado-f.pdf',compact('ingresos','costos','gastos','totales','cuentas','proyecto','start_date','end_date','status_text','nroMaxColumna','total'));
         $pdf->setPaper('LETTER', 'portrait');//landscape

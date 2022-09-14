@@ -33,7 +33,6 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody {{--class="border-bottom"--}}>
@@ -166,7 +165,6 @@
         </tbody>
         <tfoot>
             <td><strong><font size="9px">TOTAL:</font></strong></td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>

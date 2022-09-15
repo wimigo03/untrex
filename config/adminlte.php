@@ -263,19 +263,25 @@ return [
             'text'          => 'Cotizaciones',
             'route'         => 'tipo_cambio.index',
             'icon'          => 'fas fa-funnel-dollar',
-            'label_color'   => 'success',
+            'label_color'   => 'success'
         ],
         [
             'text'          => 'Plan de cuentas',
             'route'         => 'plandecuentas.index',
             'icon'          => 'fas fa-sitemap',
-            'label_color'   => 'success',
+            'label_color'   => 'success'
         ],
         [
             'text'          => 'Proveedores',
             'route'         => 'proveedor.index',
             'icon'          => 'fas fa-user-secret',
-            'label_color'   => 'success',
+            'label_color'   => 'success'
+        ],
+        [
+            'text'          => 'Facturas',
+            'route'         => 'facturas.index',
+            'icon'          => 'fas fa-file-invoice',
+            'label_color'   => 'success'
         ],
         [
             'icon'    => 'fas fa-star-half',
@@ -284,12 +290,12 @@ return [
                 [
                     'text'  => 'Base 1',
                     'icon'  => 'fas fa-list',
-                    'route' => 'balanceapertura.proyectos',
+                    'route' => 'balanceapertura.proyectos'
                 ],
                 [
                     'text'  => 'Base 2',
                     'icon'  => 'fas fa-list',
-                    'route' => 'balanceaperturaf.proyectos',
+                    'route' => 'balanceaperturaf.proyectos'
                 ],
             ],
         ],
@@ -300,12 +306,12 @@ return [
                 [
                     'text'  => 'Base 1',
                     'icon'  => 'fas fa-list',
-                    'route' => 'comprobantes.index',
+                    'route' => 'comprobantes.index'
                 ],
                 [
                     'text'  => 'Base 2',
                     'icon'  => 'fas fa-list',
-                    'route' => 'comprobantes.fiscales.index',
+                    'route' => 'comprobantes.fiscales.index'
                 ],
             ],
         ],
@@ -321,12 +327,12 @@ return [
                         [
                             'text'  => 'Base 1',
                             'icon'  => 'fas fa-list',
-                            'route' => 'estadoresultado.proyectos',
+                            'route' => 'estadoresultado.proyectos'
                         ],
                         [
                             'text'  => 'Base 2',
                             'icon'  => 'fas fa-list',
-                            'route' => 'estadoresultadof.proyectos',
+                            'route' => 'estadoresultadof.proyectos'
                         ],
                     ],
                 ],
@@ -338,39 +344,58 @@ return [
                         [
                             'text'  => 'Base 1',
                             'icon'  => 'fas fa-list',
-                            'route' => 'balancegeneral.proyectos',
+                            'route' => 'balancegeneral.proyectos'
                         ],
                         [
                             'text'  => 'Base 2',
                             'icon'  => 'fas fa-list',
-                            'route' => 'balancegeneralf.proyectos',
+                            'route' => 'balancegeneralf.proyectos'
                         ],
                     ],
                 ],
             ],
         ],
         [
-            'text'          => 'Facturas',
-            'route'         => 'facturas.index',
-            'icon'          => 'fas fa-file-invoice',
-            'label_color'   => 'success',
-        ],
-        [
             'text'    => 'Libro Mayor',
             'icon'    => 'fas fa-book',
             'submenu' => [
                 [
-                    'text'  => 'Por cuenta',
-                    'icon'  => 'fas fa-briefcase',
-                    'route' => 'libromayor.porcuenta.index',
+                    'icon'    => 'fas fa-briefcase',
+                    'text'    => 'Por cuenta',
+                    'url'     => '#',
+                    'submenu' => [
+                        [
+                            'text'  => 'Base 1',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'libromayor.porcuenta.index'
+                        ],
+                        [
+                            'text'  => 'Base 2',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'libromayorf.porcuenta.index'
+                        ],
+                    ],
                 ],
-                /*[
-                    'text'  => 'Por auxiliar',
-                    'icon'  => 'fas fa-briefcase',
-                    'route' => 'librobanco.index',
-                ],*/
+                [
+                    'icon'    => 'fas fa-briefcase',
+                    'text'    => 'de 1 a 99',
+                    'url'     => '#',
+                    'submenu' => [
+                        [
+                            'text'  => 'Base 1',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'libromayor.de1a99.index',
+                        ],
+                        [
+                            'text'  => 'Base 2',
+                            'icon'  => 'fas fa-list',
+                            'route' => 'libromayorf.de1a99.index',
+                        ],
+                    ],
+                ],
             ],
         ],
+        
         [
             'text'          => 'Libro Banco',
             'route'         => 'librobanco.index',
@@ -479,6 +504,16 @@ return [
     */
 
     'plugins' => [
+        'Tooltips' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '/css/tooltips/tooltips.min.css',
+                ]
+            ],
+        ],
         'Datatables' => [
             'active' => true,
             'files' => [

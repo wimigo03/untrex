@@ -9,16 +9,16 @@ use App\Proyectos;
 use App\PlanCuentas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Luecano\NumeroALetras\NumeroALetras;
+//use Luecano\NumeroALetras\NumeroALetras;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\LibroMayorPorCuentaGeneralExport;
-use App\Exports\LibroMayorPorCuentaAuxiliar1Export;
-use App\Exports\LibroMayorPorCuentaAuxiliar2Export;
-class LibroMayorPorCuentaController extends Controller
+use App\Exports\LibroMayorFPorCuentaGeneralExport;
+use App\Exports\LibroMayorFPorCuentaAuxiliar1Export;
+use App\Exports\LibroMayorFPorCuentaAuxiliar2Export;
+class LibroMayorFPorCuentaController extends Controller
 {
     public function index(){
         $proyectos = Proyectos::pluck('nombre','id');
-        return view('libro-mayor.por-cuenta.index',compact('proyectos'));
+        return view('libro-mayor-f.por-cuenta.index',compact('proyectos'));
     }
 
     public function search(Request $request){
@@ -41,7 +41,7 @@ class LibroMayorPorCuentaController extends Controller
             $saldo_final = $datos['saldo_final'];
             $total_debe = $datos['total_debe'];
             $total_haber = $datos['total_haber'];
-            return view('libro-mayor.por-cuenta.search-general',compact('proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber'));
+            return view('libro-mayor-f.por-cuenta.search-general',compact('proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber'));
         }else{
             $datos = $this->searchAuxiliar($request->proyecto,$request->fecha_inicial,$request->fecha_final,$request->tipo,$request->plancuenta_id);
             $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
@@ -52,7 +52,7 @@ class LibroMayorPorCuentaController extends Controller
             $fecha_final = $datos['fecha_final'];
             $find_auxiliares = $datos['find_auxiliares'];
             $auxiliares = $datos['auxiliares'];
-            return view('libro-mayor.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','find_auxiliares','auxiliares'));
+            return view('libro-mayor-f.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','find_auxiliares','auxiliares'));
         }
     }
 
@@ -68,8 +68,8 @@ class LibroMayorPorCuentaController extends Controller
         $fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes as a')
-                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $sumarRestar = DB::table('comprobantes_fiscales as a')
+                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                                 ->join('centros as c','c.id','b.centro_id')
                                 ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                                 ->where('a.proyecto_id',$proyecto_id)
@@ -87,8 +87,8 @@ class LibroMayorPorCuentaController extends Controller
             $saldo -= $datos->haber;
         }
 
-        $comprobantes = DB::table('comprobantes as a')
-                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $comprobantes = DB::table('comprobantes_fiscales as a')
+                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                                 ->join('centros as c','c.id','b.centro_id')
                                 ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                                 ->where('a.proyecto_id',$proyecto_id)
@@ -135,8 +135,8 @@ class LibroMayorPorCuentaController extends Controller
         $fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $find_auxiliares = DB::table('comprobantes as a')
-                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $find_auxiliares = DB::table('comprobantes_fiscales as a')
+                            ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                             ->leftjoin('plan_cuentas_auxiliares as c','c.id','b.plancuentaauxiliar_id')
                             ->select('c.id as plancuentaauxiliar_id','c.nombre as auxiliar')
                             ->where('a.proyecto_id',$proyecto_id)
@@ -147,8 +147,8 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('b.deleted_at',null)
                             ->groupBy('c.id','c.nombre')
                             ->orderBy('c.id','asc')->get();
-        $auxiliares = DB::table('comprobantes as a')
-                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $auxiliares = DB::table('comprobantes_fiscales as a')
+                            ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                             ->join('centros as c','c.id','b.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                             ->select('d.id as plancuentaauxiliar_id','d.nombre as auxiliar',
@@ -192,8 +192,8 @@ class LibroMayorPorCuentaController extends Controller
         $fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $find_auxiliares = DB::table('comprobantes as a')
-                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $find_auxiliares = DB::table('comprobantes_fiscales as a')
+                            ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                             ->leftjoin('plan_cuentas_auxiliares as c','c.id','b.plancuentaauxiliar_id')
                             ->select('c.id as plancuentaauxiliar_id','c.nombre as auxiliar')
                             ->where('a.proyecto_id',$proyecto_id)
@@ -204,8 +204,8 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('b.deleted_at',null)
                             ->groupBy('c.id','c.nombre')
                             ->orderBy('c.id','asc')->get();
-        $auxiliares = DB::table('comprobantes as a')
-                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $auxiliares = DB::table('comprobantes_fiscales as a')
+                            ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                             ->join('centros as c','c.id','b.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                             ->select('d.id as plancuentaauxiliar_id','d.nombre as auxiliar',
@@ -221,7 +221,7 @@ class LibroMayorPorCuentaController extends Controller
                             ->where('b.deleted_at',null)
                             ->groupBy('d.id','d.nombre')
                             ->orderBy('d.id','asc')->get();
-        return view('libro-mayor.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','find_auxiliares','auxiliares','plancuentaauxiliar_id'));
+        return view('libro-mayor-f.por-cuenta.search-auxiliar',compact('fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','find_auxiliares','auxiliares','plancuentaauxiliar_id'));
     }
 
     public function seleccionar(Request $request){
@@ -257,7 +257,7 @@ class LibroMayorPorCuentaController extends Controller
             $saldo_final = $datos['saldo_final'];
             $total_debe = $datos['total_debe'];
             $total_haber = $datos['total_haber'];
-            $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-general',compact(['proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber']));
+            $pdf = PDF::loadView('libro-mayor-f.por-cuenta.pdf-general',compact(['proyecto','tipo','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber']));
             $pdf->setPaper('LETTER', 'portrait');//landscape
             return $pdf->stream();
             
@@ -282,7 +282,7 @@ class LibroMayorPorCuentaController extends Controller
         $total_debe = $datos['total_debe'];
         $total_haber = $datos['total_haber'];
         $file_name = 'LibroMayorPorCuentaGeneral';
-        return Excel::download(new LibroMayorPorCuentaGeneralExport($proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$comprobantes,$saldo,$saldo_final,$total_debe,$total_haber),$file_name . '.xlsx');
+        return Excel::download(new LibroMayorFPorCuentaGeneralExport($proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$comprobantes,$saldo,$saldo_final,$total_debe,$total_haber),$file_name . '.xlsx');
     }
 
     public function getGeneralPdf($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
@@ -295,8 +295,8 @@ class LibroMayorPorCuentaController extends Controller
         $fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes as a')
-                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $sumarRestar = DB::table('comprobantes_fiscales as a')
+                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                                 ->join('centros as c','c.id','b.centro_id')
                                 ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                                 ->where('a.proyecto_id',$proyecto_id)
@@ -314,8 +314,8 @@ class LibroMayorPorCuentaController extends Controller
             $saldo -= $datos->haber;
         }
 
-        $comprobantes = DB::table('comprobantes as a')
-                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $comprobantes = DB::table('comprobantes_fiscales as a')
+                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                                 ->join('centros as c','c.id','b.centro_id')
                                 ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                                 ->where('a.proyecto_id',$proyecto_id)
@@ -351,15 +351,26 @@ class LibroMayorPorCuentaController extends Controller
     }
 
     public function auxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
-        set_time_limit(0);ini_set('memory_limit', '1G');
-        $datos = $this->getAuxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);
-        $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
-        $proyecto = $datos['proyecto'];
-        $plancuenta = $datos['plancuenta'];
-        $auxiliares = $datos['auxiliares'];
-        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
+        try{
+            ini_set('memory_limit','-1');
+            ini_set('max_execution_time','-1');
+            //set_time_limit(0);ini_set('memory_limit', '1G');
+
+            $datos = $this->getAuxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id);
+            $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
+            $proyecto = $datos['proyecto'];
+            $plancuenta = $datos['plancuenta'];
+            $auxiliares = $datos['auxiliares'];
+            $pdf = PDF::loadView('libro-mayor-f.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares']));
+            $pdf->setPaper('LETTER', 'portrait');//landscape
+            return $pdf->stream();
+
+        } catch (\Throwable $th){
+            return '[ERROR_500]';
+        }finally{
+            ini_restore('memory_limit');
+            ini_restore('max_execution_time');
+        }
     }
 
     public function auxiliarExcel1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
@@ -369,7 +380,7 @@ class LibroMayorPorCuentaController extends Controller
         $plancuenta = $datos['plancuenta'];
         $auxiliares = $datos['auxiliares'];
         $file_name = 'LibroMayorPorCuentaAuxiliar';
-        return Excel::download(new LibroMayorPorCuentaAuxiliar1Export($fecha_saldo_inicial,$proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$auxiliares),$file_name . '.xlsx');
+        return Excel::download(new LibroMayorFPorCuentaAuxiliar1Export($fecha_saldo_inicial,$proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$auxiliares),$file_name . '.xlsx');
     }
 
     private function getAuxiliarPdf1($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id){
@@ -382,8 +393,8 @@ class LibroMayorPorCuentaController extends Controller
         $fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $auxiliares = DB::table('comprobantes as a')
-                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $auxiliares = DB::table('comprobantes_fiscales as a')
+                            ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                             ->join('centros as c','c.id','b.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                             ->select('d.id as plancuentaauxiliar_id','d.nombre as auxiliar',
@@ -407,15 +418,25 @@ class LibroMayorPorCuentaController extends Controller
     }
 
     public function auxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id){
-        set_time_limit(0);ini_set('memory_limit', '1G');
-        $datos = $this->getAuxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id);
-        $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
-        $proyecto = $datos['proyecto'];
-        $plancuenta = $datos['plancuenta'];
-        $auxiliares = $datos['auxiliares'];
-        $pdf = PDF::loadView('libro-mayor.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares','plancuentaauxiliar_id']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
+        try{
+            ini_set('memory_limit','-1');
+            ini_set('max_execution_time','-1');
+            //set_time_limit(0);ini_set('memory_limit', '1G');
+            $datos = $this->getAuxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id);
+            $fecha_saldo_inicial = $datos['fecha_saldo_inicial'];
+            $proyecto = $datos['proyecto'];
+            $plancuenta = $datos['plancuenta'];
+            $auxiliares = $datos['auxiliares'];
+            $pdf = PDF::loadView('libro-mayor-f.por-cuenta.pdf-auxiliar',compact(['fecha_saldo_inicial','proyecto','tipo','plancuenta','fecha_inicial','fecha_final','auxiliares','plancuentaauxiliar_id']));
+            $pdf->setPaper('LETTER', 'portrait');//landscape
+            return $pdf->stream();
+
+        } catch (\Throwable $th){
+            return '[ERROR_500]';
+        }finally{
+            ini_restore('memory_limit');
+            ini_restore('max_execution_time');
+        }
     }
 
     public function auxiliarExcel2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id){
@@ -425,7 +446,7 @@ class LibroMayorPorCuentaController extends Controller
         $plancuenta = $datos['plancuenta'];
         $auxiliares = $datos['auxiliares'];
         $file_name = 'LibroMayorPorCuentaAuxiliar';
-        return Excel::download(new LibroMayorPorCuentaAuxiliar2Export($fecha_saldo_inicial,$proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$auxiliares,$plancuentaauxiliar_id),$file_name . '.xlsx');
+        return Excel::download(new LibroMayorFPorCuentaAuxiliar2Export($fecha_saldo_inicial,$proyecto,$tipo,$plancuenta,$fecha_inicial,$fecha_final,$auxiliares,$plancuentaauxiliar_id),$file_name . '.xlsx');
     }
 
     private function getAuxiliarPdf2($proyecto_id,$tipo,$fecha_inicial,$fecha_final,$plancuenta_id,$plancuentaauxiliar_id){
@@ -438,8 +459,8 @@ class LibroMayorPorCuentaController extends Controller
         $fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $auxiliares = DB::table('comprobantes as a')
-                            ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+        $auxiliares = DB::table('comprobantes_fiscales as a')
+                            ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                             ->join('centros as c','c.id','b.centro_id')
                             ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                             ->select('d.id as plancuentaauxiliar_id','d.nombre as auxiliar',

@@ -20,7 +20,7 @@
                     NIT: {{ $empresa->nit }}</font>--}}
             </td>
             <td align="center">
-                <h4>_*LIBRO MAYOR POR CUENTA - GENERAL*_</h4>
+                <h4>LIBRO MAYOR POR CUENTA - GENERAL</h4>
 				<h4>{{strtoupper($proyecto->nombre)}}</h4>
             </td>
             <td width="20%" align="center">&nbsp;</td>

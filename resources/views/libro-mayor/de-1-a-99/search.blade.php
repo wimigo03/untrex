@@ -6,31 +6,46 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>LIBRO MAYOR POR CUENTA - {{strtoupper($tipo)}} - {{strtoupper($proyecto->nombre)}}</b></div>
+                <div class="card-title"><b>LIBRO MAYOR DEL 1 AL 99 - {{strtoupper($proyecto->nombre)}}</b></div>
             </div>
             <div class="card-body">
-                @include('libro-mayor.por-cuenta.partials.encabezado-general')
+                @include('libro-mayor.de-1-a-99.partials.encabezado')
                 @if ($comprobantes != null)
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <table class="table table-hover table-bordered">
+                            <table class="table-responsive table-striped table-hover table-bordered">
                                 <thead>
-                                    <tr class="font-verdana">
+                                    <tr class="font-verdana-sm">
                                         <td class="text-center p-1"><b>FECHA</b></td>
-                                        <td width="15%" colspan="2" class="text-center p-1"><b>COMPROBANTE</b></td>
-                                        <td class="text-center p-1"><b>CENTRO</b></td>
+                                        {{--<td class="text-center p-1"><b>FACTURA</b></td>--}}
+                                        <td colspan="2" class="text-center p-1"><b>COMPROBANTE</b></td>
+                                        <td class="text-center p-1"><b>CODIGO</b></td>
+                                        <td class="text-center p-1"><b>CUENTA</b></td>
                                         <td class="text-center p-1"><b>AUXILIAR</b></td>
+                                        <td class="text-center p-1"><b>CENTRO</b></td>
                                         <td class="text-center p-1"><b>CHEQUE</b></td>
                                         <td class="text-center p-1"><b>GLOSA</b></td>
                                         <td class="text-center p-1"><b>DEBE</b></td>
                                         <td class="text-center p-1"><b>HABER</b></td>
-                                        <td class="text-center p-1"><b>SALDO</b></td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($comprobantes as $datos)
-                                        <tr class="font-verdana">
+                                        <tr class="font-verdana-sm">
                                             <td class="text-center p-1">{{\Carbon\Carbon::parse($datos->fecha)->format('d/m/Y')}}</td>
+                                            {{--@php
+                                                $facturas = DB::table('comprobante_facturas as a')
+                                                                ->join('facturas as b','b.id','a.factura_id')
+                                                                ->where('a.comprobante_id',$datos->comprobante_id)
+                                                                ->where('a.estado',1)
+                                                                ->where('a.deleted_at',null)
+                                                                ->get();
+                                            @endphp
+                                            <td class="text-justify p-1">
+                                                @foreach ( $facturas as $factura)
+                                                    {{'- ' . $factura->numero}}<br>
+                                                @endforeach
+                                            </td>--}}
                                             @php
                                                 if($datos->status == 0){
                                                     $estado = "B";
@@ -41,25 +56,21 @@
                                                 }
                                             @endphp
                                             <td class="text-center p-1">
-                                                <a href="{{ route('comprobantes.show',$datos->comprobante_id) }}" target="_blank">
-                                                    {{$datos->nro_comprobante}}
-                                                </a>
+                                                <span class="tts:down tts-slideIn tts-custom/ font-verdana" aria-label="Ir a comprobante">
+                                                    <a href="{{ route('comprobantes.show',$datos->comprobante_id) }}" target="_blank" class="font-verdana-sm">
+                                                        {{$datos->nro_comprobante}}
+                                                    </a>
+                                                </span>
                                             </td>
                                             <td class="text-center p-1 {{$color}}"><b>{{$estado}}</b></td>
+                                            <td class="text-center p-1">{{$datos->codigo}}</td>
+                                            <td class="text-justify p-1">{{$datos->cuenta}}</td>
+                                            <td class="text-justify p-1">{{$datos->auxiliar}}</td>
                                             <td class="text-center p-1">{{$datos->centro}}</td>
-                                            <td class="text-center p-1">{{$datos->auxiliar}}</td>
-                                            <td class="text-center p-1">{{strtoupper($datos->cheque_nro)}}</td>
+                                            <td class="text-center p-1">{{$datos->tipo_transaccion . $datos->cheque_nro}}</td>
                                             <td class="text-justify p-1">{{strtoupper($datos->glosa)}}</td>
                                             <td class="text-right p-1">{{number_format($datos->debe,2,'.',',')}}</td>
                                             <td class="text-right p-1">{{number_format($datos->haber,2,'.',',')}}</td>
-                                            @php
-                                                if($datos->debe > 0){
-                                                    $saldo += $datos->debe;
-                                                }else{
-                                                    $saldo -= $datos->haber;
-                                                }
-                                            @endphp
-                                            <td class="text-right p-1">{{number_format($saldo,2,'.',',')}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -79,9 +90,9 @@
 
 @section('js')
     <script>
-     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })   
+        function hide(){
+            $(".btn").hide();
+            $(".spinner-btn-hide").show();
+        }
     </script>
 @stop

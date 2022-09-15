@@ -20,7 +20,7 @@
                     NIT: {{ $empresa->nit }}</font>--}}
             </td>
             <td align="center">
-                <h4>_*LIBRO MAYOR POR CUENTA - AUXILIAR*_</h4>
+                <h4>LIBRO MAYOR POR CUENTA - AUXILIAR</h4>
 				<h4>{{strtoupper($proyecto->nombre)}}</h4>
             </td>
             <td width="20%" align="center">&nbsp;</td>
@@ -67,8 +67,8 @@
 		<tbody>
 			@foreach ($auxiliares as $datos)
 				@php
-					$sumarRestar = DB::table('comprobantes as a')
-										->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+					$sumarRestar = DB::table('comprobantes_fiscales as a')
+										->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
 										->join('centros as c','c.id','b.centro_id')
 										->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
 										->where('a.proyecto_id',$proyecto->id)
@@ -86,8 +86,8 @@
 						$saldo += $sumaResta->debe;
 						$saldo -= $sumaResta->haber;
 					}
-					$comprobantes_detalle = DB::table('comprobantes as a')
-												->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+					$comprobantes_detalle = DB::table('comprobantes_fiscales as a')
+												->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
 												->join('centros as c','c.id','b.centro_id')
 												->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
 												->where('a.proyecto_id',$proyecto->id)

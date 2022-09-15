@@ -156,10 +156,10 @@
                                                 <td class="text-left p-1"><strong>TOTAL:</strong></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td class="text-right p-1"><strong>CAPITAL&nbsp;<i class="fas fa-arrow-alt-circle-right"></i></strong></td>
-                                                <td class="text-right p-1"><strong>{{number_format($capital,2,'.',',')}}</strong></td>
-                                                <td class="text-left p-1"><strong>{{number_format($activo_pasivo,2,'.',',')}}</strong></td>
-                                                <td class="text-left p-1"><strong><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;ACTIVO + PASIVO</strong></td>
+                                                <td class="text-right p-1"><strong>ACTIVO&nbsp;<i class="fas fa-arrow-alt-circle-right"></i></strong></td>
+                                                <td class="text-right p-1"><strong>{{number_format($total_activo,2,'.',',')}}</strong></td>
+                                                <td class="text-left p-1"><strong>{{number_format($total_capital_pasivo,2,'.',',')}}</strong></td>
+                                                <td class="text-left p-1"><strong><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;CAPITAL + PASIVO</strong></td>
                                             </tfoot>
                                         </table>
                                     </div>

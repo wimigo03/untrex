@@ -1,7 +1,7 @@
 <table>
 	<tr>
 		<td colspan="10" align="center">
-			<h4>_*LIBRO MAYOR POR CUENTA - GENERAL*_</h4>
+			<h4>LIBRO MAYOR POR CUENTA - GENERAL</h4>
 			<h4>{{strtoupper($proyecto->nombre)}}</h4>
 		</td>
 	</tr>

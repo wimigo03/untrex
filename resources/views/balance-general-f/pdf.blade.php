@@ -26,8 +26,8 @@
     <table width="100%" cellpadding="1px" cellspacing="0" border="1">
         <thead {{--class="border-bottom"--}}>
             <tr bgcolor="#adb5bd">
-                <th align="left"><font size="10px">CODIGO</font></th>
-                <th align="left"><font size="10px">CUENTA</font></th>
+                <th align="left"><font size="9px">CODIGO</font></th>
+                <th align="left"><font size="9px">CUENTA</font></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -48,17 +48,17 @@
                 @endphp
                 <tr>
                     @if ($activo->id == 4)
-                        <td align="left"><font size="9px"><b>{{ $activo->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $activo->nombre  }}</b></font></td>
+                        <td align="left"><font size="8px"><b>{{ $activo->codigo }}</b></font></td>
+                        <td align="left"><font size="8px"><b>{{ $activo->nombre  }}</b></font></td>
                     @else
-                        <td align="left"><font size="9px">{{ $activo->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $activo->nombre  }}</font></td>
+                        <td align="left"><font size="8px">{{ $activo->codigo }}</font></td>
+                        <td align="left"><font size="8px">{{ $activo->nombre  }}</font></td>
                     @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
-                        <td><font size="9px">&nbsp;</font></td>
+                        <td><font size="8px">&nbsp;</font></td>
                     @endfor
                     <td align="right">
-                        <font size="9px">
+                        <font size="8px">
                             @if (isset($totales[$activo->id]))
                                 @if ($activo->id == 4)
                                     <b>{{number_format($totales[$activo->id],2,'.',',')}}</b>
@@ -73,7 +73,7 @@
                         $nroColumna = $nroMaxColumna - $nroColumna -1;
                     @endphp
                     @for ($i = 0; $i < $nroColumna; $i++)
-                        <td><font size="9px">&nbsp;</font></td>
+                        <td><font size="8px">&nbsp;</font></td>
                     @endfor
                 </tr>
             @endforeach
@@ -89,17 +89,17 @@
                 @endphp
                 <tr>
                     @if ($pasivo->id == 5)
-                        <td align="left"><font size="9px"><b>{{ $pasivo->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $pasivo->nombre }}</b></font></td>
+                        <td align="left"><font size="8px"><b>{{ $pasivo->codigo }}</b></font></td>
+                        <td align="left"><font size="8px"><b>{{ $pasivo->nombre }}</b></font></td>
                     @else
-                        <td align="left"><font size="9px">{{ $pasivo->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $pasivo->nombre  }}</font></td>
+                        <td align="left"><font size="8px">{{ $pasivo->codigo }}</font></td>
+                        <td align="left"><font size="8px">{{ $pasivo->nombre  }}</font></td>
                     @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
                         <td><font size="8px">&nbsp;</font></td>
                     @endfor
                         <td align="right">
-                            <font size="9px">
+                            <font size="8px">
                                 @if (isset($totales[$pasivo->id]))
                                     @if ($pasivo->id == 5)
                                         <b>{{number_format($totales[$pasivo->id],2,'.',',') }}</b>
@@ -113,7 +113,7 @@
                         $nroColumna = $nroMaxColumna - $nroColumna - 1;
                     @endphp
                     @for ($i = 0; $i < $nroColumna; $i++)
-                        <td><font size="9px">&nbsp;</font></td>
+                        <td><font size="8px">&nbsp;</font></td>
                     @endfor
                 </tr>
             @endforeach
@@ -129,17 +129,17 @@
                 @endphp
                 <tr>
                     @if ($patrimonio->id == 6)
-                        <td align="left"><font size="9px"><b>{{ $patrimonio->codigo }}</b></font></td>
-                        <td align="left"><font size="9px"><b>{{ $patrimonio->nombre  }}</b></font></td>
+                        <td align="left"><font size="8px"><b>{{ $patrimonio->codigo }}</b></font></td>
+                        <td align="left"><font size="8px"><b>{{ $patrimonio->nombre  }}</b></font></td>
                     @else
-                        <td align="left"><font size="9px">{{ $patrimonio->codigo }}</font></td>
-                        <td align="left"><font size="9px">{{ $patrimonio->nombre  }}</font></td>
+                        <td align="left"><font size="8px">{{ $patrimonio->codigo }}</font></td>
+                        <td align="left"><font size="8px">{{ $patrimonio->nombre  }}</font></td>
                     @endif
                     @for ($i = 0; $i < $nroColumna; $i++)
-                    <td><font size="9px">&nbsp;</font></td>
+                    <td><font size="8px">&nbsp;</font></td>
                     @endfor
                     <td align="right">
-                        <font size="9px">
+                        <font size="8px">
                             @if (isset($totales[$patrimonio->id]))
                                 @if ($patrimonio->id == 6)
                                     <b>{{number_format($totales[$patrimonio->id],2,'.',',') }}</b>
@@ -153,19 +153,19 @@
                         $nroColumna = $nroMaxColumna - $nroColumna - 1;
                     @endphp
                     @for ($i = 0; $i < $nroColumna; $i++)
-                    <td><font size="9px">&nbsp;</font></td>
+                    <td><font size="8px">&nbsp;</font></td>
                     @endfor
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
-            <td align="left"><strong><font size="9px">TOTAL:</font></strong></td>
+            <td align="left"><strong><font size="8px">TOTAL:</font></strong></td>
             <td></td>
             <td></td>
-            <td align="right"><strong><font size="9px">CAPITAL&nbsp;</strong></font></td>
-            <td align="right"><strong><font size="9px">{{number_format($capital,2,'.',',')}}&nbsp;</strong></font></td>
-            <td align="left"><strong>&nbsp;<font size="9px">{{number_format($activo_pasivo,2,'.',',')}}</strong></font></td>
-            <td align="left"><strong><font size="9px">&nbsp;ACTIVO + PASIVO</strong></font></td>
+            <td align="right"><strong><font size="8px">ACTIVO&nbsp;</strong></font></td>
+            <td align="right"><strong><font size="8px">{{number_format($total_activo,2,'.',',')}}&nbsp;</strong></font></td>
+            <td align="left"><strong><font size="8px">{{number_format($total_capital_pasivo,2,'.',',')}}</strong></font></td>
+            <td align="left"><strong><font size="8px">&nbsp;CAPITAL + PASIVO</strong></font></td>
         </tfoot>
     </table>
     {{--<div class="page-break"></div>--}}

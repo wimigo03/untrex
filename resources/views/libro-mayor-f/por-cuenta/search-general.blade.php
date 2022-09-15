@@ -5,11 +5,11 @@
 <div class="form-group row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-secondary text-white">
+            <div class="card-header bg-gradient-warning text-white">
                 <div class="card-title"><b>LIBRO MAYOR POR CUENTA - {{strtoupper($tipo)}} - {{strtoupper($proyecto->nombre)}}</b></div>
             </div>
             <div class="card-body">
-                @include('libro-mayor.por-cuenta.partials.encabezado-general')
+                @include('libro-mayor-f.por-cuenta.partials.encabezado-general')
                 @if ($comprobantes != null)
                     <div class="form-group row">
                         <div class="col-md-12">
@@ -41,7 +41,7 @@
                                                 }
                                             @endphp
                                             <td class="text-center p-1">
-                                                <a href="{{ route('comprobantes.show',$datos->comprobante_id) }}" target="_blank">
+                                                <a href="{{ route('comprobantes.fiscales.show',$datos->comprobante_id) }}" target="_blank">
                                                     {{$datos->nro_comprobante}}
                                                 </a>
                                             </td>

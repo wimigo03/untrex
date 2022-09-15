@@ -114,9 +114,9 @@ class BalanceGeneralController extends Controller
         $planCuentaId = $patrimonios[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $nroMaxColumna = 5;
-        $capital = $totales[$patrimonios[0]->id];
-        $activo_pasivo = $totales[$activos[0]->id] + $totales[$pasivos[0]->id];
-        return view('balance-general.show',compact('activos','pasivos','patrimonios','totales','cuentas','proyectos','proyecto_id','start_date','end_date','status_text','nroMaxColumna','capital','activo_pasivo'));
+        $total_activo = $totales[$activos[0]->id];
+        $total_capital_pasivo = $totales[$patrimonios[0]->id] + $totales[$pasivos[0]->id];
+        return view('balance-general.show',compact('activos','pasivos','patrimonios','totales','cuentas','proyectos','proyecto_id','start_date','end_date','status_text','nroMaxColumna','total_activo','total_capital_pasivo'));
     }
 
     public function pdf(Request $request){
@@ -168,9 +168,9 @@ class BalanceGeneralController extends Controller
         $planCuentaId = $patrimonios[0]->id;
         $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
         $nroMaxColumna = 5;
-        $capital = $totales[$patrimonios[0]->id];
-        $activo_pasivo = $totales[$activos[0]->id] + $totales[$pasivos[0]->id];
-        $pdf = PDF::loadView('balance-general.pdf',compact('activos','pasivos','patrimonios','totales','cuentas','proyecto','start_date','end_date','status_text','nroMaxColumna','capital','activo_pasivo'));
+        $total_activo = $totales[$activos[0]->id];
+        $total_capital_pasivo = $totales[$patrimonios[0]->id] + $totales[$pasivos[0]->id];
+        $pdf = PDF::loadView('balance-general.pdf',compact('activos','pasivos','patrimonios','totales','cuentas','proyecto','start_date','end_date','status_text','nroMaxColumna','total_activo','total_capital_pasivo'));
         $pdf->setPaper('LETTER', 'portrait');//landscape
         return $pdf->stream('Balance_General.pdf');
     }

@@ -5,11 +5,11 @@
 <div class="form-group row">
     <div class="col-md-12">
         <div class="card card-custom">
-            <div class="card-header bg-gradient-secondary text-white">
+            <div class="card-header bg-gradient-warning text-white">
                 <div class="card-title"><b>LIBRO MAYOR POR AUXILIAR - {{strtoupper($tipo)}} - {{strtoupper($proyecto->nombre)}}</b></div>
             </div>
             <div class="card-body">
-                @include('libro-mayor.por-cuenta.partials.encabezado-auxiliar')
+                @include('libro-mayor-f.por-cuenta.partials.encabezado-auxiliar')
                 @if ($auxiliares != null)
                     <div class="form-group row">
                         <div class="col-md-12">
@@ -29,8 +29,8 @@
                                 <tbody>
                                     @foreach ($auxiliares as $datos)
                                         @php
-                                            $sumarRestar = DB::table('comprobantes as a')
-                                                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+                                            $sumarRestar = DB::table('comprobantes_fiscales as a')
+                                                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                                                                 ->join('centros as c','c.id','b.centro_id')
                                                                 ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                                                                 ->where('a.proyecto_id',$proyecto->id)
@@ -48,8 +48,8 @@
                                                 $saldo += $sumaResta->debe;
                                                 $saldo -= $sumaResta->haber;
                                             }
-                                            $comprobantes_detalle = DB::table('comprobantes as a')
-                                                                        ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
+                                            $comprobantes_detalle = DB::table('comprobantes_fiscales as a')
+                                                                        ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
                                                                         ->join('centros as c','c.id','b.centro_id')
                                                                         ->leftjoin('plan_cuentas_auxiliares as d','d.id','b.plancuentaauxiliar_id')
                                                                         ->where('a.proyecto_id',$proyecto->id)
@@ -99,7 +99,7 @@
                                                         }
                                                     @endphp
                                                     <td class="text-center p-1">
-                                                        <a href="{{ route('comprobantes.show',$data->comprobante_id) }}" target="_blank">
+                                                        <a href="{{ route('comprobantes.fiscales.show',$data->comprobante_id) }}" target="_blank">
                                                             {{$data->nro_comprobante}}
                                                         </a>
                                                     </td>

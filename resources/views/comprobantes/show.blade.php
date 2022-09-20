@@ -13,7 +13,13 @@
             </div>
             <div class="card-body">
                 <div class="form-group row">
-                    
+                    @if (isset($comprobante_fiscal))
+                        <div class="col-md-12 text-right">
+                            <a href="{{route('comprobantes.fiscales.show',$comprobante_fiscal->id)}}" class="btn btn-sm btn-info font-verdana-bg" target="_blank">
+                                <i class="fas fa-file-alt"></i>&nbsp;{{$comprobante_fiscal->nro_comprobante}}
+                            </a>
+                        </div>    
+                    @endif
                     <div class="col-md-2">
                         {{ Form::label('Nro','Nro',['class' => 'd-inline font-verdana-bg'])}}
                         {!! Form::text('Nro',$comprobante->nro_comprobante, ['readonly' => true,'class' => 'form-control form-control-sm font-verdana-bg']) !!}

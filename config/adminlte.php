@@ -395,13 +395,28 @@ return [
                 ],
             ],
         ],
-        
         [
+            'text'    => 'Libro Banco',
+            'icon'    => 'fas fa-book',
+            'submenu' => [
+                [
+                    'text'  => 'Base 1',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'librobanco.index'
+                ],
+                [
+                    'text'  => 'Base 2',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'librobancof.index'
+                ],
+            ],
+        ],
+        /*[
             'text'          => 'Libro Banco',
             'route'         => 'librobanco.index',
             'icon'          => 'fas fa-book',
             'label_color'   => 'success',
-        ],
+        ],*/
         //['header' => 'account_settings'],
         /*[
             'text' => 'profile',

@@ -98,9 +98,10 @@ class ComprobantesController extends Controller
                             ->where('a.comprobante_id',$comprobante_id)
                             ->where('a.deleted_at',null)
                             ->orderBy('a.id','desc')->get();
+        $comprobante_fiscal = DB::table('comprobantes_fiscales')->where('comprobante_interno_id',$comprobante_id)->first();
         $total_debe = $comprobante_detalle->sum('debe');
         $total_haber = $comprobante_detalle->sum('haber');
-        return view('comprobantes.show',compact('comprobante','comprobante_detalle','total_debe','total_haber'));
+        return view('comprobantes.show',compact('comprobante','comprobante_detalle','comprobante_fiscal','total_debe','total_haber'));
     }
 
     public function create(){

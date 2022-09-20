@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\LibroMayorDe1a99Controller;
 use App\Http\Controllers\Admin\LibroMayorFPorCuentaController;
 use App\Http\Controllers\Admin\LibroMayorPorCuentaController;
 use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
+use App\Http\Controllers\Admin\LibroBancoFController;
 use App\Http\Controllers\Admin\LibroBancoController;
 use App\Http\Controllers\Admin\ProveedorController;
 use App\Http\Controllers\Admin\BalanceAperturaController;
@@ -75,6 +76,13 @@ Route::get('/proveedor/create', [ProveedorController::class, 'create'])->name('p
 route::post('/proveedor/search', [ProveedorController::class, 'search'])->name('proveedor.search');
 route::get('/proveedor/indexAjax', [ProveedorController::class, 'indexAjax'])->name('proveedor.indexAjax');
 route::get('/proveedor/index', [ProveedorController::class, 'index'])->name('proveedor.index');
+//Libro banco F
+Route::get('librobancof/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf3'])->name('librobancof.pdf3');
+Route::get('librobancof/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf2'])->name('librobancof.pdf2');
+Route::get('librobancof/pdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf1'])->name('librobancof.pdf1');
+route::post('/librobancof/search', [LibroBancoFController::class, 'search'])->name('librobancof.search');
+Route::get('/librobancof/seleccionar', [LibroBancoFController::class, 'seleccionar']);
+route::get('/librobancof/index', [LibroBancoFController::class, 'index'])->name('librobancof.index');
 //Libro banco
 Route::get('librobanco/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf3'])->name('librobanco.pdf3');
 Route::get('librobanco/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf2'])->name('librobanco.pdf2');

@@ -105,9 +105,10 @@ class ComprobantesFiscalesController extends Controller
             $comprobante_detalle = ComprobantesFiscalesDetalle::where('comprobante_fiscal_id',$comprobante_id)->get();
             $total_debe = $comprobante_detalle->sum('debe');
             $total_haber = $comprobante_detalle->sum('haber');
-            if($total_debe != $total_haber){
+            if(round(floatval($total_debe),2) != round(floatval($total_haber),2)){
                 return back()->withInput()->with('danger','Imposible Aprobar el comprobante. El total debe y haber no son iguales...');
             }
+            
             $comprobante = ComprobantesFiscales::find($comprobante_id);
             $comprobante->user_autorizado_id = auth()->user()->id;;
             $comprobante->status = 1;

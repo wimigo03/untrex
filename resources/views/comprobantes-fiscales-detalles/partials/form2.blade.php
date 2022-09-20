@@ -46,7 +46,7 @@
                     </tr>
                 @endforeach
                     <tr class="font-verdana">
-                        <td colspan="6" class="text-center p-1"><b>TOTAL</b></td>
+                        <td colspan="5" class="text-center p-1"><b>TOTAL</b></td>
                         <td class="text-right p-1">
                             {{number_format($total_debe,2,'.',',')}}
                             {{Form::hidden('total_debe',$total_debe)}}

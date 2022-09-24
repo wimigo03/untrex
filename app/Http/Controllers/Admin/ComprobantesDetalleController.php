@@ -19,24 +19,6 @@ class ComprobantesDetalleController extends Controller
     }
 
     public function create(Comprobantes $comprobante){
-        /*$comprobante_detalle = ComprobantesDetalle::orderBy('id','asc')->get();
-        foreach($comprobante_detalle as $datos){
-            if($datos->cheque_nro != null){
-                $string = $datos->cheque_nro;
-                $numero = (int) filter_var($string, FILTER_SANITIZE_NUMBER_INT);
-                //echo $datos->id . "***" . $numero . "<br>";
-                if($numero >= 0){
-                    $cheque = $numero;
-                }else{
-                    $cheque = explode("-", $numero);
-                    $cheque = $cheque[1];
-                }
-                $update = ComprobantesDetalle::find($datos->id);
-                $update->cheque_nro = $cheque;
-                $update->update();
-            }
-        }
-        dd("ok");*/
         $user = DB::table('users')->where('id',$comprobante->user_id)->first();
         $proyecto = DB::table('proyectos')->where('id',$comprobante->proyecto_id)->first();
         //$proyectos = DB::table('proyectos')->pluck('nombre','id');

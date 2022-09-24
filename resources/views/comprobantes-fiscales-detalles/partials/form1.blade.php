@@ -5,12 +5,12 @@
         {{Form::text('nro_comprobante',$comprobante->nro_comprobante,['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'nro_comprobante'])}}
         {!! $errors->first('nro_comprobante','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
         {{Form::label('Tc','TC',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('taza_cambio',$comprobante->tipo_cambio,['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'taza_cambio'])}}
         {!! $errors->first('taza_cambio','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
         {{Form::label('Ufv','UFV',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('ufv',$comprobante->ufv,['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'ufv'])}}
         {!! $errors->first('ufv','<span class="invalid-feedback d-block">:message</span>') !!}
@@ -20,11 +20,19 @@
         {!! Form::text('moneda', $comprobante->moneda, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('moneda') ? ' is-invalid' : '' )]) !!}
         {!! $errors->first('moneda','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-5">
+    <div class="col-md-6">
         {{Form::label('nombre','Nombre',['class' => 'd-inline font-verdana-bg'])}}
         {{Form::text('nombre',strtoupper($user->name),['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'nombre'])}}
         {!! $errors->first('nombre','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
+    @if ($comprobante->status == 0)
+        <div class="col-md-1 text-right">
+            <br>
+            <a href="{{route('comprobantes.fiscales.editar', $comprobante->id)}}" class="btn btn-success font-verdana-bg">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </a>
+        </div>
+    @endif
     <div class="col-md-5">
         {{ Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
         {!! Form::text('proyecto', $proyecto->nombre, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('proyecto') ? ' is-invalid' : '' )]) !!}

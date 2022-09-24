@@ -25,12 +25,14 @@
         {{Form::text('nombre',strtoupper($user->name),['readonly'=>true,'class'=>'form-control form-control-sm font-verdana-bg', 'id' => 'nombre'])}}
         {!! $errors->first('nombre','<span class="invalid-feedback d-block">:message</span>') !!}
     </div>
-    <div class="col-md-1 text-right">
-        <br>
-        <a href="{{route('comprobantes.editar', $comprobante->id)}}" class="btn btn-success font-verdana-bg">
-            <i class="fas fa-edit" aria-hidden="true"></i>
-        </a>
-    </div>
+    @if ($comprobante->status == 0)
+        <div class="col-md-1 text-right">
+            <br>
+            <a href="{{route('comprobantes.editar', $comprobante->id)}}" class="btn btn-success font-verdana-bg">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </a>
+        </div>    
+    @endif
     <div class="col-md-5">
         {{ Form::label('proyecto','Proyecto',['class' => 'd-inline font-verdana-bg'])}}
         {!! Form::text('proyecto', $proyecto->nombre, ['readonly'=>true,'class' => 'form-control form-control-sm font-verdana-bg' . ( $errors->has('proyecto') ? ' is-invalid' : '' )]) !!}

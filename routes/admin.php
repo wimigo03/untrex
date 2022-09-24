@@ -149,6 +149,7 @@ Route::get('/facturas/index', [FacturasController::class, 'index'])->name('factu
 Route::get('/comprobantesfiscalesdetalles/delete/{comprobante_detalle_id}', [ComprobantesFiscalesDetalleController::class, 'delete'])->name('comprobantesfiscalesdetalles.delete');
 Route::post('/comprobantesfiscalesdetalles/update', [ComprobantesFiscalesDetalleController::class, 'update'])->name('comprobantesfiscalesdetalles.update');
 Route::get('/comprobantesfiscalesdetalles/editar/{comprobante_fiscal_id}', [ComprobantesFiscalesDetalleController::class, 'editar'])->name('comprobantesfiscalesdetalles.editar');
+Route::get('/comprobantesfiscalesdetalles/edit_header/{comprobante_fiscal_id}', [ComprobantesFiscalesDetalleController::class, 'editar_encabezado'])->name('comprobantesfiscalesdetalles.edit_header');
 Route::post('/comprobantesfiscalesdetalles/finalizar', [ComprobantesFiscalesDetalleController::class, 'finalizar'])->name('comprobantesfiscalesdetalles.finalizar');
 Route::post('/comprobantesfiscalesdetalles/insertar', [ComprobantesFiscalesDetalleController::class, 'insertar'])->name('comprobantesfiscalesdetalles.insertar');
 Route::get('/comprobantesfiscalesdetalles/create/{comprobante}', [ComprobantesFiscalesDetalleController::class, 'create'])->name('comprobantesfiscalesdetalles.create');
@@ -158,6 +159,8 @@ Route::get('/comprobantesfiscales/pdf/{comprobante_fiscal_id}', [ComprobantesFis
 Route::get('/comprobantesfiscales/rechazar/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'rechazar'])->name('comprobantes.fiscales.rechazar');
 Route::get('/comprobantesfiscales/aprobar/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'aprobar'])->name('comprobantes.fiscales.aprobar');
 Route::get('/comprobantesfiscales/show/{comprobante_fiscal_id}', [ComprobantesFiscalesController::class, 'show'])->name('comprobantes.fiscales.show');
+Route::post('/comprobantesfiscales/update', [ComprobantesFiscalesController::class, 'update'])->name('comprobantes.fiscales.update');
+Route::get('/comprobantesfiscales/editar/{comprobante_id}', [ComprobantesFiscalesController::class, 'editar'])->name('comprobantes.fiscales.editar');
 Route::post('/comprobantesfiscales/search', [ComprobantesFiscalesController::class, 'search'])->name('comprobantes.fiscales.search');
 Route::get('/comprobantesfiscales/indexAjax', [ComprobantesFiscalesController::class, 'indexAjax'])->name('comprobantes.fiscales.indexAjax');
 Route::get('/comprobantesfiscales', [ComprobantesFiscalesController::class, 'index'])->name('comprobantes.fiscales.index');

@@ -99,6 +99,30 @@ class ComprobantesFiscalesController extends Controller
         return view('comprobantes-fiscales.show',compact('comprobante_fiscal','comprobante_fiscal_detalle','total_debe','total_haber'));
     }
 
+    public function editar($comprobante_id){
+        $comprobante = ComprobantesFiscales::where('id',$comprobante_id)->first();
+        $date = date('Y-m-d');
+        $tipo_cambio = TipoCambio::where('fecha',$date)->where('deleted_at',null)->first();
+        if($tipo_cambio == null){
+            return back()->with('danger', 'No exite un tipo de cambio para el dia de hoy...');
+        }
+        $proyectos = Proyectos::pluck('nombre','id');
+        $nombre = auth()->user()->name;
+        $user_id = auth()->user()->id;
+        return view('comprobantes-fiscales.editar',compact('comprobante','tipo_cambio','proyectos','nombre','user_id'));
+    }
+
+    public function update(Request $request){
+        $request->validate([
+            'concepto'=> 'required'
+        ]);
+        $comprobante = ComprobantesFiscales::find($request->comprobante_id);
+        $comprobante->concepto = $request->concepto;
+        $comprobante->update();
+        
+        return redirect()->route('comprobantesfiscalesdetalles.create',$comprobante->id)->with('message','Los datos ingresados se actualizaron correctamente...');
+    }
+
     public function aprobar($comprobante_id){
         /*try{
             DB::beginTransaction();*/

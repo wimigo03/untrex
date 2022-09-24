@@ -7,7 +7,16 @@
     <div class="col-md-12">
         <div class="card card-custom">
             <div class="card-header bg-gradient-secondary text-white">
-                <div class="card-title"><b>DETALLE DE COMPROBANTE</b></div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="card-title"><b>DETALLE DE COMPROBANTE</b></div>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <a href="{{route('comprobantes.index')}}" class="font-verdana-bg text-white">
+                            <i class="fas fa-reply fa-lg" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 {!! Form::model(Request::all(),['route'=> ['comprobantesdetalles.insertar']]) !!}

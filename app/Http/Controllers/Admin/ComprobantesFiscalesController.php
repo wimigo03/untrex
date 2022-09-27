@@ -126,6 +126,10 @@ class ComprobantesFiscalesController extends Controller
     public function aprobar($comprobante_id){
         /*try{
             DB::beginTransaction();*/
+            $comprobante_detalle = DB::table('comprobantes_fiscales_detalles')->where('comprobante_fiscal_id',$comprobante_id)->where('deleted_at',null)->get();
+            if($comprobante_detalle->count() == 0){
+                return back()->withInput()->with('danger','Imposible continuar. El detalle del comprobante esta vacio...');
+            }
             $comprobante_detalle = ComprobantesFiscalesDetalle::where('comprobante_fiscal_id',$comprobante_id)->get();
             $total_debe = $comprobante_detalle->sum('debe');
             $total_haber = $comprobante_detalle->sum('haber');

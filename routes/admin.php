@@ -27,25 +27,25 @@ use App\Http\Controllers\Admin\BalanceGeneralController;
 use App\Http\Controllers\Admin\BalanceGeneralFController;
 
 //Balance General Base II
-//route::post('/estadoresultadof/excel', [EstadoResultadoFController::class, 'excel'])->name('estadoresultadof.excel');
+route::post('/balancegeneralf/excel', [BalanceGeneralFController::class, 'excel'])->name('balancegeneralf.excel');
 route::post('/balancegeneralf/pdf', [BalanceGeneralFController::class, 'pdf'])->name('balancegeneralf.pdf');
 route::post('/balancegeneralf/search', [BalanceGeneralFController::class, 'search'])->name('balancegeneralf.search');
 route::get('/balancegeneralf/index/{proyecto_id}', [BalanceGeneralFController::class, 'index'])->name('balancegeneralf.index');
 route::get('/balancegeneralf/proyectos', [BalanceGeneralFController::class, 'proyectos'])->name('balancegeneralf.proyectos');
 //Balance General Base I
-//route::post('/estadoresultado/excel', [EstadoResultadoController::class, 'excel'])->name('estadoresultado.excel');
+route::post('/balancegeneral/excel', [BalanceGeneralController::class, 'excel'])->name('balancegeneral.excel');
 route::post('/balancegeneral/pdf', [BalanceGeneralController::class, 'pdf'])->name('balancegeneral.pdf');
 route::post('/balancegeneral/search', [BalanceGeneralController::class, 'search'])->name('balancegeneral.search');
 route::get('/balancegeneral/index/{proyecto_id}', [BalanceGeneralController::class, 'index'])->name('balancegeneral.index');
 route::get('/balancegeneral/proyectos', [BalanceGeneralController::class, 'proyectos'])->name('balancegeneral.proyectos');
 //Estado de resultados Base II
-//route::post('/estadoresultadof/excel', [EstadoResultadoFController::class, 'excel'])->name('estadoresultadof.excel');
+route::post('/estadoresultadof/excel', [EstadoResultadoFController::class, 'excel'])->name('estadoresultadof.excel');
 route::post('/estadoresultadof/pdf', [EstadoResultadoFController::class, 'pdf'])->name('estadoresultadof.pdf');
 route::post('/estadoresultadof/search', [EstadoResultadoFController::class, 'search'])->name('estadoresultadof.search');
 route::get('/estadoresultadof/index/{proyecto_id}', [EstadoResultadoFController::class, 'index'])->name('estadoresultadof.index');
 route::get('/estadoresultadof/proyectos', [EstadoResultadoFController::class, 'proyectos'])->name('estadoresultadof.proyectos');
 //Estado de resultados Base I
-//route::post('/estadoresultado/excel', [EstadoResultadoController::class, 'excel'])->name('estadoresultado.excel');
+route::post('/estadoresultado/excel', [EstadoResultadoController::class, 'excel'])->name('estadoresultado.excel');
 route::post('/estadoresultado/pdf', [EstadoResultadoController::class, 'pdf'])->name('estadoresultado.pdf');
 route::post('/estadoresultado/search', [EstadoResultadoController::class, 'search'])->name('estadoresultado.search');
 route::get('/estadoresultado/index/{proyecto_id}', [EstadoResultadoController::class, 'index'])->name('estadoresultado.index');

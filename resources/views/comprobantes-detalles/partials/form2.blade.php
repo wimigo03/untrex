@@ -69,9 +69,6 @@
         </div>
     @else
         <div class="col-md-12 text-right">
-            {{--<a href="{{route('comprobantes.index')}}" class="btn btn-danger font-verdana-bg">
-                <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
-            </a>--}}
             <button type="submit" class="btn btn-primary font-verdana-bg">
                 <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Guardar&nbsp;
             </button>

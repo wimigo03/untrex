@@ -101,6 +101,7 @@ class LibroBancoFController extends Controller
                                 ->where('a.proyecto_id',$proyecto_id)
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('a.status','!=','2')
+                                ->where('b.deleted_at',null)
                                 //->where('a.fecha','>=',$fecha_saldo_inicial)
                                 ->where('a.fecha','<',$fecha_inicial)
                                 ->select('b.debe','b.haber')
@@ -119,6 +120,7 @@ class LibroBancoFController extends Controller
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_inicial)
                                 ->where('a.fecha','<=',$fecha_final)
+                                ->where('b.deleted_at',null)
                                 ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','b.cheque_orden','b.glosa','b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();
@@ -164,6 +166,7 @@ class LibroBancoFController extends Controller
                                 ->where('b.cheque_nro','>=',intval($nro_inicial))
                                 ->where('b.cheque_nro','<=',intval($nro_final))
                                 ->where('a.status','!=','2')
+                                ->where('b.deleted_at',null)
                                 //->where('a.fecha','>=',$fecha_saldo_inicial)
                                 ->where('a.fecha','<',$fecha_inicial)
                                 ->select('b.debe','b.haber')
@@ -185,6 +188,7 @@ class LibroBancoFController extends Controller
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_inicial)
                                 ->where('a.fecha','<=',$fecha_final)
+                                ->where('b.deleted_at',null)
                                 ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','b.cheque_orden','b.glosa','b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();
@@ -231,6 +235,7 @@ class LibroBancoFController extends Controller
                                 ->where('b.cheque_nro','>=',intval($nro_inicial))
                                 ->where('b.cheque_nro','<=',intval($nro_final))
                                 ->where('a.status','!=','2')
+                                ->where('b.deleted_at',null)
                                 //->where('a.fecha','>=',$fecha_saldo_inicial)
                                 ->where('a.fecha','<',$fecha_inicial)
                                 ->select('b.debe','b.haber')
@@ -251,6 +256,7 @@ class LibroBancoFController extends Controller
                                 ->where('a.status','!=','2')
                                 ->where('a.fecha','>=',$fecha_inicial)
                                 ->where('a.fecha','<=',$fecha_final)
+                                ->where('b.deleted_at',null)
                                 ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','b.cheque_orden','b.glosa','b.debe','b.haber')
                                 ->orderBy('a.fecha','asc')
                                 ->get();
@@ -279,173 +285,185 @@ class LibroBancoFController extends Controller
     }
 
     public function pdf1($proyecto_id,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$plancuenta_id){
-        //dd($proyecto_id,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$plancuenta_id);
-        set_time_limit(0);ini_set('memory_limit', '1G');
-        /*$gestion = Carbon::parse($fecha_inicial);
-        if($gestion->month < 4){
-            $gestion = $gestion->year - 1;
-        }else{
-            $gestion = $gestion->year;
-        }
-        $fecha_saldo_inicial = $gestion . '-04-01';*/
-        $proyecto = Proyectos::where('id',$proyecto_id)->first();
-        $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
-                                ->where('a.proyecto_id',$proyecto_id)
-                                ->where('b.plancuenta_id',$plancuenta_id)
-                                ->where('a.status','!=','2')
-                                //->where('a.fecha','>=',$fecha_saldo_inicial)
-                                ->where('a.fecha','<',$fecha_inicial)
-                                ->select('b.debe','b.haber')
-                                ->orderBy('a.fecha','asc')
-                                ->get();
-        $saldo = 0;
-        foreach($sumarRestar as $datos){
-            $saldo += $datos->debe;
-            $saldo -= $datos->haber;
-        }
+        try{
+            ini_set('memory_limit','-1');
+            ini_set('max_execution_time','-1');
 
-        $comprobantes = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
-                                ->where('a.proyecto_id',$proyecto_id)
-                                ->where('b.plancuenta_id',$plancuenta_id)
-                                ->where('a.status','!=','2')
-                                ->where('a.fecha','>=',$fecha_inicial)
-                                ->where('a.fecha','<=',$fecha_final)
-                                ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','cheque_orden','b.glosa','b.debe','b.haber')
-                                ->orderBy('a.fecha','asc')
-                                ->get();
-        $saldo_final = $saldo;
-        $total_debe = 0;
-        $total_haber = 0;
-        foreach ($comprobantes as $datos) {
-            $saldo_final += $datos->debe;
-            $saldo_final -= $datos->haber;
-            $total_debe += $datos->debe;
-            $total_haber += $datos->haber;
+            $proyecto = Proyectos::where('id',$proyecto_id)->first();
+            $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
+            $sumarRestar = DB::table('comprobantes_fiscales as a')
+                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+                                    ->where('a.proyecto_id',$proyecto_id)
+                                    ->where('b.plancuenta_id',$plancuenta_id)
+                                    ->where('a.status','!=','2')
+                                    ->where('b.deleted_at',null)
+                                    //->where('a.fecha','>=',$fecha_saldo_inicial)
+                                    ->where('a.fecha','<',$fecha_inicial)
+                                    ->select('b.debe','b.haber')
+                                    ->orderBy('a.fecha','asc')
+                                    ->get();
+            $saldo = 0;
+            foreach($sumarRestar as $datos){
+                $saldo += $datos->debe;
+                $saldo -= $datos->haber;
+            }
+    
+            $comprobantes = DB::table('comprobantes_fiscales as a')
+                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+                                    ->where('a.proyecto_id',$proyecto_id)
+                                    ->where('b.plancuenta_id',$plancuenta_id)
+                                    ->where('a.status','!=','2')
+                                    ->where('a.fecha','>=',$fecha_inicial)
+                                    ->where('a.fecha','<=',$fecha_final)
+                                    ->where('b.deleted_at',null)
+                                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','cheque_orden','b.glosa','b.debe','b.haber')
+                                    ->orderBy('a.fecha','asc')
+                                    ->get();
+            $saldo_final = $saldo;
+            $total_debe = 0;
+            $total_haber = 0;
+            foreach ($comprobantes as $datos) {
+                $saldo_final += $datos->debe;
+                $saldo_final -= $datos->haber;
+                $total_debe += $datos->debe;
+                $total_haber += $datos->haber;
+            }
+            $tipo = 'TRANSFERENCIA && CHEQUE';
+            $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
+            $pdf->setPaper('LETTER', 'portrait');//landscape
+            return $pdf->stream();
+            
+        } catch (\Throwable $th){
+            return '[ERROR_500]';
+        }finally{
+            ini_restore('memory_limit');
+            ini_restore('max_execution_time');
         }
-        $tipo = 'TRANSFERENCIA && CHEQUE';
-        $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
     }
 
     public function pdf2($proyecto_id,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$plancuenta_id){
-        //dd($proyecto_id,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$plancuenta_id);
-        set_time_limit(0);ini_set('memory_limit', '1G');
-        /*$gestion = Carbon::parse($fecha_inicial);
-        if($gestion->month < 4){
-            $gestion = $gestion->year - 1;
-        }else{
-            $gestion = $gestion->year;
-        }
-        $fecha_saldo_inicial = $gestion . '-04-01';*/
-        $proyecto = Proyectos::where('id',$proyecto_id)->first();
-        $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
-                                ->where('a.proyecto_id',$proyecto_id)
-                                ->where('b.plancuenta_id',$plancuenta_id)
-                                ->where('b.tipo_transaccion','TRANSFERENCIA')
-                                ->where('b.cheque_nro','>=',intval($nro_inicial))
-                                ->where('b.cheque_nro','<=',intval($nro_final))
-                                ->where('a.status','!=','2')
-                                //->where('a.fecha','>=',$fecha_saldo_inicial)
-                                ->where('a.fecha','<',$fecha_inicial)
-                                ->select('b.debe','b.haber')
-                                ->orderBy('a.fecha','asc')
-                                ->get();
-        $saldo = 0;
-        foreach($sumarRestar as $datos){
-            $saldo += $datos->debe;
-            $saldo -= $datos->haber;
-        }
+        try{
+            ini_set('memory_limit','-1');
+            ini_set('max_execution_time','-1');
 
-        $comprobantes = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
-                                ->where('a.proyecto_id',$proyecto_id)
-                                ->where('b.plancuenta_id',$plancuenta_id)
-                                ->where('b.tipo_transaccion','TRANSFERENCIA')
-                                ->where('b.cheque_nro','>=',intval($nro_inicial))
-                                ->where('b.cheque_nro','<=',intval($nro_final))
-                                ->where('a.status','!=','2')
-                                ->where('a.fecha','>=',$fecha_inicial)
-                                ->where('a.fecha','<=',$fecha_final)
-                                ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','cheque_orden','b.glosa','b.debe','b.haber')
-                                ->orderBy('a.fecha','asc')
-                                ->get();
-        $saldo_final = $saldo;
-        $total_debe = 0;
-        $total_haber = 0;
-        foreach ($comprobantes as $datos) {
-            $saldo_final += $datos->debe;
-            $saldo_final -= $datos->haber;
-            $total_debe += $datos->debe;
-            $total_haber += $datos->haber;
+            $proyecto = Proyectos::where('id',$proyecto_id)->first();
+            $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
+            $sumarRestar = DB::table('comprobantes_fiscales as a')
+                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+                                    ->where('a.proyecto_id',$proyecto_id)
+                                    ->where('b.plancuenta_id',$plancuenta_id)
+                                    ->where('b.tipo_transaccion','TRANSFERENCIA')
+                                    ->where('b.cheque_nro','>=',intval($nro_inicial))
+                                    ->where('b.cheque_nro','<=',intval($nro_final))
+                                    ->where('a.status','!=','2')
+                                    ->where('b.deleted_at',null)
+                                    //->where('a.fecha','>=',$fecha_saldo_inicial)
+                                    ->where('a.fecha','<',$fecha_inicial)
+                                    ->select('b.debe','b.haber')
+                                    ->orderBy('a.fecha','asc')
+                                    ->get();
+            $saldo = 0;
+            foreach($sumarRestar as $datos){
+                $saldo += $datos->debe;
+                $saldo -= $datos->haber;
+            }
+    
+            $comprobantes = DB::table('comprobantes_fiscales as a')
+                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+                                    ->where('a.proyecto_id',$proyecto_id)
+                                    ->where('b.plancuenta_id',$plancuenta_id)
+                                    ->where('b.tipo_transaccion','TRANSFERENCIA')
+                                    ->where('b.cheque_nro','>=',intval($nro_inicial))
+                                    ->where('b.cheque_nro','<=',intval($nro_final))
+                                    ->where('a.status','!=','2')
+                                    ->where('a.fecha','>=',$fecha_inicial)
+                                    ->where('a.fecha','<=',$fecha_final)
+                                    ->where('b.deleted_at',null)
+                                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','cheque_orden','b.glosa','b.debe','b.haber')
+                                    ->orderBy('a.fecha','asc')
+                                    ->get();
+            $saldo_final = $saldo;
+            $total_debe = 0;
+            $total_haber = 0;
+            foreach ($comprobantes as $datos) {
+                $saldo_final += $datos->debe;
+                $saldo_final -= $datos->haber;
+                $total_debe += $datos->debe;
+                $total_haber += $datos->haber;
+            }
+            $tipo = 'TRANSFERENCIA';
+            $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
+            $pdf->setPaper('LETTER', 'portrait');//landscape
+            return $pdf->stream();
+
+        } catch (\Throwable $th){
+            return '[ERROR_500]';
+        }finally{
+            ini_restore('memory_limit');
+            ini_restore('max_execution_time');
         }
-        $tipo = 'TRANSFERENCIA';
-        $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
     }
 
     public function pdf3($proyecto_id,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$plancuenta_id){
-        //dd($proyecto_id,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$plancuenta_id);
-        set_time_limit(0);ini_set('memory_limit', '1G');
-        /*$gestion = Carbon::parse($fecha_inicial);
-        if($gestion->month < 4){
-            $gestion = $gestion->year - 1;
-        }else{
-            $gestion = $gestion->year;
-        }
-        $fecha_saldo_inicial = $gestion . '-04-01';*/
-        $proyecto = Proyectos::where('id',$proyecto_id)->first();
-        $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
-                                ->where('a.proyecto_id',$proyecto_id)
-                                ->where('b.plancuenta_id',$plancuenta_id)
-                                ->where('b.tipo_transaccion','CHEQUE')
-                                ->where('b.cheque_nro','>=',intval($nro_inicial))
-                                ->where('b.cheque_nro','<=',intval($nro_final))
-                                ->where('a.status','!=','2')
-                                //->where('a.fecha','>=',$fecha_saldo_inicial)
-                                ->where('a.fecha','<',$fecha_inicial)
-                                ->select('b.debe','b.haber')
-                                ->orderBy('a.fecha','asc')
-                                ->get();
-        $saldo = 0;
-        foreach($sumarRestar as $datos){
-            $saldo += $datos->debe;
-            $saldo -= $datos->haber;
-        }
+        try{
+            ini_set('memory_limit','-1');
+            ini_set('max_execution_time','-1');
 
-        $comprobantes = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
-                                ->where('a.proyecto_id',$proyecto_id)
-                                ->where('b.plancuenta_id',$plancuenta_id)
-                                ->where('b.tipo_transaccion','CHEQUE')
-                                ->where('b.cheque_nro','>=',intval($nro_inicial))
-                                ->where('b.cheque_nro','<=',intval($nro_final))
-                                ->where('a.status','!=','2')
-                                ->where('a.fecha','>=',$fecha_inicial)
-                                ->where('a.fecha','<=',$fecha_final)
-                                ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','cheque_orden','b.glosa','b.debe','b.haber')
-                                ->orderBy('a.fecha','asc')
-                                ->get();
-        $saldo_final = $saldo;
-        $total_debe = 0;
-        $total_haber = 0;
-        foreach ($comprobantes as $datos) {
-            $saldo_final += $datos->debe;
-            $saldo_final -= $datos->haber;
-            $total_debe += $datos->debe;
-            $total_haber += $datos->haber;
+            $proyecto = Proyectos::where('id',$proyecto_id)->first();
+            $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
+            $sumarRestar = DB::table('comprobantes_fiscales as a')
+                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+                                    ->where('a.proyecto_id',$proyecto_id)
+                                    ->where('b.plancuenta_id',$plancuenta_id)
+                                    ->where('b.tipo_transaccion','CHEQUE')
+                                    ->where('b.cheque_nro','>=',intval($nro_inicial))
+                                    ->where('b.cheque_nro','<=',intval($nro_final))
+                                    ->where('a.status','!=','2')
+                                    ->where('b.deleted_at',null)
+                                    //->where('a.fecha','>=',$fecha_saldo_inicial)
+                                    ->where('a.fecha','<',$fecha_inicial)
+                                    ->select('b.debe','b.haber')
+                                    ->orderBy('a.fecha','asc')
+                                    ->get();
+            $saldo = 0;
+            foreach($sumarRestar as $datos){
+                $saldo += $datos->debe;
+                $saldo -= $datos->haber;
+            }
+    
+            $comprobantes = DB::table('comprobantes_fiscales as a')
+                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+                                    ->where('a.proyecto_id',$proyecto_id)
+                                    ->where('b.plancuenta_id',$plancuenta_id)
+                                    ->where('b.tipo_transaccion','CHEQUE')
+                                    ->where('b.cheque_nro','>=',intval($nro_inicial))
+                                    ->where('b.cheque_nro','<=',intval($nro_final))
+                                    ->where('a.status','!=','2')
+                                    ->where('a.fecha','>=',$fecha_inicial)
+                                    ->where('a.fecha','<=',$fecha_final)
+                                    ->where('b.deleted_at',null)
+                                    ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','b.tipo_transaccion','b.cheque_nro','cheque_orden','b.glosa','b.debe','b.haber')
+                                    ->orderBy('a.fecha','asc')
+                                    ->get();
+            $saldo_final = $saldo;
+            $total_debe = 0;
+            $total_haber = 0;
+            foreach ($comprobantes as $datos) {
+                $saldo_final += $datos->debe;
+                $saldo_final -= $datos->haber;
+                $total_debe += $datos->debe;
+                $total_haber += $datos->haber;
+            }
+            $tipo = 'CHEQUE';
+            $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
+            $pdf->setPaper('LETTER', 'portrait');//landscape
+            return $pdf->stream();
+
+        } catch (\Throwable $th){
+            return '[ERROR_500]';
+        }finally{
+            ini_restore('memory_limit');
+            ini_restore('max_execution_time');
         }
-        $tipo = 'CHEQUE';
-        $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
-        $pdf->setPaper('LETTER', 'portrait');//landscape
-        return $pdf->stream();
     }
 }

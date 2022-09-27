@@ -77,6 +77,7 @@ class LibroMayorFDe1a99Controller extends Controller
                             ->whereBetween('a.fecha', [$fecha_inicial, $fecha_final])
                             ->where('a.proyecto_id',$proyecto_id)
                             ->whereIn('a.status',$estado_search)
+                            ->where('b.deleted_at',null)
                             ->orderBy('c.codigo','asc')
                             ->orderBy('a.fecha','asc')
                             ->select('a.id as comprobante_id','a.fecha','a.nro_comprobante','a.status','c.codigo','c.nombre as cuenta',

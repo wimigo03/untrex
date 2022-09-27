@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Proyectos;
 use App\TipoCambio;
@@ -10,6 +11,7 @@ use App\PlanCuentas;
 use App\Comprobantes;
 use App\BalanceAperturas;
 use App\ComprobantesFiscalesDetalle;
+use App\Exports\EstadoResultadoFExport;
 use Carbon\Carbon;
 use DB;
 use PDF;
@@ -173,6 +175,60 @@ class EstadoResultadoFController extends Controller
         return $pdf->stream('Estado_de_Resultado.pdf');
     }
     
+    public function excel(Request $request){
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $proyecto_id = $request->proyecto_id;
+        if($request->status == "TODOS"){
+            $request_status = null;
+        }else{
+            $request_status = $request->status;
+        }
+        $status = array();
+        if($request_status != null){
+            $status_text = $request_status;
+            array_push($status,$request_status);
+        }else{
+            $status_text = "TODOS";
+            array_push($status,1);
+            array_push($status,0);
+        }
+        $proyecto = DB::table('proyectos as a')
+                        ->join('consorcios as b','b.id','a.consorcio_id')
+                        ->select('a.nombre as proyecto','b.nombre as consorcio')
+                        ->where('a.id',$proyecto_id)->first();
+        set_time_limit(0);ini_set('memory_limit', '1G'); 
+        $ingresos = PlanCuentas::where('codigo','like','4%')
+                                ->where('proyecto_id',$proyecto_id)
+                                ->where('estado','1')
+                                ->orderBy('codigo')
+                                ->get();
+        $costos = PlanCuentas::where('codigo','like','5%')
+                                ->where('proyecto_id',$proyecto_id)
+                                ->where('estado','1')
+                                ->orderBy('codigo')
+                                ->get();
+        $gastos = PlanCuentas::where('codigo','like','6%')
+                                ->where('proyecto_id',$proyecto_id)
+                                ->where('estado','1')
+                                ->orderBy('codigo')
+                                ->get();
+        $totales = [];
+        $cuentas = array();
+        $tipoOperacion = "-+";
+        $planCuentaId = $ingresos[0]->id;
+        $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
+        $tipoOperacion = "+-";
+        $planCuentaId = $costos[0]->id;
+        $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
+        $planCuentaId = $gastos[0]->id;
+        $totales[$planCuentaId] = $this->sum_total_account_gestion($planCuentaId,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion,$totales,$cuentas);
+        $nroMaxColumna = 5;
+        $total = $totales[$ingresos[0]->id] - $totales[$costos[0]->id] - $totales[$gastos[0]->id];
+        $file_name = 'EstadoResultadoF';
+        return Excel::download(new EstadoResultadoFExport($ingresos,$costos,$gastos,$totales,$cuentas,$proyecto,$start_date,$end_date,$status_text,$nroMaxColumna,$total),$file_name . '.xlsx');
+    }
+
     public function sum_total_account_gestion($plan_cuenta_id,$start_date,$end_date,$status,$proyecto_id,$tipoOperacion, &$totales, &$cuentas){
         $totalFinal = 0;
         $planCuenta = PlanCuentas::find($plan_cuenta_id);
@@ -182,6 +238,7 @@ class EstadoResultadoFController extends Controller
                                                         ->whereBetween('c.fecha',[$start_date,$end_date])
                                                         ->where('c.proyecto_id',$proyecto_id)
                                                         ->whereIn('c.status',$status)
+                                                        ->where('comprobantes_fiscales_detalles.deleted_at',null)
                                                         ->orderBy('comprobantes_fiscales_detalles.plancuentaauxiliar_id')
                                                         ->orderBy('c.fecha')
                                                         ->select('c.id','c.fecha','comprobantes_fiscales_detalles.plancuenta_id as idplancuenta','c.nro_comprobante','comprobantes_fiscales_detalles.glosa','debe','haber','comprobantes_fiscales_detalles.cheque_nro','comprobantes_fiscales_detalles.cheque_orden','c.status','comprobantes_fiscales_detalles.plancuentaauxiliar_id as cuentaAux')

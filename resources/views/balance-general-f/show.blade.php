@@ -20,29 +20,28 @@
                     <div class="col-md-10">
                         <strong>DEL </strong>{{\Carbon\Carbon::parse($start_date)->format('d/m/Y')}} <strong>AL: </strong>{{\Carbon\Carbon::parse($end_date)->format('d/m/Y')}}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         {!! Form::open(['route'=>'balancegeneralf.pdf','target' => '_blank']) !!}
                             <input type="hidden" name="status" value="{{$status_text}}">
                             <input type="hidden" name="start_date" value="{{$start_date}}">
                             <input type="hidden" name="end_date" value="{{$end_date}}">
                             <input type="hidden" name="proyecto_id" value="{{$proyecto_id}}">
                             <button class="btn btn-block btn-danger font-verdana-bg">
-                                <span><i class="fas fa-file-pdf"></i>&nbsp;Exportar a Pdf</span>
+                                &nbsp;<i class="fas fa-lg fa-file-pdf"></i>&nbsp;
                             </button>
                         {!! Form::close()!!}
                     </div>
-                    {{--<div class="col-md-1">
-                        {!! Form::open(['route'=>'estadoresultado.excel']) !!}
-                            <input type="hidden" name="year" value="{{$anho}}">
-                            <input type="hidden" name="proyecto_id" value="{{$proyecto_id}}">
+                    <div class="col-md-1">
+                        {!! Form::open(['route'=>'balancegeneralf.excel']) !!}
                             <input type="hidden" name="status" value="{{$status_text}}">
                             <input type="hidden" name="start_date" value="{{$start_date}}">
                             <input type="hidden" name="end_date" value="{{$end_date}}">
+                            <input type="hidden" name="proyecto_id" value="{{$proyecto_id}}">
                             <button class="btn btn-block btn-success font-verdana-bg">
-                                <span><i class="fas fa-file-excel"></i>&nbsp;Excel</span>
+                                &nbsp;<i class="fas fa-lg fa-file-excel"></i>&nbsp;
                             </button>
                         {!! Form::close()!!}
-                    </div>--}}
+                    </div>
                 </div>
                 <br>
                 <div class="row">

@@ -78,6 +78,11 @@ class ComprobantesFiscalesDetalleController extends Controller
     }
 
     public function finalizar(Request $request){
+        $comprobante_detalle = DB::table('comprobantes_fiscales_detalles')->where('comprobante_fiscal_id',$request->comprobante_id)->where('deleted_at',null)->get();
+        if($comprobante_detalle->count() == 0){
+            return back()->withInput()->with('danger','Imposible continuar. El detalle del comprobante esta vacio...');
+        }
+
         if($request->total_debe != $request->total_haber){
             return back()->withInput()->with('danger','El total debe y haber no son iguales...');
         }

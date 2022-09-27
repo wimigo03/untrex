@@ -48,7 +48,7 @@
             @endfor
             <td align="right">
                 @if (isset($totales[$activo->id]))
-                    {{number_format($totales[$activo->id],2,'.',',')}}
+                    {{$totales[$activo->id]}}
                 @endif
             </td>
             @php
@@ -77,7 +77,7 @@
             @endfor
             <td align="right">
                 @if (isset($totales[$pasivo->id]))
-                    {{number_format($totales[$pasivo->id],2,'.',',')}}
+                    {{$totales[$pasivo->id]}}
                 @endif
             </td>
             @php
@@ -106,7 +106,7 @@
             @endfor
             <td align="right">
                 @if (isset($totales[$patrimonio->id]))
-                    {{number_format($totales[$patrimonio->id],2,'.',',')}}
+                    {{$totales[$patrimonio->id]}}
                 @endif
             </td>
             @php
@@ -122,8 +122,8 @@
         <td></td>
         <td></td>
         <td align="right"><strong>ACTIVO&nbsp;</strong></td>
-        <td align="right"><strong>{{number_format($total_activo,2,'.',',')}}</strong></td>
-        <td align="left"><strong>{{number_format($total_capital_pasivo,2,'.',',')}}</strong></td>
+        <td align="right"><strong>{{$total_activo}}</strong></td>
+        <td align="left"><strong>{{$total_capital_pasivo}}</strong></td>
         <td align="left"><strong>&nbsp;CAPITAL + PASIVO</strong></td>
     </tr>
 </table>

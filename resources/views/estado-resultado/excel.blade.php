@@ -49,7 +49,7 @@
                 @endfor
                 <td align="right">
                     {{--@if (isset($totales[$ing->id]))--}}
-                        {{number_format($totales[$ing->id],2,'.',',')}}
+                        {{$totales[$ing->id]}}
                     {{--@endif--}}
                 </td>
                 @php
@@ -80,7 +80,7 @@
                 @endfor
                 <td align="right">
                     {{--@if (isset($totales[$costo->id]))--}}
-                        {{number_format($totales[$costo->id],2,'.',',')}}
+                        {{$totales[$costo->id]}}
                     {{--@endif--}}
                 </td>
                 @php
@@ -111,7 +111,7 @@
                 @endfor
                 <td align="right">
                     {{--@if (isset($totales[$gasto->id]))--}}
-                        {{number_format($totales[$gasto->id],2,'.',',')}}
+                        {{$totales[$gasto->id]}}
                     {{--@endif--}}
                 </td>
                 @php
@@ -130,6 +130,6 @@
         <td></td>
         <td></td>
         <td><strong>TOTAL:</strong></td>
-        <td align="right"><strong>{{number_format($total,2,'.',',')}}</strong></td>
+        <td align="right"><strong>{{$total}}</strong></td>
     </tr>
 </table>

@@ -29,12 +29,12 @@
 	</tr>
 	<tr>
 		<td colspan="10" align="left">
-			<b>TOTAL DEBE:&nbsp;</b>Bs.&nbsp;{{ number_format($total_debe,2,'.',',') }}
+			<b>TOTAL DEBE:&nbsp;</b>Bs.&nbsp;{{$total_debe}}
 		</td>
 	</tr>
 	<tr>
 		<td colspan="10" align="left">
-			<b>TOTAL HABER:&nbsp;</b>Bs.&nbsp;{{number_format($total_haber,2,'.',',')}}
+			<b>TOTAL HABER:&nbsp;</b>Bs.&nbsp;{{$total_haber}}
 		</td>
 	</tr>
 </table>
@@ -55,19 +55,6 @@
 	@foreach ($comprobantes as $datos)
 		<tr>
 			<td align="center">{{\Carbon\Carbon::parse($datos->fecha)->format('d/m/Y')}}</td>
-			{{--@php
-				$facturas = DB::table('comprobante_facturas as a')
-								->join('facturas as b','b.id','a.factura_id')
-								->where('a.comprobante_id',$datos->comprobante_id)
-								->where('a.estado',1)
-								->where('a.deleted_at',null)
-								->get();
-			@endphp
-			<td align="left">
-				@foreach ( $facturas as $factura)
-					{{'- ' . $factura->numero}}<br>
-				@endforeach
-			</td>--}}
 			@php
 				if($datos->status == 0){
 					$estado = "B";
@@ -89,8 +76,8 @@
 			<td align="center">{{$datos->centro}}</td>
 			<td align="center">{{$datos->tipo_transaccion . $datos->cheque_nro}}</td>
 			<td align="left">{{strtoupper($datos->glosa)}}</td>
-			<td align="right">{{number_format($datos->debe,2,'.',',')}}</td>
-			<td align="right">{{number_format($datos->haber,2,'.',',')}}</td>
+			<td align="right">{{$datos->debe}}</td>
+			<td align="right">{{$datos->haber}}</td>
 		</tr>
 	@endforeach
 </table>

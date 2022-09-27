@@ -19,12 +19,12 @@
 	</tr>
 	<tr>
 		<td colspan="10" align="left">
-			<b>SALDO INICIAL:&nbsp;</b>Bs.&nbsp;{{ number_format($saldo,2,'.',',') }}
+			<b>SALDO INICIAL:&nbsp;</b>Bs.&nbsp;{{$saldo}}
 		</td>
 	</tr>
 	<tr>
 		<td colspan="10" align="left">
-			<b>TOTAL DEBE:&nbsp;</b>Bs.&nbsp;{{ number_format($total_debe,2,'.',',') }}
+			<b>TOTAL DEBE:&nbsp;</b>Bs.&nbsp;{{$total_debe}}
 		</td>
 	</tr>
 	<tr>
@@ -34,12 +34,12 @@
 	</tr>
 	<tr>
 		<td colspan="10" align="left">
-			<b>SALDO FINAL:&nbsp;</b>Bs.&nbsp;{{number_format($saldo_final,2,'.',',')}}
+			<b>SALDO FINAL:&nbsp;</b>Bs.&nbsp;{{$saldo_final}}
 		</td>
 	</tr>
 	<tr>
 		<td colspan="10" align="left">
-			<b>TOTAL HABER:&nbsp;</b>Bs.&nbsp;{{number_format($total_haber,2,'.',',')}}
+			<b>TOTAL HABER:&nbsp;</b>Bs.&nbsp;{{$total_haber}}
 		</td>
 	</tr>
 </table>
@@ -86,10 +86,10 @@
 				{{strtoupper($datos->glosa)}}
 			</td>
 			<td align="right">
-				{{ number_format($datos->debe,2,'.',',') }}
+				{{$datos->debe}}
 			</td>
 			<td align="right">
-				{{ number_format($datos->haber,2,'.',',') }}
+				{{$datos->haber}}
 			</td>
 			@php
 				if($datos->debe > 0){
@@ -99,7 +99,7 @@
 				}
 			@endphp
 			<td align="right">
-				{{ number_format($saldo,2,'.',',') }}
+				{{$saldo}}
 			</td>
 		</tr>
 	@endforeach

@@ -72,13 +72,13 @@
         </tr>
         <tr>
             <td colspan="9" align="center">
-                SALDO INICIAL:&nbsp;Bs. {{number_format($saldo,2,'.',',')}}
+                SALDO INICIAL:&nbsp;Bs. {{$saldo}}
                 &nbsp;|&nbsp;
-                SALDO FINAL:&nbsp;Bs. {{number_format($saldo_final,2,'.',',')}}
+                SALDO FINAL:&nbsp;Bs. {{$saldo_final}}
                 &nbsp;|&nbsp;
-                TOTAL DEBE:&nbsp;Bs. {{number_format($total_debe,2,'.',',')}}
+                TOTAL DEBE:&nbsp;Bs. {{$total_debe}}
                 &nbsp;|&nbsp;
-                TOTAL HABER:&nbsp;Bs. {{number_format($total_haber,2,'.',',')}}				
+                TOTAL HABER:&nbsp;Bs. {{$total_haber}}				
             </td>
         </tr>
         <tr>
@@ -106,8 +106,8 @@
                     <td align="center">{{$data->centro}}</td>
                     <td align="center">{{strtoupper($data->cheque_nro)}}</td>
                     <td align="justify">{{strtoupper($data->glosa)}}</td>
-                    <td align="right">{{number_format($data->debe,2,'.',',')}}</td>
-                    <td align="right">{{number_format($data->haber,2,'.',',')}}</td>
+                    <td align="right">{{$data->debe}}</td>
+                    <td align="right">{{$data->haber}}</td>
                     @php
                         if($data->debe > 0){
                             $saldo += $data->debe;
@@ -115,7 +115,7 @@
                             $saldo -= $data->haber;
                         }
                     @endphp
-                    <td align="right">{{number_format($saldo,2,'.',',')}}</td>
+                    <td align="right">{{$saldo}}</td>
                 </tr>
             @endforeach
     @endforeach

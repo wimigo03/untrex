@@ -82,7 +82,7 @@ class ComprobantesFiscalesController extends Controller
                                 ->join('proyectos as c','c.id','a.proyecto_id')
                                 ->leftjoin('users as d','d.id','a.user_autorizado_id')
                                 ->where('a.id',$comprobante_fiscal_id)
-                                ->select('a.id as comprobante_id','a.nro_comprobante','a.moneda','b.name as creador',
+                                ->select('a.id as comprobante_id','a.comprobante_interno_id','a.nro_comprobante','a.moneda','b.name as creador',
                                 DB::raw("if(a.tipo = 1,'INGRESO',if(a.tipo = 2,'EGRESO','TRASPASO')) as tipo_comprobante"),
                                 'a.status','a.concepto','c.nombre','d.name as autorizado','a.fecha','a.monto')
                                 ->first();
@@ -94,9 +94,10 @@ class ComprobantesFiscalesController extends Controller
                                         ->where('a.comprobante_fiscal_id',$comprobante_fiscal_id)
                                         ->where('a.deleted_at',null)
                                         ->orderBy('a.id','desc')->get();
+        $comprobante_interno = DB::table('comprobantes')->where('id',$comprobante_fiscal->comprobante_interno_id)->first();
         $total_debe = $comprobante_fiscal_detalle->sum('debe');
         $total_haber = $comprobante_fiscal_detalle->sum('haber');
-        return view('comprobantes-fiscales.show',compact('comprobante_fiscal','comprobante_fiscal_detalle','total_debe','total_haber'));
+        return view('comprobantes-fiscales.show',compact('comprobante_fiscal','comprobante_fiscal_detalle','comprobante_interno','total_debe','total_haber'));
     }
 
     public function editar($comprobante_id){

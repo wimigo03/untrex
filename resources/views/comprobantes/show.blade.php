@@ -14,7 +14,8 @@
             <div class="card-body">
                 <div class="form-group row">
                     @if (isset($comprobante_fiscal))
-                        <div class="col-md-12 text-right">
+                        <div class="col-md-12">
+                            {{ Form::label('Base','Base',['class' => 'd-inline font-verdana-bg'])}}<br>
                             <a href="{{route('comprobantes.fiscales.show',$comprobante_fiscal->id)}}" class="btn btn-sm btn-info font-verdana-bg" target="_blank">
                                 <i class="fas fa-file-alt"></i>&nbsp;{{$comprobante_fiscal->nro_comprobante}}
                             </a>

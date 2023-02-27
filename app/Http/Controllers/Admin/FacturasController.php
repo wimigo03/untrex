@@ -194,7 +194,8 @@ class FacturasController extends Controller
     public function delete($factura_id){
         $factura = Facturas::find($factura_id);
         $factura->delete();
-        $comprobanteFactura = ComprobanteFacturas::find($factura->id);
+        $comprobante_factura = ComprobanteFacturas::where('factura_id',$factura_id)->where('deleted_at',null)->first();
+        $comprobanteFactura = ComprobanteFacturas::find($comprobante_factura->id);
         $comprobanteFactura->delete();
         return back()->with('info','Se elimino una factura...');
     }

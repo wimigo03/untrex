@@ -37,13 +37,17 @@
                             <div class="form-group row">
                                 <div class="col-md-5">
                                     @if ($proyecto_id != null)
-                                        {!! Form::model(Request::all(),['route'=> ['plandecuentasauxiliares.index']]) !!}
+                                        {{--{!! Form::model(Request::all(),['route'=> ['plandecuentasauxiliares.index']]) !!}
                                             {{Form::hidden('proyecto_id',$proyecto_id,['id' => 'proyecto_id'])}}
                                             <br>
                                             <button type="submit" class="btn btn-sm btn-block btn-secondary">
                                                 <i class="fas fa-list"></i>&nbsp;Cuentas auxiliares
                                             </button>
-                                        {!! Form::close()!!}
+                                        {!! Form::close()!!}--}}
+                                        <br>
+                                        <a href="{{route('plandecuentasauxiliares.index', $proyecto_id)}}" class="btn btn-sm btn-block btn-secondary" style="text-decoration:none;">
+                                            <i class="fas fa-list"></i>&nbsp;Cuentas auxiliares
+                                        </a>
                                     @endif
                                 </div>
                                 <div class="col-md-3">

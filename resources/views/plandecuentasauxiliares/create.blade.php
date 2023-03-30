@@ -39,7 +39,7 @@
                             <button type="submit" class="btn btn-primary font-verdana-bg">
                                 <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;Guardar&nbsp;
                             </button>
-                            <a href="{{route('plandecuentasauxiliares.index')}}" class="btn btn-danger font-verdana-bg">
+                            <a href="{{route('plandecuentasauxiliares.index',$proyecto->id)}}" class="btn btn-danger font-verdana-bg">
                                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
                             </a>
                         </div>

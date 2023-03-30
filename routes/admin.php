@@ -200,7 +200,7 @@ Route::get('/tipo-cambio', [TipoCambioController::class, 'index'])->name('tipo_c
 Route::post('/plandecuentasauxiliares/store', [PlandecuentasAuxiliaresController::class, 'store'])->name('plandecuentasauxiliares.store');
 Route::get('/plandecuentasauxiliares/create/{proyecto_id}', [PlandecuentasAuxiliaresController::class, 'create'])->name('plandecuentasauxiliares.create');
 Route::get('/plandecuentasauxiliares/indexAjax/{proyecto_id}', [PlandecuentasAuxiliaresController::class, 'indexAjax'])->name('plandecuentasauxiliares.indexAjax');
-Route::post('/plandecuentasauxiliares', [PlandecuentasAuxiliaresController::class, 'index'])->name('plandecuentasauxiliares.index');
+Route::get('/plandecuentasauxiliares/{proyecto_id}', [PlandecuentasAuxiliaresController::class, 'index'])->name('plandecuentasauxiliares.index');
 
 //Plan de cuentas
 Route::post('/plandecuentas/store/editar', [PlandecuentasController::class, 'update'])->name('store_editar_dependiente');

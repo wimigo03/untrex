@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-md-8 text-right">
                             <br>
-                            <a href="{{--route('fondos_a_rendir.index')--}}" class="btn btn-danger font-verdana-bg">
+                            <a href="{{route('plandecuentas.index')}}" class="btn btn-danger font-verdana-bg">
                                 <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Cancelar&nbsp;
                             </a>
                             <button type="submit" class="btn btn-primary font-verdana-bg">

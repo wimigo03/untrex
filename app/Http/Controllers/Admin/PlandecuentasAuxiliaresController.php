@@ -6,14 +6,31 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PlanCuentasAuxiliares;
 use App\Proyectos;
+use App\Proveedores;
+use Auth;
 use DB;
 
 class PlandecuentasAuxiliaresController extends Controller
 {
     public function index(Request $request){
+        if(auth()->id() == 1){
+            $this->reprocesarAuxiliaresProveedores();
+        }
         $plancuentasauxiliares = PlanCuentasAuxiliares::where('proyecto_id',$request->proyecto_id)->where('estado',1)->orderBy('id', 'desc')->paginate();
         $proyecto = Proyectos::where('id',$request->proyecto_id)->first();
         return view('plandecuentasauxiliares.index',compact('plancuentasauxiliares','proyecto'));
+    }
+
+    private function reprocesarAuxiliaresProveedores(){
+        $proveedores = proveedores::get();
+        foreach($proveedores as $datos){
+            $auxiliar = PlanCuentasAuxiliares::where('tipo',1)->where('nombre','like','%' . $datos->razon_social . '%')->first();
+            if($auxiliar != null){
+                $auxiliares = PlanCuentasAuxiliares::find($auxiliar->id);
+                $auxiliares->reg_id = $datos->id;
+                $auxiliares->update();
+            }
+        }
     }
     
     public function indexAjax($proyecto_id){

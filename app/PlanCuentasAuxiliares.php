@@ -13,6 +13,7 @@ class PlanCuentasAuxiliares extends Model
         'proyecto_id',
         'tipo',
         'nombre',
+        'reg_id',
         'estado'
     ];
     use SoftDeletes;

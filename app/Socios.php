@@ -10,8 +10,11 @@ class Socios extends Model
 {
     protected $table = 'socios';
     protected $fillable = [
-        'empresa',
+        'consorcio_id',
+        'nombre',
         'abreviatura',
+        'porcentaje',
+        'tipo',
         'direccion',
         'nit',
         'razon_social'

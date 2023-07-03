@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Proveedores;
 use App\Ciudades;
-//use App\ComprobantesDetalle;
+use App\PlanCuentasAuxiliares;
 //use App\PlanCuentas;
 //use App\PlanCuentasAuxiliares;
 //use App\Proveedores;
@@ -92,6 +92,14 @@ class ProveedorController extends Controller
             $proveedor->observaciones = $request->observaciones;
             $proveedor->status = 1;
             $proveedor->save();
+
+            $auxiliar = new PlanCuentasAuxiliares();
+            $auxiliar->proyecto_id = 1;
+            $auxiliar->tipo = 1;
+            $auxiliar->nombre = $request->razon_social;
+            $auxiliar->reg_id = $proveedor->id;
+            $auxiliar->estado = 1;
+            $auxiliar->save();
 
             DB::commit();
         } catch (\Exception $e) {

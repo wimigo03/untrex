@@ -14,9 +14,9 @@ return [
     |
     */
 
-    'title' => 'UNTREX',
+    'title' => 'UNTRES',
     'title_prefix' => '',
-    'title_postfix' => '| Untrex',
+    'title_postfix' => '| Untres',
 
     /*
     |--------------------------------------------------------------------------
@@ -258,6 +258,12 @@ return [
             'route'         => 'consorcios.index',
             'icon'          => 'fas fa-city',
             'label_color'   => 'success',
+        ],*/
+        /*[
+            'text'          => 'Usuarios',
+            'route'         => 'usuario.index',
+            'icon'          => 'fas fa-users',
+            'label_color'   => 'success'
         ],*/
         [
             'text'          => 'Cotizaciones',
@@ -554,12 +560,12 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
                 ],
             ],

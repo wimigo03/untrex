@@ -11,6 +11,8 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
+use App\Socios;
+
 class User extends Authenticatable
 {
     use HasApiTokens;
@@ -26,7 +28,12 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'socio_id',
+        'username',
+        'name',
+        'email',
+        'password',
+        'estado',
     ];
 
     /**
@@ -58,4 +65,28 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function socio(){
+        return $this->belongsTo(Socios::class,'socio_id','id');
+    }
+    
+    public function scopeBySocio($query, $socio){
+        if($socio)  
+            return $query->where('socio_id', $socio);
+    }
+
+    public function scopeByUsername($query, $username){
+        if($username)  
+            return $query->where('username', 'LIKE', '%' . $username . '%');
+    }
+
+    public function scopeByName($query, $name){
+        if($name)  
+            return $query->where('name', 'like', '%' . $name . '%');
+    }
+
+    public function scopeByEmail($query, $email){
+        if($email)  
+            return $query->where('email', 'like', '%' . $email . '%');
+    }
 }

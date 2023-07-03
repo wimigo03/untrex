@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PlanCuentas;
@@ -14,6 +15,7 @@ class PlandecuentasController extends Controller
         $proyecto_id = null;
         $plancuentas = null;
         $html = "";
+        
         $proyectos = DB::table('user_proyectos as a')
                             ->join('proyectos as b','b.id','a.proyecto_id')
                             ->where('a.user_id',auth()->user()->id)

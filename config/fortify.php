@@ -84,7 +84,9 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify which middleware Fortify will assign to the routes
-    | that it registers with the application. If necessary, you may change
+    | that it 
+    
+    s with the application. If necessary, you may change
     | these middleware but typically this provided default is preferred.
     |
     */

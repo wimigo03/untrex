@@ -78,7 +78,7 @@
             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
             $.ajax({
                 type: 'GET',
-                url: '/admin/libromayor/porcuenta/seleccionar',
+                url: '/libromayor/porcuenta/seleccionar',
                 data: {
                     _token: CSRF_TOKEN,
                     id: id

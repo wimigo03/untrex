@@ -96,7 +96,7 @@
         function getCuentasInicial(id,CSRF_TOKEN){
             $.ajax({
                 type: 'GET',
-                url: '/admin/libromayor/de1a99/seleccionar',
+                url: '/libromayor/de1a99/seleccionar',
                 data: {
                     _token: CSRF_TOKEN,
                     id: id
@@ -127,7 +127,7 @@
         function getCuentasFinal(id,CSRF_TOKEN){
             $.ajax({
                 type: 'GET',
-                url: '/admin/libromayor/de1a99/seleccionar',
+                url: '/libromayor/de1a99/seleccionar',
                 data: {
                     _token: CSRF_TOKEN,
                     id: id

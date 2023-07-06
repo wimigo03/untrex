@@ -122,7 +122,7 @@
                     if(idplancuenta.length!=0){
                         $.ajax({
                             type: 'GET',
-                            url: '/admin/comprobantesdetalles/get_plancuenta/'+idplancuenta,
+                            url: '/comprobantesdetalles/get_plancuenta/'+idplancuenta,
                             dataType: 'json',
                             data: {
                                 id: idplancuenta

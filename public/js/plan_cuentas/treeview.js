@@ -27,7 +27,7 @@
 		} else{
 			$.ajax({
 				type: 'GET',
-				url: '/admin/plandecuentas/cargar/'+id,
+				url: '/plandecuentas/cargar/'+id,
 				data: {
 					id: id
 				},

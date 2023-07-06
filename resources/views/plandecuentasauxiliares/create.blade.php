@@ -7,7 +7,7 @@
 {{--<div class="row">
     <div class="col-md-12 text-right">
         <a href="{{ url('/admin') }}"><i class="fas fa-home fa-xs"></i> <font size="2px">Inicio</font></a> /
-        <a href="{{ url('/admin/plandecuentasauxiliares') }}"><i class="fas fa-sitemap fa-xs"></i> <font size="2px">Estructura</font></a> /
+        <a href="{{ url('/plandecuentasauxiliares') }}"><i class="fas fa-sitemap fa-xs"></i> <font size="2px">Estructura</font></a> /
         <a href="#"><i class="fas fa-plus-square fa-xs"></i><font size="2px"> Crear</font></a>
     </div>
 </div>--}}

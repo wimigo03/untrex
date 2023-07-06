@@ -146,7 +146,7 @@
                     {
                         $.ajax({
                             type: 'GET',
-                            url: '/admin/facturas/get_proveedor/'+proveedor_id,
+                            url: '/facturas/get_proveedor/'+proveedor_id,
                             dataType: 'json',
                             data: {
                                 id: proveedor_id
@@ -164,33 +164,5 @@
                 }
             }
         });
-        /*$('#plan_cuentas').change(function() {
-                var idplancuenta = $(this).val();
-                if(idplancuenta!=null)
-                {
-                    if(idplancuenta.length!=0){
-                        $.ajax({
-                            type: 'GET',
-                            url: '/admin/comprobantesdetalles/get_plancuenta/'+idplancuenta,
-                            dataType: 'json',
-                            data: {
-                                id: idplancuenta
-                            },
-                            success: function(json){
-                                if(json.cheque=='1'){                                    
-                                    $('.cheque').show();
-                                    //$('.cheque_id').val(1);
-                                } else {
-                                    //$('.cheque_id').val(0);
-                                    $('.cheque').hide();
-                                }
-                            },
-                            error: function(xhr){
-                                //console.log(xhr.responseText);
-                            }
-                        });
-                    }
-                }
-            });*/
     </script>
 @stop

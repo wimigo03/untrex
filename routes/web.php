@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\LibroBancoFController;
 use App\Http\Controllers\Admin\LibroBancoController;
 use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
 use App\Http\Controllers\Admin\ConsorciosController;
+use App\Http\Controllers\Admin\LibroDiarioController;
 
 Route::get('/', function () {
     return view('/');
@@ -59,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tipo-cambio', [TipoCambioController::class, 'index'])->name('tipo_cambio.index');
 
     //Plan de cuentas
+    Route::get('/plandecuentas/excel', [PlandecuentasController::class, 'excel'])->name('plandecuentas.excel');
     Route::post('/plandecuentas/store/editar', [PlandecuentasController::class, 'update'])->name('store_editar_dependiente');
     Route::post('/plandecuentas/store', [PlandecuentasController::class, 'store'])->name('store_dependiente');
     Route::get('/plandecuentas/cargar/{id}', [PlandecuentasController::class, 'ajaxSeleccionar'])->name('seleccionar-cargo');
@@ -220,18 +222,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/libromayorf/de1a99/index', [LibroMayorFDe1a99Controller::class, 'index'])->name('libromayorf.de1a99.index');
 
     //Libro banco
+    route::get('/librobanco/excel', [LibroBancoController::class, 'excel'])->name('librobanco.excel');
     Route::get('librobanco/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf3'])->name('librobanco.pdf3');
     Route::get('librobanco/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf2'])->name('librobanco.pdf2');
     Route::get('librobanco/pdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoController::class, 'pdf1'])->name('librobanco.pdf1');
-    route::post('/librobanco/search', [LibroBancoController::class, 'search'])->name('librobanco.search');
+    route::get('/librobanco/search', [LibroBancoController::class, 'search'])->name('librobanco.search');
     Route::get('/librobanco/seleccionar', [LibroBancoController::class, 'seleccionar']);
     route::get('/librobanco/index', [LibroBancoController::class, 'index'])->name('librobanco.index');
 
     //Libro banco F
+    route::get('/librobancof/excel', [LibroBancoFController::class, 'excel'])->name('librobancof.excel');
     Route::get('librobancof/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf3'])->name('librobancof.pdf3');
     Route::get('librobancof/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf2'])->name('librobancof.pdf2');
     Route::get('librobancof/pdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf1'])->name('librobancof.pdf1');
-    route::post('/librobancof/search', [LibroBancoFController::class, 'search'])->name('librobancof.search');
+    route::get('/librobancof/search', [LibroBancoFController::class, 'search'])->name('librobancof.search');
     Route::get('/librobancof/seleccionar', [LibroBancoFController::class, 'seleccionar']);
     route::get('/librobancof/index', [LibroBancoFController::class, 'index'])->name('librobancof.index');
 
@@ -250,4 +254,11 @@ Route::middleware(['auth'])->group(function () {
     //Libro mayor por auxiliar
     route::get('/libromayor/porauxiliar/index', [LibroMayorPorAuxiliarController::class, 'index'])->name('libromayor.porauxiliar.index');
 
+    /*route::get('/librobancof/excel', [LibroBancoFController::class, 'excel'])->name('librobancof.excel');
+    Route::get('librobancof/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf3'])->name('librobancof.pdf3');
+    Route::get('librobancof/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf2'])->name('librobancof.pdf2');
+    Route::get('librobancof/pdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf1'])->name('librobancof.pdf1');
+    route::get('/librobancof/search', [LibroBancoFController::class, 'search'])->name('librobancof.search');
+    Route::get('/librobancof/seleccionar', [LibroBancoFController::class, 'seleccionar']);*/
+    route::get('/librodiario/index', [LibroDiarioController::class, 'index'])->name('librodiario.index');
 });

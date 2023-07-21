@@ -231,8 +231,8 @@ class LibroMayorFPorCuentaController extends Controller
                             ->where('a.proyecto_id', $id)
                             ->where('a.cuenta_detalle','1')
                             ->where('a.deleted_at',null)
-                            ->select('a.id','a.nombre')
-                            ->orderBy('a.id', 'desc')
+                            ->select(DB::raw("CONCAT(a.codigo,' ',a.nombre) as cuenta"),'a.id')
+                            ->orderBy('a.codigo', 'asc')
                             ->get()->toJson();
         if($plancuenta){
             return response()->json([

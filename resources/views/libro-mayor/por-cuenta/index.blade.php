@@ -92,8 +92,8 @@
                         select.append($("<option></option>").attr("value", '').text('--Plan cuenta--'));
                         select.append($("<option></option>").attr("value", '').text('Ninguno'));
                         $.each(arr,function(index,json){
-                            if (json.nombre!=null || json.nombre!="") {
-                                select.append($("<option></option>").attr("value", json.id).text(json.nombre)); 
+                            if (json.cuenta!=null || json.cuenta!="") {
+                                select.append($("<option></option>").attr("value", json.id).text(json.cuenta)); 
                             } else {
                                 
                             }

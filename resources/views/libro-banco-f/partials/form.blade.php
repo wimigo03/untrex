@@ -51,10 +51,3 @@
         {!! $errors->first('plancuenta_id','<span class="invalid-feedback d-block">Cuenta no seleccionado.</span>') !!}
     </div>
 </div>
-<div class="form-group row font-verdana-bg">
-    <div class="col-md-12 text-right"><br>
-        <button type="submit" class="btn btn-primary font-verdana-bg">
-            <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Procesar&nbsp;
-        </button>
-    </div>
-</div>

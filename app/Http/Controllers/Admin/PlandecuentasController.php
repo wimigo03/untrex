@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PlanCuentasExcel;
 use Illuminate\Http\Request;
 use App\PlanCuentas;
 use App\Proyectos;
@@ -193,5 +195,11 @@ class PlandecuentasController extends Controller
             ]);
         }
         return response()->json(['error'=>'Algo Salio Mal']);
+    }
+
+    public function excel(Request $request){
+        $plancuentas = PlanCuentas::where('proyecto_id',$request->proyecto_id)->orderBy('codigo','asc')->get();
+        $file_name = 'Plan_de_cuentas';
+        return Excel::download(new PlanCuentasExcel($plancuentas),$file_name . '.xlsx');
     }
 }

@@ -37,13 +37,6 @@
                             <div class="form-group row">
                                 <div class="col-md-5">
                                     @if ($proyecto_id != null)
-                                        {{--{!! Form::model(Request::all(),['route'=> ['plandecuentasauxiliares.index']]) !!}
-                                            {{Form::hidden('proyecto_id',$proyecto_id,['id' => 'proyecto_id'])}}
-                                            <br>
-                                            <button type="submit" class="btn btn-sm btn-block btn-secondary">
-                                                <i class="fas fa-list"></i>&nbsp;Cuentas auxiliares
-                                            </button>
-                                        {!! Form::close()!!}--}}
                                         <br>
                                         <a href="{{route('plandecuentasauxiliares.index', $proyecto_id)}}" class="btn btn-sm btn-block btn-secondary" style="text-decoration:none;">
                                             <i class="fas fa-list"></i>&nbsp;Cuentas auxiliares
@@ -72,6 +65,17 @@
                             </div>
                         </div>
                     </div>
+                    @if ($proyecto_id != null)
+                        <div class="col-md-12">
+                            <form action="#" method="get" id="form">
+                                <input type="hidden" name="proyecto_id" value="{{$proyecto_id}}">
+                            </form>
+                            <button class="btn btn-success font-verdana" type="button" onclick="excel();">
+                                <i class="fa fa-file-excel" aria-hidden="true"></i>&nbsp;Exportar Plan de Cuentas
+                            </button>
+                            <i class="fa fa-spinner custom-spinner fa-spin fa-2x fa-fw spinner-btn" style="display: none;"></i>
+                        </div>    
+                    @endif
                 </div>
                 @if ($proyecto_id != null)
                     @include('plandecuentas.partials.encabezado')
@@ -212,5 +216,11 @@
 				getDatos(plan_cuenta_id_selected);
 			});
 		});
+
+        function excel(){
+            var url = '{{ route("plandecuentas.excel") }}';
+            $("#form").attr('action', url);
+            $("#form").submit();
+        }
     </script>
 @stop

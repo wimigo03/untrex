@@ -9,9 +9,20 @@
                 <div class="card-title"><b>LIBRO BANCO</b></div>
             </div>
             <div class="card-body">
-                {!! Form::model(Request::all(),['route'=> ['librobanco.search']]) !!}
+                <form action="#" method="get" id="form">
                     @include('libro-banco.partials.form')
-                {!! Form::close()!!}
+                </form>
+                <div class="form-group row">
+                    <div class="col-md-12 text-right">
+                        <button class="btn btn-primary font-verdana" type="button" onclick="procesar();">
+                            <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Procesar
+                        </button>
+                        <button class="btn btn-success font-verdana" type="button" onclick="excel();">
+                            <i class="fa fa-file-excel" aria-hidden="true"></i>&nbsp;Exportar a Excel
+                        </button>
+                        <i class="fa fa-spinner custom-spinner fa-spin fa-2x fa-fw spinner-btn" style="display: none;"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -131,5 +142,20 @@
                 }
             });
         });
+
+        function procesar(){
+            var url = "{{ route('librobanco.search') }}";
+            $("#form").attr('action', url);
+            $(".btn").hide();
+            $(".btn-importar").hide();
+            $(".spinner-btn").show();
+            $("#form").submit();
+        }
+
+        function excel(){
+            var url = "{{ route('librobanco.excel') }}";
+            $("#form").attr('action', url);
+            $("#form").submit();
+        }
     </script>
 @stop

@@ -417,6 +417,22 @@ return [
                 ],
             ],
         ],
+        [
+            'text'    => 'Libro Diario',
+            'icon'    => 'fas fa-book',
+            'submenu' => [
+                [
+                    'text'  => 'Base 1',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'librodiario.index'
+                ]/*,
+                [
+                    'text'  => 'Base 2',
+                    'icon'  => 'fas fa-list',
+                    'route' => 'librobancof.index'
+                ],*/
+            ],
+        ],
         /*[
             'text'          => 'Libro Banco',
             'route'         => 'librobanco.index',

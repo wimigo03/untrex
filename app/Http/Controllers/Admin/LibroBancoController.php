@@ -8,6 +8,8 @@ use Luecano\NumeroALetras\NumeroALetras;
 use App\Proyectos;
 use App\PlanCuentas;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LibroBancoExcel;
 use DB;
 use PDF;
 
@@ -81,6 +83,62 @@ class LibroBancoController extends Controller
             $total_haber = $datos['total_haber'];
             $tipo = $request->tipo;
             return view('libro-banco.search',compact('proyecto','plancuenta','fecha_inicial','fecha_final','nro_inicial','nro_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo'));
+        }
+    }
+
+    public function excel(Request $request){
+        $request->validate([
+            'proyecto'=> 'required',
+            'fecha_inicial'=> 'required',
+            'fecha_final'=> 'required',
+            'plancuenta_id' => 'required'
+        ]);
+        try{
+            ini_set('memory_limit','-1');
+            ini_set('max_execution_time','-1');
+            if($request->tipo == "Todo"){
+                $datos = $this->todo($request->proyecto,$request->fecha_inicial,$request->fecha_final,$request->plancuenta_id);
+                $proyecto = $datos['proyecto'];
+                $plancuenta = $datos['plancuenta'];
+                $fecha_inicial = $datos['fecha_inicial'];
+                $fecha_final = $datos['fecha_final'];
+                $nro_inicial = 'null';
+                $nro_final = 'null';
+                $comprobantes = $datos['comprobantes'];
+                $saldo = $datos['saldo'];
+                $saldo_final = $datos['saldo_final'];
+                $total_debe = $datos['total_debe'];
+                $total_haber = $datos['total_haber'];
+                $tipo = $request->tipo;
+            }else{
+                if(($request->nro_inicial == null) || ($request->nro_final == null)){
+                    return back()->with('danger', 'Los datos son insuficientes para procesar la peticion...');
+                }
+                if($request->tipo == "Cheque"){  
+                    $datos = $this->cheque($request->proyecto,$request->fecha_inicial,$request->fecha_final,$request->nro_inicial,$request->nro_final,$request->plancuenta_id);
+                }else{
+                    $datos = $this->transferencia($request->proyecto,$request->fecha_inicial,$request->fecha_final,$request->nro_inicial,$request->nro_final,$request->plancuenta_id);
+                }
+                $proyecto = $datos['proyecto'];
+                $plancuenta = $datos['plancuenta'];
+                $fecha_inicial = $datos['fecha_inicial'];
+                $fecha_final = $datos['fecha_final'];
+                $nro_inicial = $datos['nro_inicial'];
+                $nro_final = $datos['nro_final'];
+                $comprobantes = $datos['comprobantes'];
+                $saldo = $datos['saldo'];
+                $saldo_final = $datos['saldo_final'];
+                $total_debe = $datos['total_debe'];
+                $total_haber = $datos['total_haber'];
+                $tipo = $request->tipo;
+            }     
+                $file_name = 'libro_banco';
+                return Excel::download(new LibroBancoExcel($proyecto,$plancuenta,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$comprobantes,$saldo,$saldo_final,$total_debe,$total_haber,$tipo),$file_name . '.xlsx');
+        } catch (\Throwable $th){
+            return '[ERROR_500]';
+        }finally{
+            ini_restore('memory_limit');
+            ini_restore('max_execution_time');
         }
     }
 

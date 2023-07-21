@@ -13,11 +13,11 @@ use App\Exports\LibroBancoExcel;
 use DB;
 use PDF;
 
-class LibroBancoFController extends Controller
+class LibroDiarioController extends Controller
 {
-    public function index(){
+    public function index(){dd("ok");
         $proyectos = Proyectos::pluck('nombre','id');
-        return view('libro-banco-f.index',compact('proyectos'));
+        return view('libro-banco.index',compact('proyectos'));
     }
 
     public function seleccionar(Request $request){
@@ -60,7 +60,7 @@ class LibroBancoFController extends Controller
             $total_debe = $datos['total_debe'];
             $total_haber = $datos['total_haber'];
             $tipo = $request->tipo;
-            return view('libro-banco-f.search',compact('proyecto','plancuenta','fecha_inicial','fecha_final','nro_inicial','nro_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo'));
+            return view('libro-banco.search',compact('proyecto','plancuenta','fecha_inicial','fecha_final','nro_inicial','nro_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo'));
         }else{
             if(($request->nro_inicial == null) || ($request->nro_final == null)){
                 return back()->with('danger', 'Los datos son insuficientes para procesar la peticion...');
@@ -82,7 +82,7 @@ class LibroBancoFController extends Controller
             $total_debe = $datos['total_debe'];
             $total_haber = $datos['total_haber'];
             $tipo = $request->tipo;
-            return view('libro-banco-f.search',compact('proyecto','plancuenta','fecha_inicial','fecha_final','nro_inicial','nro_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo'));
+            return view('libro-banco.search',compact('proyecto','plancuenta','fecha_inicial','fecha_final','nro_inicial','nro_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo'));
         }
     }
 
@@ -132,7 +132,7 @@ class LibroBancoFController extends Controller
                 $total_haber = $datos['total_haber'];
                 $tipo = $request->tipo;
             }     
-                $file_name = 'libro_bancof';
+                $file_name = 'libro_banco';
                 return Excel::download(new LibroBancoExcel($proyecto,$plancuenta,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$comprobantes,$saldo,$saldo_final,$total_debe,$total_haber,$tipo),$file_name . '.xlsx');
         } catch (\Throwable $th){
             return '[ERROR_500]';
@@ -154,8 +154,8 @@ class LibroBancoFController extends Controller
         //$fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+        $sumarRestar = DB::table('comprobantes as a')
+                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                 ->where('a.proyecto_id',$proyecto_id)
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('a.status','!=','2')
@@ -171,8 +171,8 @@ class LibroBancoFController extends Controller
             $saldo -= $datos->haber;
         }
 
-        $comprobantes = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+        $comprobantes = DB::table('comprobantes as a')
+                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                 ->where('a.proyecto_id',$proyecto_id)
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('a.status','!=','2')
@@ -216,8 +216,8 @@ class LibroBancoFController extends Controller
         //$fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+        $sumarRestar = DB::table('comprobantes as a')
+                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                 ->where('a.proyecto_id',$proyecto_id)
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('b.tipo_transaccion','CHEQUE')
@@ -236,8 +236,8 @@ class LibroBancoFController extends Controller
             $saldo -= $datos->haber;
         }
 
-        $comprobantes = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+        $comprobantes = DB::table('comprobantes as a')
+                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                 ->where('a.proyecto_id',$proyecto_id)
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('b.tipo_transaccion','CHEQUE')
@@ -285,8 +285,8 @@ class LibroBancoFController extends Controller
         //$fecha_saldo_inicial = $gestion . '-04-01';
         $proyecto = Proyectos::where('id',$proyecto_id)->first();
         $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-        $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+        $sumarRestar = DB::table('comprobantes as a')
+                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                 ->where('a.proyecto_id',$proyecto_id)
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('b.tipo_transaccion','TRANSFERENCIA')
@@ -304,8 +304,8 @@ class LibroBancoFController extends Controller
             $saldo += $datos->debe;
             $saldo -= $datos->haber;
         }
-        $comprobantes = DB::table('comprobantes_fiscales as a')
-                                ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+        $comprobantes = DB::table('comprobantes as a')
+                                ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                 ->where('a.proyecto_id',$proyecto_id)
                                 ->where('b.plancuenta_id',$plancuenta_id)
                                 ->where('b.tipo_transaccion','TRANSFERENCIA')
@@ -349,8 +349,8 @@ class LibroBancoFController extends Controller
 
             $proyecto = Proyectos::where('id',$proyecto_id)->first();
             $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-            $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+            $sumarRestar = DB::table('comprobantes as a')
+                                    ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                     ->where('a.proyecto_id',$proyecto_id)
                                     ->where('b.plancuenta_id',$plancuenta_id)
                                     ->where('a.status','!=','2')
@@ -366,8 +366,8 @@ class LibroBancoFController extends Controller
                 $saldo -= $datos->haber;
             }
     
-            $comprobantes = DB::table('comprobantes_fiscales as a')
-                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+            $comprobantes = DB::table('comprobantes as a')
+                                    ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                     ->where('a.proyecto_id',$proyecto_id)
                                     ->where('b.plancuenta_id',$plancuenta_id)
                                     ->where('a.status','!=','2')
@@ -387,10 +387,10 @@ class LibroBancoFController extends Controller
                 $total_haber += $datos->haber;
             }
             $tipo = 'TRANSFERENCIA && CHEQUE';
-            $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
+            $pdf = PDF::loadView('libro-banco.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
             $pdf->setPaper('LETTER', 'portrait');//landscape
             return $pdf->stream();
-            
+
         } catch (\Throwable $th){
             return '[ERROR_500]';
         }finally{
@@ -406,8 +406,8 @@ class LibroBancoFController extends Controller
 
             $proyecto = Proyectos::where('id',$proyecto_id)->first();
             $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-            $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+            $sumarRestar = DB::table('comprobantes as a')
+                                    ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                     ->where('a.proyecto_id',$proyecto_id)
                                     ->where('b.plancuenta_id',$plancuenta_id)
                                     ->where('b.tipo_transaccion','TRANSFERENCIA')
@@ -425,9 +425,9 @@ class LibroBancoFController extends Controller
                 $saldo += $datos->debe;
                 $saldo -= $datos->haber;
             }
-    
-            $comprobantes = DB::table('comprobantes_fiscales as a')
-                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+
+            $comprobantes = DB::table('comprobantes as a')
+                                    ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                     ->where('a.proyecto_id',$proyecto_id)
                                     ->where('b.plancuenta_id',$plancuenta_id)
                                     ->where('b.tipo_transaccion','TRANSFERENCIA')
@@ -450,7 +450,7 @@ class LibroBancoFController extends Controller
                 $total_haber += $datos->haber;
             }
             $tipo = 'TRANSFERENCIA';
-            $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
+            $pdf = PDF::loadView('libro-banco.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
             $pdf->setPaper('LETTER', 'portrait');//landscape
             return $pdf->stream();
 
@@ -459,7 +459,7 @@ class LibroBancoFController extends Controller
         }finally{
             ini_restore('memory_limit');
             ini_restore('max_execution_time');
-        }
+        }  
     }
 
     public function pdf3($proyecto_id,$fecha_inicial,$fecha_final,$nro_inicial,$nro_final,$plancuenta_id){
@@ -469,8 +469,8 @@ class LibroBancoFController extends Controller
 
             $proyecto = Proyectos::where('id',$proyecto_id)->first();
             $plancuenta = PlanCuentas::where('id',$plancuenta_id)->first();
-            $sumarRestar = DB::table('comprobantes_fiscales as a')
-                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+            $sumarRestar = DB::table('comprobantes as a')
+                                    ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                     ->where('a.proyecto_id',$proyecto_id)
                                     ->where('b.plancuenta_id',$plancuenta_id)
                                     ->where('b.tipo_transaccion','CHEQUE')
@@ -489,8 +489,8 @@ class LibroBancoFController extends Controller
                 $saldo -= $datos->haber;
             }
     
-            $comprobantes = DB::table('comprobantes_fiscales as a')
-                                    ->join('comprobantes_fiscales_detalles as b','b.comprobante_fiscal_id','a.id')
+            $comprobantes = DB::table('comprobantes as a')
+                                    ->join('comprobantes_detalles as b','b.comprobante_id','a.id')
                                     ->where('a.proyecto_id',$proyecto_id)
                                     ->where('b.plancuenta_id',$plancuenta_id)
                                     ->where('b.tipo_transaccion','CHEQUE')
@@ -513,15 +513,16 @@ class LibroBancoFController extends Controller
                 $total_haber += $datos->haber;
             }
             $tipo = 'CHEQUE';
-            $pdf = PDF::loadView('libro-banco-f.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
+            $pdf = PDF::loadView('libro-banco.pdf',compact(['proyecto','plancuenta','fecha_inicial','fecha_final','comprobantes','saldo','saldo_final','total_debe','total_haber','tipo']));
             $pdf->setPaper('LETTER', 'portrait');//landscape
             return $pdf->stream();
-
+            
         } catch (\Throwable $th){
             return '[ERROR_500]';
         }finally{
             ini_restore('memory_limit');
             ini_restore('max_execution_time');
         }
+        
     }
 }

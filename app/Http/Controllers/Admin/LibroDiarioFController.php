@@ -6,19 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Luecano\NumeroALetras\NumeroALetras;
 use App\Proyectos;
-use App\Comprobantes;
-use App\ComprobantesDetalle;
+use App\ComprobantesFiscales;
+use App\ComprobantesFiscalesDetalle;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LibroDiarioExcel;
 use DB;
 use PDF;
 
-class LibroDiarioController extends Controller
+class LibroDiarioFController extends Controller
 {
     public function index(){
         $proyectos = Proyectos::pluck('nombre','id');
-        return view('libro-diario.index',compact('proyectos'));
+        return view('libro-diario-f.index',compact('proyectos'));
     }
 
     public function search(Request $request){
@@ -37,26 +37,26 @@ class LibroDiarioController extends Controller
         $estado = $request->estado;
         $consulta_comprobantes = $this->consultaLibroDiarioPaginate($request->proyecto,$request->fecha_i,$request->fecha_f,$request->tipo_comp,$request->estado);
         
-        return view('libro-diario.search',compact('proyecto','fecha_inicial','fecha_final','tipo_comprobante','estado','consulta_comprobantes'));
+        return view('libro-diario-f.search',compact('proyecto','fecha_inicial','fecha_final','tipo_comprobante','estado','consulta_comprobantes'));
     }
 
     public function consultaLibroDiarioPaginate($proyecto,$fecha_i,$fecha_f,$tipo_comp,$estado){
-        $comprobante_detalles = ComprobantesDetalle::query()
-                                                    ->byProyecto($proyecto)
-                                                    ->byFechas($fecha_i,$fecha_f)
-                                                    ->byTipoComprobante($tipo_comp)
-                                                    ->byEstado($estado)
-                                                    ->paginate(30);
+        $comprobante_detalles = ComprobantesFiscalesDetalle::query()
+                                                            ->byProyecto($proyecto)
+                                                            ->byFechas($fecha_i,$fecha_f)
+                                                            ->byTipoComprobante($tipo_comp)
+                                                            ->byEstado($estado)
+                                                            ->paginate(30);
         return $comprobante_detalles;
     }
 
     public function consultaLibroDiarioGet($proyecto,$fecha_i,$fecha_f,$tipo_comp,$estado){
-        $comprobante_detalles = ComprobantesDetalle::query()
-                                                    ->byProyecto($proyecto)
-                                                    ->byFechas($fecha_i,$fecha_f)
-                                                    ->byTipoComprobante($tipo_comp)
-                                                    ->byEstado($estado)
-                                                    ->get();
+        $comprobante_detalles = ComprobantesFiscalesDetalle::query()
+                                                            ->byProyecto($proyecto)
+                                                            ->byFechas($fecha_i,$fecha_f)
+                                                            ->byTipoComprobante($tipo_comp)
+                                                            ->byEstado($estado)
+                                                            ->get();
         return $comprobante_detalles;
     }
 

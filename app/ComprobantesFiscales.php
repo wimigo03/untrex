@@ -28,4 +28,15 @@ class ComprobantesFiscales extends Model
     ];
     use SoftDeletes;
     protected $dates =['deleted_at'];
+
+    public function getEstadoCompAttribute(){
+        switch ($this->status) {
+            case '0':
+                return "BORRADOR";
+            case '1':
+                return "APROBADO";
+            case '2':
+                return "ANULADO";
+        }
+    }
 }

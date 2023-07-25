@@ -425,12 +425,12 @@ return [
                     'text'  => 'Base 1',
                     'icon'  => 'fas fa-list',
                     'route' => 'librodiario.index'
-                ]/*,
+                ],
                 [
                     'text'  => 'Base 2',
                     'icon'  => 'fas fa-list',
-                    'route' => 'librobancof.index'
-                ],*/
+                    'route' => 'librodiariof.index'
+                ],
             ],
         ],
         /*[

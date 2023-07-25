@@ -50,11 +50,11 @@
                                                             <table style="border-collapse:collapse; border: none;" align="center">
                                                                 <tr>
                                                                     <td style="padding: 0;">
-                                                                        <a href="{{route('consorcios.proyectos', $datos->id )}}" class="btn btn-xs btn-primary font-verdana">
-                                                                            <i class="fas fa-project-diagram"></i>&nbsp;Proyectos
-                                                                        </a>
                                                                         <a href="{{route('consorcios.socios', $datos->id )}}" class="btn btn-xs btn-info font-verdana">
                                                                             <i class="fas fa-user-friends"></i>&nbsp;Socios
+                                                                        </a>
+                                                                        <a href="{{route('consorcios.proyectos', $datos->id )}}" class="btn btn-xs btn-primary font-verdana">
+                                                                            <i class="fas fa-project-diagram"></i>&nbsp;Proyectos
                                                                         </a>
                                                                     </td>
                                                                 </tr>

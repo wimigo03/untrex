@@ -11,6 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
+use App\Consorcios;
 use App\Socios;
 
 class User extends Authenticatable
@@ -28,6 +29,7 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
+        'consorcio_id',
         'socio_id',
         'username',
         'name',
@@ -65,6 +67,10 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function consorcio(){
+        return $this->belongsTo(Consorcios::class,'consorcio_id','id');
+    }
 
     public function socio(){
         return $this->belongsTo(Socios::class,'socio_id','id');

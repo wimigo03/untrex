@@ -66,6 +66,9 @@
                                                                         <a href="{{--route('consorcio.proyectos', $datos->id )--}}" class="btn btn-xs btn-info font-verdana">
                                                                             &nbsp;<i class="fas fa-info-circle" aria-hidden="true"></i>&nbsp;
                                                                         </a>
+                                                                        <a href="{{route('usuario.proyecto.index', $datos->id )}}" class="btn btn-xs btn-primary font-verdana">
+                                                                            &nbsp;<i class="fas fa-users" aria-hidden="true"></i>&nbsp;
+                                                                        </a>
                                                                     </td>
                                                                 </tr>
                                                             </table>

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Consorcios;
-use App\Proyectos;
+//use App\Consorcios;
+//use App\Proyectos;
 //use App\Ciudades;
 //use App\ComprobantesDetalle;
 //use App\PlanCuentas;
@@ -16,9 +16,9 @@ use App\Proyectos;
 use Carbon\Carbon;
 use DB;
 
-class ConsorciosController extends Controller
+class ProyectosController extends Controller
 {
-    public function index(){
+    public function index(){dd("ok");
         if(auth()->user()->id != 1){
             return back();
         }

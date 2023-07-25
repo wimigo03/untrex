@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\LibroBancoController;
 use App\Http\Controllers\Admin\LibroMayorPorAuxiliarController;
 use App\Http\Controllers\Admin\ConsorciosController;
 use App\Http\Controllers\Admin\LibroDiarioController;
+use App\Http\Controllers\Admin\LibroDiarioFController;
 
 Route::get('/', function () {
     return view('/');
@@ -47,8 +48,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuario.index');
     Route::get('/usuarios/search', [UsuarioController::class, 'search'])->name('usuario.search');
+    Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuario.create');
+    Route::post('/usuarios/store', [UsuarioController::class, 'store'])->name('usuario.store');
     Route::get('/usuarios/editar/{id}', [UsuarioController::class, 'editar'])->name('usuario.editar');
     Route::post('/usuarios/update', [UsuarioController::class, 'update'])->name('usuario.update');
+    Route::get('/usuarios/proyectos/{proyecto_id}', [UsuarioController::class, 'proyectos'])->name('usuario.proyecto.index');
+    Route::get('/usuarios/proyectos/baja/{id}', [UsuarioController::class, 'bajaProyecto'])->name('usuario.proyecto.baja');
+    Route::get('/usuarios/proyectos/alta/{id}', [UsuarioController::class, 'altaProyecto'])->name('usuario.proyecto.alta');
+    Route::get('/usuarios/proyectos/search/{proyecto_id}', [UsuarioController::class, 'proyectosSearch'])->name('usuario.proyecto.search');
+    Route::get('/usuarios/proyectos/create/{proyecto_id}', [UsuarioController::class, 'proyectosCreate'])->name('usuario.proyecto.create');
+    Route::post('/usuarios/proyectos/store', [UsuarioController::class, 'proyectosStore'])->name('usuario.proyecto.store');
 
     //Tipo de cambio
     Route::post('/tipo-cambio/update', [TipoCambioController::class, 'update'])->name('tipo_cambio.update');
@@ -254,11 +263,13 @@ Route::middleware(['auth'])->group(function () {
     //Libro mayor por auxiliar
     route::get('/libromayor/porauxiliar/index', [LibroMayorPorAuxiliarController::class, 'index'])->name('libromayor.porauxiliar.index');
 
-    /*route::get('/librobancof/excel', [LibroBancoFController::class, 'excel'])->name('librobancof.excel');
-    Route::get('librobancof/pdf3/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf3'])->name('librobancof.pdf3');
-    Route::get('librobancof/pdf2/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf2'])->name('librobancof.pdf2');
-    Route::get('librobancof/pdf1/dat1/{dat1}/dat2/{dat2}/dat3/{dat3}/dat4/{dat4}/dat5/{dat5}/dat6/{dat6}', [LibroBancoFController::class, 'pdf1'])->name('librobancof.pdf1');
-    route::get('/librobancof/search', [LibroBancoFController::class, 'search'])->name('librobancof.search');
-    Route::get('/librobancof/seleccionar', [LibroBancoFController::class, 'seleccionar']);*/
+    //Libro diario 1
+    route::get('/librodiario/excel', [LibroDiarioController::class, 'excel'])->name('librodiario.excel');
+    route::get('/librodiario/search', [LibroDiarioController::class, 'search'])->name('librodiario.search');
     route::get('/librodiario/index', [LibroDiarioController::class, 'index'])->name('librodiario.index');
+
+    //Libro diario 2
+    route::get('/librodiariof/excel', [LibroDiarioFController::class, 'excel'])->name('librodiariof.excel');
+    route::get('/librodiariof/search', [LibroDiarioFController::class, 'search'])->name('librodiariof.search');
+    route::get('/librodiariof/index', [LibroDiarioFController::class, 'index'])->name('librodiariof.index');
 });
